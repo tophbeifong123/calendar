@@ -3,9 +3,32 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import FullCalendar from "@fullcalendar/react";
-import Link from "next/link";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 
 function Calendar() {
+  const session = useSession();
+  const supabase = useSupabaseClient();
+  
+  async function googleSignIn() {
+    if (!supabase) return; // Exit if supabase is not available
+  
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        scopes: 'https://www.googleapis.com/auth/calendar'
+      }
+    });
+  
+    if (error) {
+      alert("Error logging in to Google provider with Supabase");
+      console.log(error);
+    }
+  }
+  
+  async function signOut() {
+    await supabase.auth.signOut();
+  }
+
   const events = [
     {
       title: "กินข้าวกับครอบครัว",
@@ -34,11 +57,18 @@ function Calendar() {
           height={"70vh"}
           events={events}
         />
-        <Link href="#_">
-          <button className="mt-10 text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-            Google & calendar
-          </button>
-        </Link>
+      </div>
+      <div>
+        {session?
+          <>
+          <h2>Hey there {session.user.email}</h2>
+          <button onClick={() => signOut()}>Sing Out</button>
+          </>
+          :
+          <>
+          <button onClick={() => googleSignIn()}>Sing In With Google</button>
+          </>
+        }
       </div>
     </div>
   );
