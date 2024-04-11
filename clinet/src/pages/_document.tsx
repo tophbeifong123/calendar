@@ -4,8 +4,8 @@ import { SessionContextProvider } from "@supabase/auth-helpers-react";
 
 export default function Document() {
   const supabase = createClient(
-    "https://uhuchzacpnfjmarnwhyh.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVodWNoemFjcG5mam1hcm53aHloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI2NTgwNDUsImV4cCI6MjAyODIzNDA0NX0.z_cEnlrJnPh8sH3zUpKTD8cX0GeCIbHDZcFNh87AZpE"
+    "https://zjzzsrjcmcwqdjzuhqal.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpqenpzcmpjbWN3cWRqenVocWFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI2NjkxNTUsImV4cCI6MjAyODI0NTE1NX0.p1hYda8iwBFHOkE-c0z9oJqXLR8RbNw_H5rAbfYCagg"
   );
 
   return (
