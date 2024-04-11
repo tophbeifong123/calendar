@@ -114,21 +114,22 @@ function App() {
   console.log(eventName);
   console.log(eventDescription);
   return (
-    <div className="App flex justify-center items-center h-screen">
-      <div className="w-2/3 mr-20">
+    <div className="App flex justify-center items-center h-screen bg-gray-100">
+      <div className="w-2/3 mr-20 bg-white p-10 rounded-2xl border-slate-950 drop-shadow-xl">
         <FullCalendar
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, ]}
           initialView={"dayGridMonth"}
           headerToolbar={{
-            start: "today prev,next",
+            start: "dayGridMonth,timeGridWeek,timeGridDay",
             center: "title",
-            end: "dayGridMonth,timeGridWeek,timeGridDay",
+            end: "today prev,next,",
           }}
           height={"70vh"}
           events={events}
         />
       </div>
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-96">
+      <div className="bg-white p-10 rounded-xl drop-shadow-xl">
+        <h2 className="text-center">import Calendar</h2>
         {session ? (
           <>
             <h2 className="text-2xl mb-4">Hey there {session.user.email}</h2>
@@ -204,8 +205,8 @@ function App() {
         ) : (
           <button
             onClick={() => googleSignIn()}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "
+            >
             Sign In With Google
           </button>
         )}

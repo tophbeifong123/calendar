@@ -13,7 +13,7 @@ export default function Document() {
       <Head />
       <body>
       <SessionContextProvider supabaseClient={supabase}>
-        <Main />
+        <Main  />
         <NextScript />
       </SessionContextProvider>
       </body>
