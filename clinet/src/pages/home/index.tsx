@@ -7,8 +7,9 @@ import SlideBar from "@/components/SlideBar";
 
 function Home() {
 
-
+  const [classDate, setClassDate] = useState<any>([]);
   const auth = useAuth();
+  // console.log("token",auth.user?.access_token)
 
   useEffect(() => {
     fectStudentDetail();
@@ -45,6 +46,28 @@ function Home() {
       );
       
       console.log(result.data);
+    } catch (error) {
+      console.error("Error fetching student detail:", error);
+    }
+  };
+  const fectStudentClassDate = async () => {
+    if (!auth.user?.access_token) {
+      console.error("Access token is not available");
+      return;
+    }
+    try {
+      const result = await axios.get(
+        `https://api-gateway.psu.ac.th/Test/regist/level2/StudentClassDate/token?eduTerm=1&eduYear=2563`,
+        {
+          headers: {
+            credential: "api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF",
+            token: auth.user.access_token,
+          },
+        }
+      );
+      setClassDate(result.data);
+      
+      console.log("classdate",result.data);
     } catch (error) {
       console.error("Error fetching student detail:", error);
     }
