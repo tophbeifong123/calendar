@@ -9,6 +9,7 @@ import {
   import timeGridPlugin from "@fullcalendar/timegrid";
   import interactionPlugin from "@fullcalendar/interaction";
   import FullCalendar from "@fullcalendar/react";
+import { CustomNavbar } from "@/components/Navbar";
   
   function App() {
     const [start, setStart] = useState<Date>(new Date());
@@ -42,29 +43,36 @@ import {
     }
   
     async function createCalendarEvent() {
-      console.log("Creating calendar event");
-      const event = {
-        summary: eventName,
-        description: eventDescription,
-        start: {
-          dateTime: start.toISOString(),
-          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        },
-        end: {
-          dateTime: end.toISOString(),
-          timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        },
-      };
-      await fetch(
-        "https://www.googleapis.com/calendar/v3/calendars/primary/events",
-        {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + session.provider_token,
-          },
-          body: JSON.stringify(event),
+        console.log("Creating calendar event");
+        
+        if (!session || !session.provider_token) {
+          alert("Please sign in first to create an event.");
+          return;
         }
-      )
+        
+        const event = {
+          summary: eventName,
+          description: eventDescription,
+          start: {
+            dateTime: start.toISOString(),
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          },
+          end: {
+            dateTime: end.toISOString(),
+            timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          },
+        };
+        
+        await fetch(
+          "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+          {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + session.provider_token,
+            },
+            body: JSON.stringify(event),
+          }
+        )
         .then((data) => {
           return data.json();
         })
@@ -72,7 +80,8 @@ import {
           console.log(data);
           alert("Event created, check your Google Calendar!");
         });
-    }
+      }
+      
   
     const handleStartChange = (date: Date | Date[] | null) => {
       if (date) {
@@ -114,6 +123,8 @@ import {
     console.log(eventName);
     console.log(eventDescription);
     return (
+        <>
+        <CustomNavbar />
       <div className="App flex justify-center items-center h-screen bg-gray-100">
         <div className="w-2/3 mr-20 bg-white p-10 rounded-2xl border-slate-950 drop-shadow-xl">
           <FullCalendar
@@ -212,6 +223,7 @@ import {
           )}
         </div>
       </div>
+      </>
     );
   }
   export default App;
