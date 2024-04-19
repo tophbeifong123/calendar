@@ -1,8 +1,34 @@
 
 "use client";
-
+import { useAuth } from "react-oidc-context";
+import axios from "axios";
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
+import { useEffect, useState } from "react";
 export function CustomNavbar() {
+    const auth = useAuth();
+    const [profileImg ,setprofileImg] = useState([]);
+    useEffect(()=>{fectStudentDetail();},[])
+    const fectStudentDetail = async () => {
+        if (!auth.user?.access_token) {
+          console.error("Access token is not available");
+          return;
+        }
+        try {
+          const result = await axios.get(
+            `https://api-gateway.psu.ac.th/Test/regist/level2/StudentImage/token`,
+            {
+              headers: {
+                credential: "api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF",
+                token: auth.user.access_token,
+              },
+            }
+          );
+          setprofileImg(result.data);
+          console.log(result.data);
+        } catch (error) {
+          console.error("Error fetching student detail:", error);
+        }
+      };
   return (
     <Navbar fluid rounded>
       <Navbar.Brand href="/home">
@@ -29,15 +55,6 @@ export function CustomNavbar() {
         </Dropdown>
         <Navbar.Toggle />
       </div>
-      <Navbar.Collapse>
-        <Navbar.Link href="#" active>
-          Home
-        </Navbar.Link>
-        <Navbar.Link href="#">About</Navbar.Link>
-        <Navbar.Link href="#">Services</Navbar.Link>
-        <Navbar.Link href="#">Pricing</Navbar.Link>
-        <Navbar.Link href="#">Contact</Navbar.Link>
-      </Navbar.Collapse>
     </Navbar>
   );
 }
