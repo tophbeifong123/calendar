@@ -29,7 +29,6 @@ export function CustomNavbar() {
                 }
             );
             setprofileImg(result.data.data[0]);
-            // console.log(result.data.data[0].pictureBase64);
         } catch (error) {
             console.error("Error fetching student detail:", error);
         }
