@@ -23,6 +23,7 @@ const Index = () => {
       </Button> */}
       <button
         className="  bg-blue-500 hover:bg-blue-700 text-white font-bold p-4 rounded-md ripple-effect w-1/5"
+        onClick={() => auth.signinRedirect()}
       >
         <span className="flex items-center justify-center">
           <img
