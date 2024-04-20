@@ -10,11 +10,11 @@ export default function SlideBar() {
     <Sidebar aria-label="Default sidebar example">
       <Sidebar.Items>
         <Sidebar.ItemGroup>
-          <Sidebar.Item href="/home" icon={FaCalendar}>
-            Calendar
+          <Sidebar.Item href="/home" icon={FaCalendar} >
+              Calendar
           </Sidebar.Item>
           <Sidebar.Item
-            href="/google"
+            href="/Google"
             icon={AiFillCarryOut}
             label="Pro"
             labelColor="dark"
