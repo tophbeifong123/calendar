@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { CustomNavbar } from "@/components/Navbar";
-import Calendar from "@/components/Calendar";
 import { useAuth } from "react-oidc-context";
 import SlideBar from "@/components/SlideBar";
+import CustomCalendar from "@/components/Calendar";
 
 function Home() {
 
@@ -80,7 +80,7 @@ function Home() {
       <CustomNavbar />
       <div className="flex justify-center items-center h-screen bg-gray-100">
         <SlideBar />
-        <Calendar events={events} />
+        <CustomCalendar events={events} />
       </div>
     </>
   );
