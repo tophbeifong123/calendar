@@ -10,7 +10,7 @@ const Index = () => {
       className="flex justify-center items-center h-screen bg-cover "
       style={{
         backgroundImage:
-          'url("https://img.freepik.com/free-vector/blue-pink-halftone-background_53876-99004.jpg?size=626&ext=jpg&ga=GA1.1.34264412.1713398400&semt=ais")',
+          'url("https://lh3.googleusercontent.com/p/AF1QipOqN3E_kDF9cgadnUfOy0W5h3XRdsRclM4MR6t2=s1360-w1360-h1020")',
       }}
     >
       {/* <Button
@@ -29,7 +29,6 @@ const Index = () => {
             className="w-full"
             src={PSUOauthImage.src}
             alt="PSU login button"
-            onClick={() => auth.signinRedirect()}
           />
         </span>
       </button>
