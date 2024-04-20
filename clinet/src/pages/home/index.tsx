@@ -76,7 +76,7 @@ function Home() {
   return (
     <>
       <CustomNavbar />
-      <div className="flex justify-center items-center h-screen bg-gray-100">
+      <div className="flex justify-center items-center h-screen bg-blue-50">
       <SlideBar/>
         <Calendar events={events} />
       </div>

@@ -7,14 +7,14 @@ import axios from "axios";
 
 function Calendar({ events }: any) {
   return (
-    <div className="w-full mx-40 bg-white p-10 rounded-2xl border-slate-950 drop-shadow-xl">
+    <div className="w-full  mx-40 bg-white p-10 rounded-2xl border-slate-950 drop-shadow-xl ">
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView={"dayGridMonth"}
         headerToolbar={{
           start: "dayGridMonth,timeGridWeek,timeGridDay",
           center: "title",
-          end: "today prev,next,",
+          end: "today prev,next",
         }}
         height={"60vh"}
         events={events}
