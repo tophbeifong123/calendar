@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { CustomNavbar } from "@/components/Navbar";
 import Calendar from "@/components/Calendar";
@@ -9,26 +9,27 @@ function Home() {
 
   const [classDate, setClassDate] = useState<any>([]);
   const auth = useAuth();
-  // console.log("token",auth.user?.access_token)
+  const [events, setEvents] = useState<any[]>([]);
 
   useEffect(() => {
     fectStudentDetail();
+    fectStudentClassDate();
   }, [auth]); 
 
-  const events = [
-    {
-      title: "กินข้าวกับครอบครัว",
-      start: new Date().setHours(18, 30),
-      end: new Date().setHours(20, 30),
-      allDay: false,
-    },
-    {
-      title: "ออกกำลังกาย",
-      start: new Date("2024-04-20"),
-      end: new Date("2024-04-20"),
-      allDay: true,
-    },
-  ];
+  useEffect(() => {
+    if (classDate.length > 0) {
+      const newEvents = classDate.map((item: any) => ({
+        title: `${item.subjectNameEng} (${item.subjectCode})`,
+        description: `เรียนที่: ${item.roomId || item.roomName || 'ไม่ระบุห้องเรียน'}`,
+        daysOfWeek: [item.classDate],
+        startTime: `${item.startTime.substring(0, 2)}:${item.startTime.substring(2, 4)}`,
+        endTime: `${item.stopTime.substring(0, 2)}:${item.stopTime.substring(2, 4)}`, 
+      }));
+      console.log("Events:", newEvents);
+      setEvents(newEvents);
+    }
+  }, [classDate]);
+
   const fectStudentDetail = async () => {
     if (!auth.user?.access_token) {
       console.error("Access token is not available");
@@ -50,6 +51,7 @@ function Home() {
       console.error("Error fetching student detail:", error);
     }
   };
+
   const fectStudentClassDate = async () => {
     if (!auth.user?.access_token) {
       console.error("Access token is not available");
@@ -65,7 +67,7 @@ function Home() {
           },
         }
       );
-      setClassDate(result.data);
+      setClassDate(result.data.data);
       
       console.log("classdate",result.data);
     } catch (error) {
@@ -77,7 +79,7 @@ function Home() {
     <>
       <CustomNavbar />
       <div className="flex justify-center items-center h-screen bg-gray-100">
-      <SlideBar/>
+        <SlideBar />
         <Calendar events={events} />
       </div>
     </>
