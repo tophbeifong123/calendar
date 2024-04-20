@@ -4,9 +4,7 @@ import { CustomNavbar } from "@/components/Navbar";
 import { useAuth } from "react-oidc-context";
 import SlideBar from "@/components/SlideBar";
 import CustomCalendar from "@/components/Calendar";
-
 function Home() {
-
   const [classDate, setClassDate] = useState<any>([]);
   const auth = useAuth();
   const [events, setEvents] = useState<any[]>([]);
@@ -14,16 +12,23 @@ function Home() {
   useEffect(() => {
     fectStudentDetail();
     fectStudentClassDate();
-  }, [auth]); 
+  }, [auth]);
 
   useEffect(() => {
     if (classDate.length > 0) {
       const newEvents = classDate.map((item: any) => ({
         title: `${item.subjectNameEng} (${item.subjectCode})`,
-        description: `เรียนที่: ${item.roomId || item.roomName || 'ไม่ระบุห้องเรียน'}`,
+        description: ` ${item.roomId || item.roomName || "ไม่ระบุห้องเรียน"}`,
         daysOfWeek: [item.classDate],
-        startTime: `${item.startTime.substring(0, 2)}:${item.startTime.substring(2, 4)}`,
-        endTime: `${item.stopTime.substring(0, 2)}:${item.stopTime.substring(2, 4)}`, 
+        startTime: `${item.startTime.substring(
+          0,
+          2
+        )}:${item.startTime.substring(2, 4)}`,
+        endTime: `${item.stopTime.substring(0, 2)}:${item.stopTime.substring(
+          2,
+          4
+        )}`,
+        lecturer: `${item.lecturerNameThai}`,
       }));
       console.log("Events:", newEvents);
       setEvents(newEvents);
@@ -37,7 +42,8 @@ function Home() {
     }
     try {
       const result = await axios.get(
-        `https://api-gateway.psu.ac.th/Test/regist/level2/RegistData/token?eduTerm=1&eduYear=2564`,
+        `https://api-gateway.psu.ac.th/Test/regist/level2/StudentDetail/token
+          `,
         {
           headers: {
             credential: "api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF",
@@ -45,8 +51,8 @@ function Home() {
           },
         }
       );
-      
-      console.log(result.data);
+
+      console.log("studentdetail", result.data.data[0]);
     } catch (error) {
       console.error("Error fetching student detail:", error);
     }
@@ -68,8 +74,8 @@ function Home() {
         }
       );
       setClassDate(result.data.data);
-      
-      console.log("classdate",result.data);
+
+      console.log("classdate", result.data);
     } catch (error) {
       console.error("Error fetching student detail:", error);
     }
