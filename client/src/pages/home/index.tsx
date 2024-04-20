@@ -5,9 +5,10 @@ import { useAuth } from "react-oidc-context";
 import SlideBar from "@/components/SlideBar";
 import CustomCalendar from "@/components/Calendar";
 function Home() {
-  const [classDate, setClassDate] = useState<any>([]);
   const auth = useAuth();
+  const [classDate, setClassDate] = useState<any>([]);
   const [events, setEvents] = useState<any[]>([]);
+  const [studentDetails, setStudentDetails] = useState<any[]>([]);
 
   useEffect(() => {
     fectStudentDetail();
@@ -51,7 +52,7 @@ function Home() {
           },
         }
       );
-
+      setStudentDetails(result.data.data[0]);
       console.log("studentdetail", result.data.data[0]);
     } catch (error) {
       console.error("Error fetching student detail:", error);
@@ -86,7 +87,7 @@ function Home() {
       <CustomNavbar />
       <div className="flex justify-center items-center h-screen bg-gray-100">
         <SlideBar />
-        <CustomCalendar events={events} />
+        <CustomCalendar details={studentDetails} events={events} />
       </div>
     </>
   );
