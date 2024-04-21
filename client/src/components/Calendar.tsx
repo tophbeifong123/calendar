@@ -18,7 +18,7 @@ export default function CustomCalendar({ details, events }: any) {
   useEffect(() => {
     if (details && details.admitYear) {
       const initialYear = parseInt(details.admitYear);
-      const yearsArray = Array.from({ length: 5 }, (_, i) => initialYear + i);
+      const yearsArray = Array.from({ length: 8 }, (_, i) => initialYear + i);
       setYears(yearsArray);
     }
   }, [details]);
@@ -30,7 +30,7 @@ export default function CustomCalendar({ details, events }: any) {
     <div className="flex justify-center gap-4">
       <label className="block mt-2 text-sm font-medium text-gray-900 dark:text-white items-center">ปีการศึกษา</label>
     <select id="small" className="w-1/4 block  p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-        <option selected>**โปรดเลือก**</option>
+        <option selected>**ทั้งหมด**</option>
         {years.map((year) => (
         <option key={year} value={year}>{year}</option>
       ))}
@@ -38,7 +38,7 @@ export default function CustomCalendar({ details, events }: any) {
       </select>
       <label className="block mt-2 text-sm font-medium text-gray-900 dark:text-white items-center">ภาคเรียน</label>
       <select id="small" className="w-1/4 block  p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-        <option selected>**โปรดเลือก**</option>
+        <option selected>**ทั้งหมด**</option>
         <option value="1">1</option>
         <option value="2">2</option>
       </select>
