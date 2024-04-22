@@ -60,7 +60,7 @@ export default function CustomCalendar({ details, events }: any) {
             headerToolbar={{
               start: "dayGridMonth,timeGridWeek,timeGridDay",
               center: "title",
-              end: "today prev,next,",
+              end: "today prev,next",
             }}
             height={"60vh"}
             events={events}

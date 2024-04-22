@@ -18,7 +18,7 @@ function Home() {
   useEffect(() => {
     if (classDate.length > 0) {
       const newEvents = classDate.map((item: any) => ({
-        title: `${item.subjectNameEng} (${item.subjectCode})`,
+        title: `${item.subjectCode} ${item.subjectNameThai} (${item.subjectNameEng}) `,
         description: ` ${item.roomId || item.roomName || "ไม่ระบุห้องเรียน"}`,
         daysOfWeek: [item.classDate],
         startTime: `${item.startTime.substring(
@@ -83,7 +83,7 @@ function Home() {
       console.error("Error fetching student detail:", error);
     }
   };
-
+  
   return (
     <>
       <CustomNavbar />

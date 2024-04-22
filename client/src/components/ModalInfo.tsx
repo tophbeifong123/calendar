@@ -22,7 +22,8 @@ export default function ModalInfo({ event, openModal, onClose }: { event:any, op
   if (!event) {
     return null;
   }
-
+  console.log("event",event);
+  
   return (
     <Modal show={modalOpen} onClose={handleCloseModal} className="animate-modal">
       <Modal.Header className="bg-blue-200 text-sm text-white p-5"> 
