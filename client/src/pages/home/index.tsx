@@ -30,8 +30,9 @@ function Home() {
           4
         )}`,
         lecturer: `${item.lecturerNameThai}`,
-        startRecur: '2024-04-01', // กำหนดช่วงเวลาได้ เอาอะไรดี
+        startRecur: '2024-04-01',
         endRecur: '2024-07-29', 
+        section: `${item.section || "ไม่ระบุกลุ่ม"}`,
       }));
       console.log("Events:", newEvents);
       setEvents(newEvents);
@@ -68,7 +69,7 @@ function Home() {
     }
     try {
       const result = await axios.get(
-        `https://api-gateway.psu.ac.th/Test/regist/level2/StudentClassDate/token?eduTerm=1&eduYear=2563`,
+        `https://api-gateway.psu.ac.th/Test/regist/level2/StudentClassDate/token?eduTerm=1&eduYear=2564`,
         {
           headers: {
             credential: "api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF",

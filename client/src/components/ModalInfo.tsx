@@ -34,7 +34,10 @@ export default function ModalInfo({ event, openModal, onClose }: { event:any, op
           <p className="text-base leading-relaxed text-gray-500 font-thin dark:text-gray-400">
             <span className="font-bold">เรียนที่: </span>{event._def.extendedProps.description} <br />
             <span className="font-bold">เวลา: </span> {formatDateTime(event.start)} - {formatDateTime(event.end)}<br />
+            <span className="font-bold">ตอนที่: </span> {event._def.extendedProps.section} <br />
             <span className="font-bold">อาจารย์: </span> {event._def.extendedProps.lecturer}
+            
+
           </p>
         </div>
       </Modal.Body>
