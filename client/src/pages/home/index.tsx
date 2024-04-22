@@ -30,6 +30,8 @@ function Home() {
           4
         )}`,
         lecturer: `${item.lecturerNameThai}`,
+        startRecur: '2024-04-01', // กำหนดช่วงเวลาได้ เอาอะไรดี
+        endRecur: '2024-07-29', 
       }));
       console.log("Events:", newEvents);
       setEvents(newEvents);
