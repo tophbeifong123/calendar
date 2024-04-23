@@ -28,10 +28,10 @@ export default function CustomCalendar({ details, events }: any) {
     <>
       <div className="flex flex-col mx-auto w-3/4">
         <div className="flex justify-center gap-4">
-          <label className="block mt-2 text-sm font-medium text-gray-900 dark:text-white items-center">
+          {/* <label className="block mt-2 text-sm font-medium text-gray-900 dark:text-white items-center">
             ปีการศึกษา
-          </label>
-          <select
+          </label> */}
+          {/* <select
             id="small"
             className="w-1/4 block  p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           >
@@ -52,9 +52,9 @@ export default function CustomCalendar({ details, events }: any) {
             <option selected>**โปรดเลือก**</option>
             <option value="1">1</option>
             <option value="2">2</option>
-          </select>
+          </select> */}
         </div>
-        <div className="w-full  bg-white p-10 rounded-2xl border-slate-950 drop-shadow-xl">
+        <div className="w-full  bg-white p-8 rounded-2xl border-slate-950 drop-shadow-xl">
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView={"dayGridMonth"}

@@ -6,16 +6,16 @@ import PSUImage from "../assets/icon/logo-psupassport.png";
 export function LoginNavbar() {
 
   return (
-    <Navbar fluid rounded>
+    <Navbar fluid rounded className="bg-sky-200-100">
       <Navbar.Brand href="/">
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
+        <span className="self-center whitespace-nowrap text-xl font-semibold ">
           <img
-          className="w-1/5"
+          className="w-1/6"
           src={PSUImage.src}
           alt="logo psu"/>
         </span>
       </Navbar.Brand>
-      <div className="flex md:order-2">
+      {/* <div className="flex md:order-2">
         <Dropdown
           arrowIcon={false}
           inline
@@ -29,7 +29,7 @@ export function LoginNavbar() {
         >
         </Dropdown>
         <Navbar.Toggle />
-      </div>
+      </div> */}
     </Navbar>
   );
 }

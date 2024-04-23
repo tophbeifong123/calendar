@@ -18,7 +18,7 @@ const Index = () => {
         <LoginNavbar />
       </div>
       <button
-        className="bg-blue-900 hover:bg-blue-800 text-white font-bold p-5 rounded-md ripple-effect w-50 transform transition-transform hover:scale-110 animate-bounce w-1/2"
+        className="bg-blue-900 hover:bg-blue-800 text-white font-bold p-4 rounded-md ripple-effect w-50 transform transition-transform hover:scale-110 animate-bounce w-1/5"
         onClick={() => auth.signinRedirect()}
       >
         <span className="flex items-center justify-center">

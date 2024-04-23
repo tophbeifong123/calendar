@@ -9,7 +9,9 @@ function Home() {
   const auth = useAuth();
   const [classDate, setClassDate] = useState<any>([]);
   const [events, setEvents] = useState<any[]>([]);
+  const [examDate, setExamDate] = useState<any[]>([]);
   const [studentDetails, setStudentDetails] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fectStudentDetail();
@@ -37,10 +39,11 @@ function Home() {
       }));
       console.log("Events:", newEvents);
       setEvents(newEvents);
-    }
-  }, [classDate]);
+    } 
+  }, [classDate, examDate]);
 
   const fectStudentDetail = async () => {
+    setLoading(true);
     if (!auth.user?.access_token) {
       console.error("Access token is not available");
       return;
@@ -58,19 +61,22 @@ function Home() {
       );
       setStudentDetails(result.data.data[0]);
       console.log("studentdetail", result.data.data[0]);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching student detail:", error);
+      setLoading(false);
     }
   };
 
   const fectStudentClassDate = async () => {
+    setLoading(true);
     if (!auth.user?.access_token) {
       console.error("Access token is not available");
       return;
     }
     try {
       const result = await axios.get(
-        `https://api-gateway.psu.ac.th/Test/regist/level2/StudentClassDate/token?eduTerm=1&eduYear=2564`,
+        `https://api-gateway.psu.ac.th/Test/regist/level2/StudentClassDate/token?eduTerm=1&eduYear=2563`,
         {
           headers: {
             credential: "api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF",
@@ -78,23 +84,41 @@ function Home() {
           },
         }
       );
+      const resultExam = await axios.get(
+        `https://api-gateway.psu.ac.th/Test/regist/level2/StudentExamdate/token?eduTerm=1&eduYear=2563&offset=0&limit=100`,
+        {
+          headers: {
+            credential: "api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF",
+            token: auth.user.access_token,
+          },
+        }
+      );
+      setExamDate(result.data.data)
       setClassDate(result.data.data);
+      setLoading(false);
 
-      console.log("classdate", result.data);
+      console.log("classDate", result.data);
+      console.log("examDate",resultExam.data);
     } catch (error) {
       console.error("Error fetching student detail:", error);
+      setLoading(false);
     }
   };
   
   return (
     <>
-      <CustomNavbar />
+    <CustomNavbar />
+    {loading ? ( 
+      <div className="flex justify-center items-center h-screen bg-gray-100">
+        loading....
+      </div>
+    ) : (
       <div className="flex justify-center items-center h-screen bg-gray-100">
         <SlideBar />
         <CustomCalendar details={studentDetails} events={events} />
-    
       </div>
-    </>
+    )}
+  </>
   );
 }
 

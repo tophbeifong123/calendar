@@ -35,9 +35,9 @@ export function CustomNavbar() {
     }
   };
   return (
-    <Navbar fluid rounded className="bg-blue-100">
+    <Navbar fluid rounded className="bg-blue-800 ">
       <Navbar.Brand href="/home">
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white ">
+        <span className="self-center whitespace-nowrap text-xl font-semibold ml-1">
           PSU Calendar
         </span>
       </Navbar.Brand>
