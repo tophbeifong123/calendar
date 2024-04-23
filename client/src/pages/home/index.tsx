@@ -4,6 +4,7 @@ import { CustomNavbar } from "@/components/Navbar";
 import { useAuth } from "react-oidc-context";
 import SlideBar from "@/components/SlideBar";
 import CustomCalendar from "@/components/Calendar";
+import DateTimePicker from "react-datetime-picker";
 function Home() {
   const auth = useAuth();
   const [classDate, setClassDate] = useState<any>([]);
@@ -91,6 +92,7 @@ function Home() {
       <div className="flex justify-center items-center h-screen bg-gray-100">
         <SlideBar />
         <CustomCalendar details={studentDetails} events={events} />
+    
       </div>
     </>
   );

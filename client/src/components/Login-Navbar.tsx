@@ -1,9 +1,6 @@
 "use client";
-import { useAuth } from "react-oidc-context";
-import axios from "axios";
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import PSUImage from "../assets/icon/logo-psupassport.png";
 
 export function LoginNavbar() {

@@ -2,8 +2,6 @@
 
 import { Sidebar } from "flowbite-react";
 import { FaCalendar } from "react-icons/fa";
-import { BiLogoGooglePlusCircle } from "react-icons/bi";
-import { FaGoogle } from "react-icons/fa6";
 import { AiFillCarryOut } from "react-icons/ai";
 export default function SlideBar() {
   return (
