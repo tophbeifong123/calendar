@@ -1,18 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useAuth } from "react-oidc-context";
 import PSUOauthImage from "../assets/icon/PSUOauth.svg";
 import { LoginNavbar } from "@/components/Login-Navbar";
+import { useRouter } from "next/router";
 
 const Index = () => {
   const auth = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (auth.isAuthenticated) {
+      router.push("/home");
+    }
+  }, [auth.isAuthenticated, router]);
 
   return (
     <div
-      className="flex justify-center items-center h-screen bg-cover bg-gradient-to-b from-sky-300 to-indigo-300 relative overflow-hidden"
-      style={{
-        // backgroundImage:
-        //   'url("https://lh3.googleusercontent.com/p/AF1QipOqN3E_kDF9cgadnUfOy0W5h3XRdsRclM4MR6t2=s1360-w1360-h1020")',
-      }}
+      className="flex justify-center items-center h-screen bg-cover relative overflow-hidden bg-gradient-to-r from-cyan-200 to-blue-200"
+      // style={{
+      //   // backgroundImage:
+      //   //   'url("https://lh3.googleusercontent.com/p/AF1QipOqN3E_kDF9cgadnUfOy0W5h3XRdsRclM4MR6t2=s1360-w1360-h1020")',
+      // }}
     >
       <div className="fixed top-0 w-full">
         <LoginNavbar />

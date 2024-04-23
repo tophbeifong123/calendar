@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { CustomNavbar } from "@/components/Navbar";
 import { useAuth } from "react-oidc-context";
@@ -12,6 +12,7 @@ function Home() {
   const [examDate, setExamDate] = useState<any[]>([]);
   const [studentDetails, setStudentDetails] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     fectStudentDetail();
@@ -107,14 +108,15 @@ function Home() {
   
   return (
     <>
-    <CustomNavbar />
+    <CustomNavbar/>
     {loading ? ( 
       <div className="flex justify-center items-center h-screen bg-gray-100">
         loading....
       </div>
     ) : (
-      <div className="flex justify-center items-center h-screen bg-gray-100">
-        <SlideBar />
+      
+      <div className="flex justify-center items-center h-screen bg-[#EEEEEE]">
+        {/* <SlideBar /> */}
         <CustomCalendar details={studentDetails} events={events} />
       </div>
     )}

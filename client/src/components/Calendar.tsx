@@ -26,35 +26,8 @@ export default function CustomCalendar({ details, events }: any) {
 
   return (
     <>
-      <div className="flex flex-col mx-auto w-3/4">
-        <div className="flex justify-center gap-4">
-          {/* <label className="block mt-2 text-sm font-medium text-gray-900 dark:text-white items-center">
-            ปีการศึกษา
-          </label> */}
-          {/* <select
-            id="small"
-            className="w-1/4 block  p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          >
-            <option selected>**โปรดเลือก**</option>
-            {years.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-          <label className="block mt-2 text-sm font-medium text-gray-900 dark:text-white items-center">
-            ภาคเรียน
-          </label>
-          <select
-            id="small"
-            className="w-1/4 block  p-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          >
-            <option selected>**โปรดเลือก**</option>
-            <option value="1">1</option>
-            <option value="2">2</option>
-          </select> */}
-        </div>
-        <div className="w-full  bg-white p-8 rounded-2xl border-slate-950 drop-shadow-xl">
+      <div className="flex justify-center items-center mx-auto w-full h-screen">
+        <div className="w-3/4 bg-white p-8 rounded-2xl border-slate-900 drop-shadow-xl">
           <FullCalendar
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
             initialView={"dayGridMonth"}
