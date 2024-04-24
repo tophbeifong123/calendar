@@ -8,7 +8,10 @@ import {
 } from "@supabase/auth-helpers-react";
 
 import LocaleUtils from "@date-io/date-fns";
-import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import {
+  KeyboardDateTimePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
 
 function Google() {
   const [start, setStart] = useState<Date | null>(new Date());
@@ -104,10 +107,10 @@ function Google() {
 
   return (
     <>
-    <MuiPickersUtilsProvider utils={LocaleUtils}>
-      <CustomNavbar />
-      <div className="flex h-screen bg-blue-50">
-         {/* <div className="flex justify-center gap-4">
+      <MuiPickersUtilsProvider utils={LocaleUtils}>
+        <CustomNavbar />
+        <div className="flex h-screen bg-blue-50">
+          {/* <div className="flex justify-center gap-4">
           <label className="block mt-2 text-sm font-medium text-gray-900 dark:text-white items-center">
             ปีการศึกษา
           </label>
@@ -134,93 +137,95 @@ function Google() {
             <option value="2">2</option>
           </select>
         </div> */}
-        <SlideBar />
-        <div className="bg-white p-10 rounded-xl drop-shadow-xl">
-          <h2 className="text-center">import Calendar</h2>
-          {session ? (
-            <>
-              <h2 className="text-2xl mb-4">Hey there {session.user.email}</h2>
-              <div className="mb-4">
-                <label
-                  htmlFor="start"
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                >
-                  Start of your event
-                </label>
-                 <KeyboardDateTimePicker
-                  label="Start Date and Time"
-                  value={start}
-                  onChange={handleStartChange}
-                  initialFocusedDate={null}
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="end"
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                >
-                  End of your event
-                </label>
-                <KeyboardDateTimePicker
-                  label="End Date and Time"
-                  value={end}
-                  onChange={handleEndChange}
-                  initialFocusedDate={null}
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="eventName"
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                >
-                  Event name
-                </label>
-                <input
-                  type="text"
-                  id="eventName"
-                  onChange={handleEventNameChange}
-                  className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  htmlFor="eventDescription"
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                >
-                  Event description
-                </label>
-                <input
-                  type="text"
-                  id="eventDescription"
-                  onChange={handleEventDescriptionChange}
-                  className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                />
-              </div>
-              <div className="flex justify-between">
-                <button
-                  onClick={() => createCalendarEvent()}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Create Calendar Event
-                </button>
-                <button
-                  onClick={() => signOut()}
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                >
-                  Sign Out
-                </button>
-              </div>
-            </>
-          ) : (
-            <button
-              onClick={() => googleSignIn()}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "
-            >
-              Sign In With Google
-            </button>
-          )}
+          {/* <SlideBar /> */}
+          <div className="bg-white p-10 rounded-xl drop-shadow-xl">
+            <h2 className="text-center">import Calendar</h2>
+            {session ? (
+              <>
+                <h2 className="text-2xl mb-4">
+                  Hey there {session.user.email}
+                </h2>
+                <div className="mb-4">
+                  <label
+                    htmlFor="start"
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                  >
+                    Start of your event
+                  </label>
+                  <KeyboardDateTimePicker
+                    label="Start Date and Time"
+                    value={start}
+                    onChange={handleStartChange}
+                    initialFocusedDate={null}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="end"
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                  >
+                    End of your event
+                  </label>
+                  <KeyboardDateTimePicker
+                    label="End Date and Time"
+                    value={end}
+                    onChange={handleEndChange}
+                    initialFocusedDate={null}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="eventName"
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                  >
+                    Event name
+                  </label>
+                  <input
+                    type="text"
+                    id="eventName"
+                    onChange={handleEventNameChange}
+                    className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label
+                    htmlFor="eventDescription"
+                    className="block text-gray-700 text-sm font-bold mb-2"
+                  >
+                    Event description
+                  </label>
+                  <input
+                    type="text"
+                    id="eventDescription"
+                    onChange={handleEventDescriptionChange}
+                    className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                </div>
+                <div className="flex justify-between">
+                  <button
+                    onClick={() => createCalendarEvent()}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  >
+                    Create Calendar Event
+                  </button>
+                  <button
+                    onClick={() => signOut()}
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </>
+            ) : (
+              <button
+                onClick={() => googleSignIn()}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "
+              >
+                Sign In With Google
+              </button>
+            )}
+          </div>
         </div>
-      </div>
       </MuiPickersUtilsProvider>
     </>
   );

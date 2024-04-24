@@ -13,7 +13,6 @@ function Home() {
   const [studentDetails, setStudentDetails] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-
   useEffect(() => {
     fectStudentDetail();
     fectStudentClassDate();
@@ -34,13 +33,13 @@ function Home() {
           4
         )}`,
         lecturer: `${item.lecturerNameThai}`,
-        startRecur: '2024-04-01',
-        endRecur: '2024-07-29', 
+        startRecur: "2024-04-01",
+        endRecur: "2024-07-29",
         section: `${item.section || "ไม่ระบุกลุ่ม"}`,
       }));
       console.log("Events:", newEvents);
       setEvents(newEvents);
-    } 
+    }
   }, [classDate, examDate]);
 
   const fectStudentDetail = async () => {
@@ -94,33 +93,32 @@ function Home() {
           },
         }
       );
-      setExamDate(result.data.data)
+      setExamDate(result.data.data);
       setClassDate(result.data.data);
       setLoading(false);
 
       console.log("classDate", result.data);
-      console.log("examDate",resultExam.data);
+      console.log("examDate", resultExam.data);
     } catch (error) {
       console.error("Error fetching student detail:", error);
       setLoading(false);
     }
   };
-  
+
   return (
     <>
-    <CustomNavbar/>
-    {loading ? ( 
-      <div className="flex justify-center items-center h-screen bg-gray-100">
-        loading....
-      </div>
-    ) : (
-      
-      <div className="flex justify-center items-center h-screen bg-[#EEEEEE]">
-        {/* <SlideBar /> */}
-        <CustomCalendar details={studentDetails} events={events} />
-      </div>
-    )}
-  </>
+      <CustomNavbar />
+      {loading ? (
+        <div className="flex justify-center items-center h-screen bg-gray-100">
+          loading....
+        </div>
+      ) : (
+        <div className="flex justify-center items-center h-screen bg-[#EEEEEE]">
+          {/* <SlideBar /> */}
+          <CustomCalendar details={studentDetails} events={events} />
+        </div>
+      )}
+    </>
   );
 }
 

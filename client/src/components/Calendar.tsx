@@ -5,7 +5,6 @@ import timeGridPlugin from "@fullcalendar/timegrid/index.js";
 import interactionPlugin from "@fullcalendar/interaction/index.js";
 import ModalInfo from "./ModalInfo";
 
-
 export default function CustomCalendar({ details, events }: any) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectEvent, setSelectEvents] = useState<any>(null);

@@ -4,15 +4,11 @@ import { useEffect, useState } from "react";
 import PSUImage from "../assets/icon/logo-psupassport.png";
 
 export function LoginNavbar() {
-
   return (
     <Navbar fluid rounded className="bg-[#DBE2EF]">
       <Navbar.Brand href="/">
         <span className="self-center whitespace-nowrap text-xl font-semibold ">
-          <img
-          className="w-1/6"
-          src={PSUImage.src}
-          alt="logo psu"/>
+          <img className="w-1/6" src={PSUImage.src} alt="logo psu" />
         </span>
       </Navbar.Brand>
       <div className="flex md:order-2">
@@ -26,8 +22,7 @@ export function LoginNavbar() {
               rounded
             />
           }
-        >
-        </Dropdown>
+        ></Dropdown>
         <Navbar.Toggle />
       </div>
     </Navbar>
