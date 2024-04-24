@@ -1,19 +1,16 @@
 "use client";
-import { useAuth } from "react-oidc-context";
-import axios from "axios";
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import PSUImage from "../assets/icon/logo-psupassport.png";
 
 export function LoginNavbar() {
 
   return (
-    <Navbar fluid rounded>
+    <Navbar fluid rounded className="bg-[#DBE2EF]">
       <Navbar.Brand href="/">
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
+        <span className="self-center whitespace-nowrap text-xl font-semibold ">
           <img
-          className="w-1/5"
+          className="w-1/6"
           src={PSUImage.src}
           alt="logo psu"/>
         </span>

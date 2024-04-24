@@ -2,8 +2,6 @@
 
 import { Sidebar } from "flowbite-react";
 import { FaCalendar } from "react-icons/fa";
-import { BiLogoGooglePlusCircle } from "react-icons/bi";
-import { FaGoogle } from "react-icons/fa6";
 import { AiFillCarryOut } from "react-icons/ai";
 export default function SlideBar() {
   return (
@@ -16,7 +14,7 @@ export default function SlideBar() {
           <Sidebar.Item
             href="/Google"
             icon={AiFillCarryOut}
-            label="Pro"
+            // label="Pro"
             labelColor="dark"
           >
             Google
