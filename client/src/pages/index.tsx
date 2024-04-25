@@ -17,10 +17,6 @@ const Index = () => {
   return (
     <div
       className="flex flex-col justify-center items-center h-screen bg-cover relative overflow-hidden bg-gradient-to-r from-cyan-200 to-blue-200"
-      // style={{
-      //   // backgroundImage:
-      //   //   'url("https://lh3.googleusercontent.com/p/AF1QipOqN3E_kDF9cgadnUfOy0W5h3XRdsRclM4MR6t2=s1360-w1360-h1020")',
-      // }}
     >
       <div className="fixed top-0 w-full">
         <LoginNavbar />

@@ -5,6 +5,7 @@ import { useAuth } from "react-oidc-context";
 import SlideBar from "@/components/SlideBar";
 import CustomCalendar from "@/components/Calendar";
 import DateTimePicker from "react-datetime-picker";
+
 function Home() {
   const auth = useAuth();
   const [classDate, setClassDate] = useState<any>([]);
@@ -14,8 +15,8 @@ function Home() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fectStudentDetail();
-    fectStudentClassDate();
+      fectStudentDetail();
+      fectStudentClassDate();
   }, [auth]);
 
   useEffect(() => {
@@ -33,7 +34,7 @@ function Home() {
           4
         )}`,
         lecturer: `${item.lecturerNameThai}`,
-        startRecur: "2024-04-01",
+        startRecur: `${item.startRecur}`,
         endRecur: "2024-07-29",
         section: `${item.section || "ไม่ระบุกลุ่ม"}`,
       }));
@@ -115,7 +116,7 @@ function Home() {
       ) : (
         <div className="flex justify-center items-center h-screen bg-[#EEEEEE]">
           {/* <SlideBar /> */}
-          <CustomCalendar details={studentDetails} events={events} />
+          <CustomCalendar user={auth.user?.profile} details={studentDetails} events={events} />
         </div>
       )}
     </>

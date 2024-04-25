@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import { createClient } from '@supabase/supabase-js';
 import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import { AuthProvider } from "react-oidc-context";
+import { ProfileProvider } from "@/contexts/Auth.context";
 
 const supabase = createClient(
   "https://zjzzsrjcmcwqdjzuhqal.supabase.co",
@@ -26,9 +27,11 @@ const oidcConfig = {
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider {...oidcConfig}>
-    <SessionContextProvider supabaseClient={supabase}>
-      <Component {...pageProps} />
-    </SessionContextProvider>
+      <SessionContextProvider supabaseClient={supabase}>
+        <ProfileProvider>
+          <Component {...pageProps} />
+        </ProfileProvider>
+      </SessionContextProvider>
     </AuthProvider>
   );
 }

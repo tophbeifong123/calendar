@@ -1,8 +1,8 @@
 "use client";
-import { useAuth } from "react-oidc-context";
+import { AuthContext, useAuth } from "react-oidc-context";
 import axios from "axios";
 import { Avatar, Dropdown, Navbar, Sidebar } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import PsuLogo from "../assets/icon/psuLogo1.png";
 import {
@@ -21,8 +21,9 @@ import {
   PowerIcon,
   XMarkIcon,
 } from "@heroicons/react/24/solid";
+import { ProfileAuthContext, ProfileProvider } from "@/contexts/Auth.context";
 
-export function CustomNavbar() {
+export function CustomNavbar({user}:any) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   interface profileImg {
     studentId: string;
@@ -30,29 +31,11 @@ export function CustomNavbar() {
   }
   const auth = useAuth();
   const [profileImg, setprofileImg] = useState<profileImg | null>(null);
-  useEffect(() => {
-    fectStudentDetail();
-  }, [auth]);
-  const fectStudentDetail = async () => {
-    if (!auth.user?.access_token) {
-      console.error("Access token is not available");
-      return;
-    }
-    try {
-      const result = await axios.get(
-        `https://api-gateway.psu.ac.th/Test/regist/level2/StudentImage/token`,
-        {
-          headers: {
-            credential: "api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF",
-            token: auth.user.access_token,
-          },
-        }
-      );
-      setprofileImg(result.data.data[0]);
-    } catch (error) {
-      console.error("Error fetching student detail:", error);
-    }
-  };
+  const value = useContext(ProfileAuthContext);
+
+  console.log("value",value);
+  console.log("test",auth.user?.profile)
+  
 
   const openDrawer = () => setIsDrawerOpen(true);
   const closeDrawer = () => setIsDrawerOpen(false);
@@ -85,13 +68,13 @@ export function CustomNavbar() {
             label={
               <Avatar
                 alt="User settings"
-                img={`data:image/png;base64,${profileImg?.pictureBase64}`}
+                img={`data:image/png;base64,${value?.pictureBase64}`}
                 rounded
               />
             }
           >
             <Dropdown.Header>
-              <span className="block text-sm">{profileImg?.studentId}</span>
+              <span className="block text-sm">{value?.studentId}</span>
             </Dropdown.Header>
             <Dropdown.Divider />
             <Link href="/">
