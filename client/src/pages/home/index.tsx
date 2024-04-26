@@ -10,22 +10,25 @@ import conf from "@/conf/main";
 function Home() {
   const auth = useAuth();
   const [classDate, setClassDate] = useState<any>([]);
-  const [events, setEvents] = useState<any[]>([]);
-  const [examDate, setExamDate] = useState<any[]>([]);
+  const [events, setEvents] = useState<any>({});
+  const [examDate, setExamDate] = useState<any>({});
   const [studentDetails, setStudentDetails] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-
+  const [loading, setLoading] = useState<boolean>(false);
+  const [startRecur, setStartRecur] = useState<any>({});
+  console.log("test1", examDate);
   useEffect(() => {
     if (auth.user?.access_token) {
       fectStudentDetail();
       fectStudentClassDate();
+      fectStartRecur();
+      // test();
     } else {
       console.log("No access token available");
     }
   }, [auth]);
 
   useEffect(() => {
-    if (classDate.length > 0) {
+    if (classDate.length > 0 && examDate.length > 0 && startRecur) {
       const newEvents = classDate.map((item: any) => ({
         title: `${item.subjectCode} ${item.subjectNameThai} (${item.subjectNameEng}) `,
         description: ` ${item.roomId || item.roomName || "ไม่ระบุห้องเรียน"}`,
@@ -39,8 +42,8 @@ function Home() {
           4
         )}`,
         lecturer: `${item.lecturerNameThai}`,
-        startRecur: `${item.startRecur}`,
-        endRecur: "2024-07-29",
+        startRecur: `${startRecur[0].startRecur}`,
+        endRecur: `${examDate[0].examDate.substring(0, 10)}T00:00:00`,
         section: `${item.section || "ไม่ระบุกลุ่ม"}`,
       }));
       console.log("Events:", newEvents);
@@ -74,6 +77,47 @@ function Home() {
     }
   };
 
+  const fectStartRecur = async () => {
+    setLoading(true);
+    if (auth.isAuthenticated) {
+      try {
+        const result = await axios.get(
+          `${conf.apiUrlPrefix}/schedules?eduYear=2563&eduTerm=1`
+        );
+        setStartRecur(result.data);
+        console.log("startRecur", result.data[0].startRecur);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching student detail:", error);
+        setLoading(false);
+      }
+    }
+  };
+
+  // const test = async () => {
+  //   setLoading(true);
+  //   if (!auth.user?.access_token) {
+  //     console.error("Access token is not available");
+  //     return;
+  //   }
+  //   try {
+  //     const result = await axios.get(
+  //       `http://localhost:1337/api/fetch-student-class-date
+  //         `,
+  //       {
+  //         headers: {
+  //           token: auth.user.access_token,
+  //         },
+  //       }
+  //     );
+  //     console.log("testtttttt", result);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error("Error fetching student detail:", error);
+  //     setLoading(false);
+  //   }
+  // };
+
   const fectStudentClassDate = async () => {
     setLoading(true);
     if (!auth.user?.access_token) {
@@ -91,7 +135,7 @@ function Home() {
         }
       );
       const resultExam = await axios.get(
-        `https://api-gateway.psu.ac.th/Test/regist/level2/StudentExamdate/token?eduTerm=1&eduYear=2563&offset=0&limit=100`,
+        `https://api-gateway.psu.ac.th/Test/regist/level2/StudentExamdate/token?eduTerm=1&eduYear=2563&offset=0&limit=20`,
         {
           headers: {
             credential: "api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF",
@@ -99,12 +143,11 @@ function Home() {
           },
         }
       );
-      setExamDate(result.data.data);
+      setExamDate(resultExam.data.data);
       setClassDate(result.data.data);
       setLoading(false);
-
-      console.log("classDate", result.data);
-      console.log("examDate", resultExam.data);
+      console.log("classDate", result.data.data);
+      console.log("examDate", resultExam.data.data);
     } catch (error) {
       console.error("Error fetching student detail:", error);
       setLoading(false);
@@ -120,10 +163,7 @@ function Home() {
         </div>
       ) : (
         <div className="flex justify-center items-center h-screen bg-[#EEEEEE]">
-          <CustomCalendar
-            details={studentDetails}
-            events={events}
-          />
+          <CustomCalendar details={studentDetails} events={events} />
         </div>
       )}
     </>
