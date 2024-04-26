@@ -6,6 +6,8 @@ import SlideBar from "@/components/SlideBar";
 import CustomCalendar from "@/components/Calendar";
 import DateTimePicker from "react-datetime-picker";
 import conf from "@/conf/main";
+import { useRouter } from "next/router";
+import { FooterComponent } from "@/components/Footer";
 
 function Home() {
   const auth = useAuth();
@@ -15,6 +17,7 @@ function Home() {
   const [studentDetails, setStudentDetails] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [startRecur, setStartRecur] = useState<any>({});
+  const app = useRouter();
   console.log("test1", examDate);
   useEffect(() => {
     setLoading(true)
@@ -24,12 +27,11 @@ function Home() {
       fectStartRecur();
       setLoading(false)
     } else {
+      app.push("/")
       console.log("No access token available");
       setLoading(false)
     }
   }, [auth]);
-
-
 
   useEffect(() => {
     if (classDate.length > 0 && examDate.length > 0 && startRecur) {
@@ -142,13 +144,20 @@ function Home() {
     <>
       <CustomNavbar />
       {loading ? (
+        <>
         <div className="flex justify-center items-center h-screen bg-gray-100">
           loading....
         </div>
+        <FooterComponent/>
+        </>
       ) : (
+        <>
         <div className="flex justify-center items-center h-screen bg-[#EEEEEE]">
           <CustomCalendar details={studentDetails} events={events} />
         </div>
+        <FooterComponent/>
+
+        </>
       )}
     </>
   );

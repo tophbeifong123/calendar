@@ -5,7 +5,8 @@ import timeGridPlugin from "@fullcalendar/timegrid/index.js";
 import interactionPlugin from "@fullcalendar/interaction/index.js";
 import ModalInfo from "./ModalInfo";
 import Addevent from "./Addevent";
-
+import listPlugin from '@fullcalendar/list';
+import bootstrapPlugin from '@fullcalendar/bootstrap';
 export default function CustomCalendar({ details, events }: any) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectEvent, setSelectEvents] = useState<any>(null);
@@ -56,22 +57,24 @@ export default function CustomCalendar({ details, events }: any) {
           <Addevent />
           add calendar
         </div>
-        <div className="w-3/4 bg-white p-8 rounded-2xl border-slate-900 drop-shadow-xl z-0">
+        <div className="w-5/6 bg-white p-7 rounded-3xl border-slate-900 drop-shadow-2xl z-0">
           <FullCalendar
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
             initialView={"dayGridMonth"}
             headerToolbar={{
               left: "prev,next today",
               center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth",
+              right: "dayGridMonth,timeGridWeek,timeGridDay",
             }}
-            height={"60vh"}
+            height={"80vh"}
             events={events}
             eventClick={handleEventClick}
             initialDate={initialDate}
             dateClick={handleDateClick}
             selectable={true}
             select={handleSelectedDates}
+            themeSystem= 'default'
+            navLinks= {true}
           />
           <ModalInfo
             event={selectEvent}

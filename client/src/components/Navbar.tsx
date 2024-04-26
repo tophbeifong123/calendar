@@ -77,11 +77,11 @@ export function CustomNavbar() {
               <span className="block text-sm">{value?.studentId}</span>
             </Dropdown.Header>
             <Dropdown.Divider />
-            {/* <Link href="/">
+            <Link href="/">
               <Dropdown.Item onClick={() => auth.signoutRedirect()}>
                 Sign out
               </Dropdown.Item>
-            </Link> */}
+            </Link>
           </Dropdown>
           <Navbar.Toggle />
         </div>
