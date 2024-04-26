@@ -10,16 +10,41 @@ export default function CustomCalendar({ details, events }: any) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectEvent, setSelectEvents] = useState<any>(null);
   const [years, setYears] = useState<number[]>([]);
+  const [initialDate, setInitialDate] = useState<string>("2020-07-01");
+  const [newEvent, setNewEvent] = useState<any>([]);
 
   const handleEventClick = (clickInfo: any) => {
     setSelectEvents(clickInfo.event);
     setModalOpen(true);
   };
 
+  const handleDateClick = (arg: any) => {
+    alert(arg.dateStr);
+  };
+
+  const handleSelectedDates = (info: any) => {
+    alert("selected " + info.startStr + " to " + info.endStr);
+    const title = prompt("What's the name of the title");
+    console.log(info);
+    if (title != null) {
+      const newEventData = {
+        title,
+        start: info.startStr,
+        end: info.endStr,
+      };
+      const updatedEvents = [...events, newEventData];
+      setNewEvent(updatedEvents);
+      console.log("here", updatedEvents);
+    } else {
+      console.log("nothing");
+    }
+  };
+
   useEffect(() => {
     if (details && details.admitYear) {
       const initialYear = parseInt(details.admitYear);
       const yearsArray = Array.from({ length: 8 }, (_, i) => initialYear + i);
+
       setYears(yearsArray);
     }
   }, [details]);
@@ -28,28 +53,32 @@ export default function CustomCalendar({ details, events }: any) {
     <>
       <div className="flex justify-center items-center mx-auto w-full h-screen">
         <div className="relative right-20 bottom-20 flex flex-col	items-center space-y-12">
-          <Addevent/>
-            add calendar
+          <Addevent />
+          add calendar
         </div>
-          <div className="w-3/4 bg-white p-8 rounded-2xl border-slate-900 drop-shadow-xl z-0">
-            <FullCalendar
-              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-              initialView={"dayGridMonth"}
-              headerToolbar={{
-                start: "dayGridMonth,timeGridWeek,timeGridDay",
-                center: "title",
-                end: "today prev,next",
-              }}
-              height={"60vh"}
-              events={events}
-              eventClick={handleEventClick}
-            />
-            <ModalInfo
-              event={selectEvent}
-              openModal={modalOpen}
-              onClose={() => setModalOpen(false)}
-            />
-          </div>
+        <div className="w-3/4 bg-white p-8 rounded-2xl border-slate-900 drop-shadow-xl z-0">
+          <FullCalendar
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            initialView={"dayGridMonth"}
+            headerToolbar={{
+              left: "prev,next today",
+              center: "title",
+              right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth",
+            }}
+            height={"60vh"}
+            events={events}
+            eventClick={handleEventClick}
+            initialDate={initialDate}
+            dateClick={handleDateClick}
+            selectable={true}
+            select={handleSelectedDates}
+          />
+          <ModalInfo
+            event={selectEvent}
+            openModal={modalOpen}
+            onClose={() => setModalOpen(false)}
+          />
+        </div>
       </div>
     </>
   );

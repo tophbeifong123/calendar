@@ -29,7 +29,7 @@ function Home() {
 
   useEffect(() => {
     if (classDate.length > 0 && examDate.length > 0 && startRecur) {
-      const newEvents = classDate.map((item: any) => ({
+      const newEventsFromClass = classDate.map((item: any) => ({
         title: `${item.subjectCode} ${item.subjectNameThai} (${item.subjectNameEng}) `,
         description: ` ${item.roomId || item.roomName || "ไม่ระบุห้องเรียน"}`,
         daysOfWeek: [item.classDate],
@@ -46,8 +46,33 @@ function Home() {
         endRecur: `${examDate[0].examDate.substring(0, 10)}T00:00:00`,
         section: `${item.section || "ไม่ระบุกลุ่ม"}`,
       }));
-      console.log("Events:", newEvents);
-      setEvents(newEvents);
+
+      const newEventsFromExam = examDate.map((item: any) => ({
+        title: `${item.subjectCode} ${item.subjectNameThai} (${item.subjectNameEng}) `,
+        description: ` ${item.roomId || item.roomName || "ไม่ระบุห้องเรียน"}`,
+        examTypeDesc: `${item.examTypeDesc}`,
+        examdateTypeDesc: `${item.examdateTypeDesc}`,
+        start: `${item.examDate.substring(
+          0,
+          10
+        )}T${item.examStartTime.substring(0, 2)}:${item.examStartTime.substring(
+          2,
+          4
+        )}`,
+        end: `${item.examDate.substring(
+          0,
+          10
+        )}T${item.examStopTime.substring(0, 2)}:${item.examStopTime.substring(
+          2,
+          4
+        )}`,
+        section: `${item.section || "ไม่ระบุกลุ่ม"}`,
+        backgroundColor: "#00ADB5",
+      }));
+      const mergedEvents = [...newEventsFromClass, ...newEventsFromExam];
+      setEvents(mergedEvents);
+
+      console.log("MergeEvents", mergedEvents);
     }
   }, [classDate, examDate]);
 
@@ -93,30 +118,6 @@ function Home() {
       }
     }
   };
-
-  // const test = async () => {
-  //   setLoading(true);
-  //   if (!auth.user?.access_token) {
-  //     console.error("Access token is not available");
-  //     return;
-  //   }
-  //   try {
-  //     const result = await axios.get(
-  //       `http://localhost:1337/api/fetch-student-class-date
-  //         `,
-  //       {
-  //         headers: {
-  //           token: auth.user.access_token,
-  //         },
-  //       }
-  //     );
-  //     console.log("testtttttt", result);
-  //     setLoading(false);
-  //   } catch (error) {
-  //     console.error("Error fetching student detail:", error);
-  //     setLoading(false);
-  //   }
-  // };
 
   const fectStudentClassDate = async () => {
     setLoading(true);
