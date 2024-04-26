@@ -5,6 +5,7 @@ import { useAuth } from "react-oidc-context";
 import SlideBar from "@/components/SlideBar";
 import CustomCalendar from "@/components/Calendar";
 import DateTimePicker from "react-datetime-picker";
+import conf from "@/conf/main";
 
 function Home() {
   const auth = useAuth();
@@ -15,8 +16,12 @@ function Home() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (auth.user?.access_token) {
       fectStudentDetail();
       fectStudentClassDate();
+    } else {
+      console.log("No access token available");
+    }
   }, [auth]);
 
   useEffect(() => {
@@ -115,8 +120,10 @@ function Home() {
         </div>
       ) : (
         <div className="flex justify-center items-center h-screen bg-[#EEEEEE]">
-          {/* <SlideBar /> */}
-          <CustomCalendar user={auth.user?.profile} details={studentDetails} events={events} />
+          <CustomCalendar
+            details={studentDetails}
+            events={events}
+          />
         </div>
       )}
     </>

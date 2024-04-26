@@ -30,7 +30,7 @@ export class ApiController {
   }
 
   @Get('fetch-student-class-date')
-  async fetchStudentClassDate(@Headers('token') token: string) {
+  async fetchStudentClassDate(@Headers('token') token: any) {
     return this.apiService.fectStudentClassDate(token);
   }
 }
