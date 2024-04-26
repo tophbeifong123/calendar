@@ -46,7 +46,7 @@ export function CustomNavbar() {
         <Navbar.Brand>
           <IconButton
             variant="text"
-            size="small"
+            size="md" // Fixed size prop
             onClick={openDrawer}
             className="mr-2"
             style={{ color: "#EEEEEE" }}
@@ -77,11 +77,11 @@ export function CustomNavbar() {
               <span className="block text-sm">{value?.studentId}</span>
             </Dropdown.Header>
             <Dropdown.Divider />
-            <Link href="/">
+            {/* <Link href="/">
               <Dropdown.Item onClick={() => auth.signoutRedirect()}>
                 Sign out
               </Dropdown.Item>
-            </Link>
+            </Link> */}
           </Dropdown>
           <Navbar.Toggle />
         </div>
@@ -94,31 +94,25 @@ export function CustomNavbar() {
               Calendar
             </Typography>
           </div>
-          <List>
-            <Link href="/home">
+          <List> 
               <ListItem>
                 <ListItemPrefix>
                   <CalendarDaysIcon className="h-5 w-5" />
                 </ListItemPrefix>
-                Calendar
+                <a href="/home">Calendar</a>
               </ListItem>
-            </Link>
-            <Link href="/Google">
               <ListItem>
                 <ListItemPrefix>
                   <LinkIcon className="h-5 w-5" />
                 </ListItemPrefix>
-                Google
+                <a href="/Google">Google</a>
               </ListItem>
-            </Link>
-            <Link href="/">
               <ListItem>
                 <ListItemPrefix>
                   <PowerIcon className="h-5 w-5" />
                 </ListItemPrefix>
-                <a onClick={() => auth.signoutRedirect()}>Sign Out</a>
+                <a href="/" onClick={() => auth.signoutRedirect()}>Sign Out</a>
               </ListItem>
-            </Link>
           </List>
         </Card>
       </Drawer>
