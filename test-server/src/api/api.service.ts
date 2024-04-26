@@ -48,11 +48,83 @@ export class ApiService {
         },
       ).toPromise();
 
-      console.log('classdate', response.data);
       return response.data.data;
     } catch (error) {
-      console.error('Error fetching student detail:', error);
-      throw new Error('Failed to fetch student detail');
+      console.error('Error fectStudentClassDate:', error);
+      throw new Error('Failed to fectStudentClassDate');
+    }
+  }
+
+  async fectStudentExamDate(token: string) {
+    if (!token) {
+      console.error("Access token is not available");
+      return;
+    }
+    try {
+      const response = await this.http.get(
+        'https://api-gateway.psu.ac.th/Test/regist/level2/StudentExamdate/token',
+        {
+          headers: {
+            credential: 'api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF',
+            token: token,
+          },
+          params: {
+            eduTerm: '1',
+            eduYear: '2563',
+            offset: '0',
+            limit: '20'
+          },
+        },
+      ).toPromise();
+
+      return response.data.data;
+    } catch (error) {
+      console.error('Error fectStudentExamDate:', error);
+      throw new Error('Failed to fectStudentExamDate');
+    }
+  }
+
+  async fectStudentDetail(token: string) {
+    if (!token) {
+      console.error("Access token is not available");
+      return;
+    }
+    try {
+      const response = await this.http.get(
+        'https://api-gateway.psu.ac.th/Test/regist/level2/StudentDetail/token',
+        {
+          headers: {
+            credential: 'api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF',
+            token: token,
+          },
+        },
+      ).toPromise();
+      return response.data.data;
+    } catch (error) {
+      console.error('Error fectStudentDetail:', error);
+      throw new Error('Failed to fectStudentDetail');
+    }
+  }
+
+  async fectStudentImage(token: string) {
+    if (!token) {
+      console.error("Access token is not available");
+      return;
+    }
+    try {
+      const response = await this.http.get(
+        'https://api-gateway.psu.ac.th/Test/regist/level2/StudentImage/token',
+        {
+          headers: {
+            credential: 'api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF',
+            token: token,
+          },
+        },
+      ).toPromise();
+      return response.data.data;
+    } catch (error) {
+      console.error('Error fectStudentImage:', error);
+      throw new Error('Failed to fectStudentImage');
     }
   }
 

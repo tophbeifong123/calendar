@@ -5,8 +5,8 @@ import DateFnsUtils from '@date-io/date-fns'; // Use the date management library
 
 function Addevent() {
   const [modalOpen, setModalOpen] = useState(false);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState<any>(null);
+  const [endDate, setEndDate] = useState<any>(null);
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>

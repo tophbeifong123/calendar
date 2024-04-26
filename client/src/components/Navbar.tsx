@@ -23,12 +23,12 @@ import {
 } from "@heroicons/react/24/solid";
 import { ProfileAuthContext, ProfileProvider } from "@/contexts/Auth.context";
 
-export function CustomNavbar({user}:any) {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  interface profileImg {
-    studentId: string;
-    pictureBase64: string;
-  }
+interface profileImg {
+  studentId: string;
+  pictureBase64: string;
+}
+export function CustomNavbar() {
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const auth = useAuth();
   const [profileImg, setprofileImg] = useState<profileImg | null>(null);
   const value = useContext(ProfileAuthContext);
@@ -46,7 +46,7 @@ export function CustomNavbar({user}:any) {
         <Navbar.Brand>
           <IconButton
             variant="text"
-            size="medium"
+            size="small"
             onClick={openDrawer}
             className="mr-2"
             style={{ color: "#EEEEEE" }}

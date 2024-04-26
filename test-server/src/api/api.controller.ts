@@ -33,4 +33,19 @@ export class ApiController {
   async fetchStudentClassDate(@Headers('token') token: any) {
     return this.apiService.fectStudentClassDate(token);
   }
+
+  @Get('fetch-student-exam-date')
+  async fetchStudentExamDate(@Headers('token') token: any) {
+    return this.apiService.fectStudentExamDate(token);
+  }
+
+  @Get('fetch-student-detail')
+  async fetchStudentDetail(@Headers('token') token: any) {
+    return this.apiService.fectStudentDetail(token);
+  }
+
+  @Get('fetch-student-image')
+  async fetchStudentImage(@Headers('token') token: any) {
+    return this.apiService.fectStudentImage(token);
+  }
 }

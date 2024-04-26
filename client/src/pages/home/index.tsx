@@ -9,23 +9,27 @@ import conf from "@/conf/main";
 
 function Home() {
   const auth = useAuth();
-  const [classDate, setClassDate] = useState<any>([]);
+  const [classDate, setClassDate] = useState<any[]>([]);
   const [events, setEvents] = useState<any>({});
-  const [examDate, setExamDate] = useState<any>({});
+  const [examDate, setExamDate] = useState<any[]>([]);
   const [studentDetails, setStudentDetails] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [startRecur, setStartRecur] = useState<any>({});
   console.log("test1", examDate);
   useEffect(() => {
+    setLoading(true)
     if (auth.user?.access_token) {
       fectStudentDetail();
       fectStudentClassDate();
       fectStartRecur();
-      // test();
+      setLoading(false)
     } else {
       console.log("No access token available");
+      setLoading(false)
     }
   }, [auth]);
+
+
 
   useEffect(() => {
     if (classDate.length > 0 && examDate.length > 0 && startRecur) {
@@ -67,7 +71,7 @@ function Home() {
           4
         )}`,
         section: `${item.section || "ไม่ระบุกลุ่ม"}`,
-        backgroundColor: "#00ADB5",
+        backgroundColor: "#FF6500",
       }));
       const mergedEvents = [...newEventsFromClass, ...newEventsFromExam];
       setEvents(mergedEvents);
@@ -77,33 +81,23 @@ function Home() {
   }, [classDate, examDate]);
 
   const fectStudentDetail = async () => {
-    setLoading(true);
-    if (!auth.user?.access_token) {
-      console.error("Access token is not available");
-      return;
-    }
     try {
       const result = await axios.get(
-        `https://api-gateway.psu.ac.th/Test/regist/level2/StudentDetail/token
-          `,
+        `${conf.apiUrlPrefix}/api/fetch-student-detail`,
         {
           headers: {
-            credential: "api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF",
-            token: auth.user.access_token,
+            token: auth.user?.access_token,
           },
         }
       );
       setStudentDetails(result.data.data[0]);
       console.log("studentdetail", result.data.data[0]);
-      setLoading(false);
     } catch (error) {
       console.error("Error fetching student detail:", error);
-      setLoading(false);
     }
   };
 
   const fectStartRecur = async () => {
-    setLoading(true);
     if (auth.isAuthenticated) {
       try {
         const result = await axios.get(
@@ -111,47 +105,36 @@ function Home() {
         );
         setStartRecur(result.data);
         console.log("startRecur", result.data[0].startRecur);
-        setLoading(false);
       } catch (error) {
-        console.error("Error fetching student detail:", error);
-        setLoading(false);
+        console.error("Error fetching StartRecur:", error);
       }
     }
   };
 
   const fectStudentClassDate = async () => {
-    setLoading(true);
-    if (!auth.user?.access_token) {
-      console.error("Access token is not available");
-      return;
-    }
     try {
       const result = await axios.get(
-        `https://api-gateway.psu.ac.th/Test/regist/level2/StudentClassDate/token?eduTerm=1&eduYear=2563`,
+        `${conf.apiUrlPrefix}/api/fetch-student-class-date`,
         {
           headers: {
-            credential: "api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF",
-            token: auth.user.access_token,
+            token: auth.user?.access_token,
           },
         }
       );
       const resultExam = await axios.get(
-        `https://api-gateway.psu.ac.th/Test/regist/level2/StudentExamdate/token?eduTerm=1&eduYear=2563&offset=0&limit=20`,
+        `${conf.apiUrlPrefix}/api/fetch-student-exam-date`,
         {
           headers: {
-            credential: "api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF",
-            token: auth.user.access_token,
+            token: auth.user?.access_token,
           },
         }
       );
-      setExamDate(resultExam.data.data);
-      setClassDate(result.data.data);
-      setLoading(false);
-      console.log("classDate", result.data.data);
-      console.log("examDate", resultExam.data.data);
+      setClassDate(result.data);
+      setExamDate(resultExam.data);
+      console.log("classDate", result.data);
+      console.log("examDate1", resultExam.data);
     } catch (error) {
       console.error("Error fetching student detail:", error);
-      setLoading(false);
     }
   };
 
