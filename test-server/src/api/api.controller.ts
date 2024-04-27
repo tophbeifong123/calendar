@@ -64,4 +64,9 @@ export class ApiController {
   async fetchStudentImage(@Headers('token') token: any) {
     return this.apiService.fectStudentImage(token);
   }
+
+  @Get('psu')
+  async allApiTest(@Headers('token') token: string,@Headers('url') url: string) {
+    return this.apiService.restApi(token,url);
+  }
 }
