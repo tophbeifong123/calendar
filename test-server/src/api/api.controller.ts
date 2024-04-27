@@ -1,11 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Headers } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Headers,
+  Query,
+} from '@nestjs/common';
 import { ApiService } from './api.service';
 import { CreateApiDto } from './dto/create-api.dto';
 import { UpdateApiDto } from './dto/update-api.dto';
 
 @Controller('api')
 export class ApiController {
-  constructor(private readonly apiService: ApiService) { }
+  constructor(private readonly apiService: ApiService) {}
 
   @Post()
   create(@Body() createApiDto: CreateApiDto) {
@@ -16,8 +26,6 @@ export class ApiController {
   findAll() {
     return this.apiService.findAll();
   }
-
-
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateApiDto: UpdateApiDto) {
@@ -30,13 +38,21 @@ export class ApiController {
   }
 
   @Get('fetch-student-class-date')
-  async fetchStudentClassDate(@Headers('token') token: any) {
-    return this.apiService.fectStudentClassDate(token);
+  async fetchStudentClassDate(
+    @Headers('token') token: string,
+    @Query('eduTerm') eduTerm: string,
+    @Query('eduYear') eduYear: string,
+  ) {
+    return this.apiService.fectStudentClassDate(token, eduTerm, eduYear);
   }
 
   @Get('fetch-student-exam-date')
-  async fetchStudentExamDate(@Headers('token') token: any) {
-    return this.apiService.fectStudentExamDate(token);
+  async fetchStudentExamDate(
+    @Headers('token') token: string,
+    @Query('eduTerm') eduTerm: string,
+    @Query('eduYear') eduYear: string,
+  ) {
+    return this.apiService.fectStudentExamDate(token, eduTerm, eduYear);
   }
 
   @Get('fetch-student-detail')

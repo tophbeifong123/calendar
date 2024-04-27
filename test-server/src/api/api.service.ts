@@ -28,12 +28,13 @@ export class ApiService {
     return `This action removes a #${id} api`;
   }
 
-  async fectStudentClassDate(token: string) {
+  async fectStudentClassDate(token: string, eduTerm: string, eduYear: string) {
     if (!token) {
       console.error("Access token is not available");
       return;
     }
     try {
+      console.log(eduTerm,eduYear)
       const response = await this.http.get(
         'https://api-gateway.psu.ac.th/Test/regist/level2/StudentClassDate/token',
         {
@@ -42,8 +43,8 @@ export class ApiService {
             token: token,
           },
           params: {
-            eduTerm: '1',
-            eduYear: '2563',
+            eduTerm: eduTerm,
+            eduYear: eduYear,
           },
         },
       ).toPromise();
@@ -55,7 +56,7 @@ export class ApiService {
     }
   }
 
-  async fectStudentExamDate(token: string) {
+  async fectStudentExamDate(token: string, eduTerm: string, eduYear: string) {
     if (!token) {
       console.error("Access token is not available");
       return;
@@ -69,8 +70,8 @@ export class ApiService {
             token: token,
           },
           params: {
-            eduTerm: '1',
-            eduYear: '2563',
+            eduTerm: eduTerm,
+            eduYear: eduYear,
             offset: '0',
             limit: '20'
           },

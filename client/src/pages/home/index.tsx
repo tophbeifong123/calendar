@@ -116,7 +116,7 @@ function Home() {
   const fectStudentClassDate = async () => {
     try {
       const result = await axios.get(
-        `${conf.apiUrlPrefix}/api/fetch-student-class-date`,
+        `${conf.apiUrlPrefix}/api/fetch-student-class-date?eduYear=2563&eduTerm=1`,
         {
           headers: {
             token: auth.user?.access_token,
@@ -124,7 +124,7 @@ function Home() {
         }
       );
       const resultExam = await axios.get(
-        `${conf.apiUrlPrefix}/api/fetch-student-exam-date`,
+        `${conf.apiUrlPrefix}/api/fetch-student-exam-date?eduYear=2563&eduTerm=1`,
         {
           headers: {
             token: auth.user?.access_token,
