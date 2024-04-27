@@ -20,21 +20,27 @@ function Home() {
   const app = useRouter();
   console.log("test1", examDate);
   useEffect(() => {
-    if (auth.user?.access_token) {
-      setLoading(true)
+    if (auth.isAuthenticated) {
+      setLoading(true);
       fectStudentDetail();
       fectStudentClassDate();
       fectStartRecur();
-      setLoading(false)
+      setLoading(false);
     } else {
       // app.push("/")
       console.log("No access token available");
-      setLoading(false)
+      setLoading(false);
     }
   }, [auth]);
 
   useEffect(() => {
     if (classDate.length > 0 && examDate.length > 0 && startRecur) {
+      const maxExamDate = examDate.reduce((maxDate, currentDate) => {
+        const currentExamDate = new Date(currentDate.examDate);
+        const maxExamDate = new Date(maxDate.examDate);
+        return currentExamDate > maxExamDate ? currentDate : maxDate;
+      }, examDate[0]);
+      console.log("MaxStopRecur", maxExamDate);
       const newEventsFromClass = classDate.map((item: any) => ({
         title: `${item.subjectCode} ${item.subjectNameThai} (${item.subjectNameEng}) `,
         description: ` ${item.roomId || item.roomName || "ไม่ระบุห้องเรียน"}`,
@@ -49,7 +55,7 @@ function Home() {
         )}`,
         lecturer: `${item.lecturerNameThai}`,
         startRecur: `${startRecur[0].startRecur}`,
-        endRecur: `${examDate[0].examDate.substring(0, 10)}T00:00:00`,
+        endRecur: `${maxExamDate.examDate.substring(0, 10)}T00:00:00`,
         section: `${item.section || "ไม่ระบุกลุ่ม"}`,
       }));
 
@@ -65,13 +71,10 @@ function Home() {
           2,
           4
         )}`,
-        end: `${item.examDate.substring(
+        end: `${item.examDate.substring(0, 10)}T${item.examStopTime.substring(
           0,
-          10
-        )}T${item.examStopTime.substring(0, 2)}:${item.examStopTime.substring(
-          2,
-          4
-        )}`,
+          2
+        )}:${item.examStopTime.substring(2, 4)}`,
         section: `${item.section || "ไม่ระบุกลุ่ม"}`,
         backgroundColor: "#FF6500",
       }));
@@ -145,18 +148,17 @@ function Home() {
       <CustomNavbar />
       {loading ? (
         <>
-        <div className="flex justify-center items-center h-screen bg-gray-100">
-          loading....
-        </div>
-        <FooterComponent/>
+          <div className="flex justify-center items-center h-screen bg-[#EEEEEE]">
+            loading....
+          </div>
+          <FooterComponent />
         </>
       ) : (
         <>
-        <div className="flex justify-center items-center h-screen bg-[#EEEEEE]">
-          <CustomCalendar details={studentDetails} events={events} />
-        </div>
-        <FooterComponent/>
-
+          <div className="flex justify-center items-center h-screen bg-[#EEEEEE]">
+            <CustomCalendar details={studentDetails} events={events} />
+          </div>
+          <FooterComponent />
         </>
       )}
     </>
