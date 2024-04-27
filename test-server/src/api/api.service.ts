@@ -5,8 +5,11 @@ import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class ApiService {
-  constructor(private http: HttpService) { }
-
+  private readonly credential: string;
+  constructor(private http: HttpService) { 
+    this.credential = 'api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF';
+   }
+  
 
   create(createApiDto: CreateApiDto) {
     return 'This action adds a new api';
@@ -39,7 +42,7 @@ export class ApiService {
         'https://api-gateway.psu.ac.th/Test/regist/level2/StudentClassDate/token',
         {
           headers: {
-            credential: 'api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF',
+            credential: this.credential,
             token: token,
           },
           params: {
@@ -66,7 +69,7 @@ export class ApiService {
         'https://api-gateway.psu.ac.th/Test/regist/level2/StudentExamdate/token',
         {
           headers: {
-            credential: 'api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF',
+            credential: this.credential,
             token: token,
           },
           params: {
@@ -95,7 +98,7 @@ export class ApiService {
         'https://api-gateway.psu.ac.th/Test/regist/level2/StudentDetail/token',
         {
           headers: {
-            credential: 'api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF',
+            credential: this.credential,
             token: token,
           },
         },
@@ -117,7 +120,7 @@ export class ApiService {
         'https://api-gateway.psu.ac.th/Test/regist/level2/StudentImage/token',
         {
           headers: {
-            credential: 'api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF',
+            credential: this.credential,
             token: token,
           },
         },

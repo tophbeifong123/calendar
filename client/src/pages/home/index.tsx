@@ -20,14 +20,14 @@ function Home() {
   const app = useRouter();
   console.log("test1", examDate);
   useEffect(() => {
-    setLoading(true)
     if (auth.user?.access_token) {
+      setLoading(true)
       fectStudentDetail();
       fectStudentClassDate();
       fectStartRecur();
       setLoading(false)
     } else {
-      app.push("/")
+      // app.push("/")
       console.log("No access token available");
       setLoading(false)
     }
