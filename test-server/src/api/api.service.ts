@@ -132,4 +132,26 @@ export class ApiService {
     }
   }
 
+  async restApi(token: string,url: string) {
+    if (!token) {
+      console.error("Access token is not available");
+      return;
+    }
+    try {
+      const response = await this.http.get(
+        `https://api-gateway.psu.ac.th/Test/regist/${url}`,
+        {
+          headers: {
+            credential: this.credential,
+            token: token,
+          },
+        },
+      ).toPromise();
+      return response.data.data;
+    } catch (error) {
+      console.error('Error fectStudentImage:', error);
+      throw new Error('Failed to fectStudentImage');
+    }
+  }
+
 }
