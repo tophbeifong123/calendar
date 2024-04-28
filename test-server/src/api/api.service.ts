@@ -154,4 +154,19 @@ export class ApiService {
     }
   }
 
+  async fectHolidayFromGoogle() {
+    try {
+      const response = await this.http.get(
+        `https://www.googleapis.com/calendar/v3/calendars/th.th%23holiday%40group.v.calendar.google.com/events?key=AIzaSyCh0pb-GeZ9Kd1YtbT_FLCZKIQ5lhFBS1k`,
+        {
+
+        },
+      ).toPromise();
+      return response.data;
+    } catch (error) {
+      console.error('Error fectHolidayFromGoogle:', error);
+      throw new Error('Failed to fectHolidayFromGoogle');
+    }
+  }
+
 }

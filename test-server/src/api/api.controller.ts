@@ -69,4 +69,9 @@ export class ApiController {
   async allApiTest(@Headers('token') token: string,@Headers('url') url: string) {
     return this.apiService.restApi(token,url);
   }
+
+  @Get('fetch-holiday-google')
+  async fetchHolidayFromGoogle() {
+    return this.apiService.fectHolidayFromGoogle();
+  }
 }
