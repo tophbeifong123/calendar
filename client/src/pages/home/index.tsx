@@ -11,9 +11,10 @@ import { FooterComponent } from "@/components/Footer";
 
 function Home() {
   const auth = useAuth();
-  const [classDate, setClassDate] = useState<any[]>([]);
   const [events, setEvents] = useState<any>({});
+  const [classDate, setClassDate] = useState<any[]>([]);
   const [examDate, setExamDate] = useState<any[]>([]);
+  const [holidayDate, setHolidayDate] = useState<any[]>([]);
   const [studentDetails, setStudentDetails] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [startRecur, setStartRecur] = useState<any>({});
@@ -78,7 +79,16 @@ function Home() {
         section: `${item.section || "ไม่ระบุกลุ่ม"}`,
         backgroundColor: "#FF6500",
       }));
-      const mergedEvents = [...newEventsFromClass, ...newEventsFromExam];
+
+      const newEventsFromHoliday = holidayDate.map((item: any) => ({
+        title: `${item.summary} `,
+        description: ` ${item.description}`,
+        start: `${item.start.date}`,
+        end: `${item.end.date}`,
+        backgroundColor: "#FFC7C7",
+        allday: true
+      }));
+      const mergedEvents = [...newEventsFromClass, ...newEventsFromExam, ...newEventsFromHoliday];
       setEvents(mergedEvents);
 
       console.log("MergeEvents", mergedEvents);
@@ -134,10 +144,16 @@ function Home() {
           },
         }
       );
+      const resultHoliday = await axios.get(
+        `${conf.apiUrlPrefix}/api/fetch-holiday-google`,
+      );
+
       setClassDate(result.data);
       setExamDate(resultExam.data);
+      setHolidayDate(resultHoliday.data.items);
       console.log("classDate", result.data);
       console.log("examDate1", resultExam.data);
+      console.log("holidayData",resultHoliday.data.items.slice(0, 100))
     } catch (error) {
       console.error("Error fetching student detail:", error);
     }
