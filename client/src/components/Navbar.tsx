@@ -33,9 +33,8 @@ export function CustomNavbar() {
   const [profileImg, setprofileImg] = useState<profileImg | null>(null);
   const value = useContext(ProfileAuthContext);
 
-  console.log("value",value);
-  console.log("test",auth.user?.profile)
-  
+  console.log("value", value);
+  console.log("test", auth.user?.profile);
 
   const openDrawer = () => setIsDrawerOpen(true);
   const closeDrawer = () => setIsDrawerOpen(false);
@@ -46,10 +45,10 @@ export function CustomNavbar() {
         <Navbar.Brand>
           <IconButton
             variant="text"
-            size="md" // Fixed size prop
+            size="md"
             onClick={openDrawer}
             className="mr-2"
-            style={{ color: "#EEEEEE" }}
+            style={{ color: "#faf7f8" }}
           >
             {isDrawerOpen ? (
               <XMarkIcon className="h-8 w-full stroke-2" />
@@ -57,10 +56,11 @@ export function CustomNavbar() {
               <Bars3Icon className="h-8 w-full stroke-2" />
             )}
           </IconButton>
-          <span className="self-center whitespace-nowrap text-xl font-semibold ml-1 flex flex-row">
+          <span className="self-center whitespace-nowrap text-xl font-semibold ml-1 flex flex-row text-[#e6e3e4]">
             PSU Calendar
           </span>
         </Navbar.Brand>
+      
         <div className="flex md:order-2">
           <Dropdown
             arrowIcon={false}
@@ -94,25 +94,27 @@ export function CustomNavbar() {
               Calendar
             </Typography>
           </div>
-          <List> 
-              <ListItem>
-                <ListItemPrefix>
-                  <CalendarDaysIcon className="h-5 w-5" />
-                </ListItemPrefix>
-                <a href="/home">Calendar</a>
-              </ListItem>
-              <ListItem>
-                <ListItemPrefix>
-                  <LinkIcon className="h-5 w-5" />
-                </ListItemPrefix>
-                <a href="/Google">Google</a>
-              </ListItem>
-              <ListItem>
-                <ListItemPrefix>
-                  <PowerIcon className="h-5 w-5" />
-                </ListItemPrefix>
-                <a href="/" onClick={() => auth.signoutRedirect()}>Sign Out</a>
-              </ListItem>
+          <List>
+            <ListItem>
+              <ListItemPrefix>
+                <CalendarDaysIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              <a href="/home">Calendar</a>
+            </ListItem>
+            <ListItem>
+              <ListItemPrefix>
+                <LinkIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              <a href="/Google">Google</a>
+            </ListItem>
+            <ListItem>
+              <ListItemPrefix>
+                <PowerIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              <a href="/" onClick={() => auth.signoutRedirect()}>
+                Sign Out
+              </a>
+            </ListItem>
           </List>
         </Card>
       </Drawer>

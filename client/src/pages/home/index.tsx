@@ -8,6 +8,7 @@ import DateTimePicker from "react-datetime-picker";
 import conf from "@/conf/main";
 import { useRouter } from "next/router";
 import { FooterComponent } from "@/components/Footer";
+import { Spinner } from "flowbite-react";
 
 function Home() {
   const auth = useAuth();
@@ -26,11 +27,9 @@ function Home() {
       fectStudentDetail();
       fectStudentClassDate();
       fectStartRecur();
-      setLoading(false);
     } else {
       // app.push("/")
       console.log("No access token available");
-      setLoading(false);
     }
   }, [auth]);
 
@@ -86,9 +85,13 @@ function Home() {
         start: `${item.start.date}`,
         end: `${item.end.date}`,
         backgroundColor: "#FFC7C7",
-        allday: true
+        allday: true,
       }));
-      const mergedEvents = [...newEventsFromClass, ...newEventsFromExam, ...newEventsFromHoliday];
+      const mergedEvents = [
+        ...newEventsFromClass,
+        ...newEventsFromExam,
+        ...newEventsFromHoliday,
+      ];
       setEvents(mergedEvents);
 
       console.log("MergeEvents", mergedEvents);
@@ -109,6 +112,7 @@ function Home() {
       console.log("studentdetail", result.data.data[0]);
     } catch (error) {
       console.error("Error fetching student detail:", error);
+    } finally {
     }
   };
 
@@ -127,6 +131,7 @@ function Home() {
   };
 
   const fectStudentClassDate = async () => {
+    setLoading(true);
     try {
       const result = await axios.get(
         `${conf.apiUrlPrefix}/api/fetch-student-class-date?eduYear=2563&eduTerm=1`,
@@ -145,7 +150,7 @@ function Home() {
         }
       );
       const resultHoliday = await axios.get(
-        `${conf.apiUrlPrefix}/api/fetch-holiday-google`,
+        `${conf.apiUrlPrefix}/api/fetch-holiday-google`
       );
 
       setClassDate(result.data);
@@ -153,9 +158,11 @@ function Home() {
       setHolidayDate(resultHoliday.data.items);
       console.log("classDate", result.data);
       console.log("examDate1", resultExam.data);
-      console.log("holidayData",resultHoliday.data.items.slice(0, 100))
+      console.log("holidayData", resultHoliday.data.items.slice(0, 100));
     } catch (error) {
       console.error("Error fetching student detail:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -164,14 +171,15 @@ function Home() {
       <CustomNavbar />
       {loading ? (
         <>
-          <div className="flex justify-center items-center h-screen bg-[#EEEEEE]">
-            loading....
+          <div className="flex justify-center items-center h-screen bg-[#faf7f8]">
+            {/* <Spinner className="h-12 w-12" /> */}
+            <progress className="progress w-56"></progress>
           </div>
           <FooterComponent />
         </>
       ) : (
         <>
-          <div className="flex justify-center items-center h-screen bg-[#EEEEEE]">
+          <div className="flex justify-center items-center h-screen bg-[#faf7f8]">
             <CustomCalendar details={studentDetails} events={events} />
           </div>
           <FooterComponent />
