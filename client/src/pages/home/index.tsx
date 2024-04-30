@@ -61,9 +61,11 @@ function Home() {
 
       const newEventsFromExam = examDate.map((item: any) => ({
         title: `${item.subjectCode} ${item.subjectNameThai} (${item.subjectNameEng}) `,
-        description: ` ${item.roomId || item.roomName || "ไม่ระบุห้องเรียน"}`,
-        examTypeDesc: `${item.examTypeDesc}`,
-        examdateTypeDesc: `${item.examdateTypeDesc}`,
+        description: ` ${item.roomId || item.roomName || "ประเภทการสอบ"}`,
+        examTypeDesc: `${item.examTypeDesc || "ไม่ระบุชิ่อตึกสอบ"}`,
+        examdateTypeDesc: `${item.examdateTypeDesc || "ไม่ระบุประเภทวันสอบ"}`,
+        buildingName: `${item.buildingName || "ไม่ระบุชิ่อตึกสอบ"}`,
+        noExaminee: `${item.noExaminee || "จำนวนผู้เข้าสอบ"}`,
         start: `${item.examDate.substring(
           0,
           10
@@ -117,16 +119,14 @@ function Home() {
   };
 
   const fectStartRecur = async () => {
-    if (auth.isAuthenticated) {
-      try {
-        const result = await axios.get(
-          `${conf.apiUrlPrefix}/schedules?eduYear=2563&eduTerm=1`
-        );
-        setStartRecur(result.data);
-        console.log("startRecur", result.data[0].startRecur);
-      } catch (error) {
-        console.error("Error fetching StartRecur:", error);
-      }
+    try {
+      const result = await axios.get(
+        `${conf.apiUrlPrefix}/schedules?eduYear=2563&eduTerm=1`
+      );
+      setStartRecur(result.data);
+      console.log("startRecur", result.data[0].startRecur);
+    } catch (error) {
+      console.error("Error fetching StartRecur:", error);
     }
   };
 
@@ -157,7 +157,7 @@ function Home() {
       setExamDate(resultExam.data);
       setHolidayDate(resultHoliday.data.items);
       console.log("classDate", result.data);
-      console.log("examDate1", resultExam.data);
+      console.log("examDate", resultExam.data);
       console.log("holidayData", resultHoliday.data.items.slice(0, 100));
     } catch (error) {
       console.error("Error fetching student detail:", error);
@@ -172,7 +172,6 @@ function Home() {
       {loading ? (
         <>
           <div className="flex justify-center items-center h-screen bg-[#faf7f8]">
-            {/* <Spinner className="h-12 w-12" /> */}
             <progress className="progress w-56"></progress>
           </div>
           <FooterComponent />
