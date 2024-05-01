@@ -5,9 +5,10 @@ import timeGridPlugin from "@fullcalendar/timegrid/index.js";
 import interactionPlugin from "@fullcalendar/interaction/index.js";
 import ModalInfo from "./ModalInfo";
 import Addevent from "./Addevent";
-import listPlugin from '@fullcalendar/list';
-import bootstrapPlugin from '@fullcalendar/bootstrap';
-export default function CustomCalendar({ details, events }: any) {
+import listPlugin from "@fullcalendar/list";
+import settingLogo from "../assets/icon/setting.svg";
+import { AccordionSetting } from "./AccordionSetting";
+export default function CustomCalendar({ details, events, filterClass, filterExam }: any) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectEvent, setSelectEvents] = useState<any>(null);
   const [years, setYears] = useState<number[]>([]);
@@ -52,14 +53,20 @@ export default function CustomCalendar({ details, events }: any) {
 
   return (
     <>
-      <div className="flex justify-center items-center mx-auto w-full h-screen">
-        <div className="relative right-20 bottom-20 flex flex-col	items-center space-y-12">
+      <div className="flex justify-center items-center  w-full h-screen">
+        <div className="items-center relative bottom-20 flex flex-col mx-auto">
           <Addevent />
-          add calendar
+         <a className="mt-3">Add Calendar</a>
+          <AccordionSetting events={events} filterClass={filterClass} filterExam={filterExam}/>
         </div>
-        <div className="w-5/6 bg-white p-7 rounded-3xl border-slate-900 drop-shadow-2xl z-0">
+        <div className="w-5/6 bg-white p-7 rounded-3xl border-slate-900 drop-shadow-2xl z-0 mr-16">
           <FullCalendar
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
+            plugins={[
+              dayGridPlugin,
+              timeGridPlugin,
+              interactionPlugin,
+              listPlugin,
+            ]}
             initialView={"dayGridMonth"}
             headerToolbar={{
               left: "prev,next today",
@@ -73,9 +80,9 @@ export default function CustomCalendar({ details, events }: any) {
             dateClick={handleDateClick}
             selectable={true}
             select={handleSelectedDates}
-            themeSystem= 'default'
-            navLinks= {true}
-          />
+            themeSystem="default"
+            navLinks={true}
+          /> 
           <ModalInfo
             event={selectEvent}
             openModal={modalOpen}

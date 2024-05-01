@@ -53,7 +53,7 @@ export default function ModalInfo({
                 {formatDateTime(event.start)} - {formatDateTime(event.end)}
                 <br />
                 <span className="font-bold">จำนวนผู้เข้าสอบ: </span>{" "}
-                {event._def.extendedProps.noExaminee}
+                {event._def.extendedProps.noExaminee} <br />
                 <span className="font-bold">อาคารสอบ: </span>{" "}
                 {event._def.extendedProps.buildingName} <br />
                 <span className="font-bold">ห้องสอบ: </span>

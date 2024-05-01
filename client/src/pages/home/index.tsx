@@ -9,6 +9,7 @@ import conf from "@/conf/main";
 import { useRouter } from "next/router";
 import { FooterComponent } from "@/components/Footer";
 import { Spinner } from "flowbite-react";
+import { AccordionSetting } from "@/components/AccordionSetting";
 
 function Home() {
   const auth = useAuth();
@@ -178,8 +179,8 @@ function Home() {
         </>
       ) : (
         <>
-          <div className="flex justify-center items-center h-screen bg-[#faf7f8]">
-            <CustomCalendar details={studentDetails} events={events} />
+          <div className="flex justify-center items-center h-screen bg-[#faf7f8]"> 
+            <CustomCalendar details={studentDetails} filterClass={classDate} filterExam={examDate} events={events} />
           </div>
           <FooterComponent />
         </>
