@@ -9,44 +9,43 @@ import listPlugin from "@fullcalendar/list";
 import settingLogo from "../assets/icon/setting.svg";
 import { AccordionSetting } from "./AccordionSetting";
 
-export default function CustomCalendar({ details, events, filterClass, filterExam }: any) {
+export default function CustomCalendar({
+  details,
+  events,
+  filterClass,
+  filterExam,
+}: any) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectEvent, setSelectEvents] = useState<any>(null);
-  const [years, setYears] = useState<number[]>([]);
   const [initialDate, setInitialDate] = useState<string>("2020-07-01");
   const [newEvent, setNewEvent] = useState<any>([]);
   const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
-
-  useEffect(() => {
-    if (details && details.admitYear) {
-      const initialYear = parseInt(details.admitYear);
-      const yearsArray = Array.from({ length: 8 }, (_, i) => initialYear + i);
-
-      setYears(yearsArray);
-    }
-  }, [details]);
+  const [test, setTest] = useState<boolean>(true);
 
   useEffect(() => {
     const storedSubjects = localStorage.getItem("checkedSubjects");
     const checkedSubjects = storedSubjects ? JSON.parse(storedSubjects) : {};
-    console.log("checkedSubjects:", checkedSubjects)
-    
+    console.log("checkedSubjects:", checkedSubjects);
+
     if (Array.isArray(events)) {
-      const allFalse = Object.values(checkedSubjects).every(value => value === true);
+      const allFalse = Object.values(checkedSubjects).every(
+        (value) => value === true
+      );
       if (allFalse) {
         setFilteredEvents(events);
       } else {
-        const filteredEvents = events.filter((event: any) => checkedSubjects[event.subjectCode]);
+        const filteredEvents = events.filter(
+          (event: any) => checkedSubjects[event.subjectCode]
+        );
         console.log("filteredEvents", filteredEvents);
         setFilteredEvents(filteredEvents);
       }
     } else {
       console.error("Events is not an array:", events);
     }
-  }, [events]);
-  
+  }, [events,test]);
 
-  console.log("test events", filteredEvents)
+  console.log("test events", filteredEvents);
 
   const handleEventClick = (clickInfo: any) => {
     setSelectEvents(clickInfo.event);
@@ -75,13 +74,22 @@ export default function CustomCalendar({ details, events, filterClass, filterExa
     }
   };
 
+  const toggleTest = () => {
+    setTest(prevTest => !prevTest);
+  };
+
   return (
     <>
       <div className="flex justify-center items-center  w-full h-screen">
         <div className="items-center relative bottom-20 flex flex-col mx-auto">
           <Addevent />
           <a className="mt-3">Add Calendar</a>
-          <AccordionSetting events={events} filterClass={filterClass} filterExam={filterExam}/>
+          <AccordionSetting
+            events={events}
+            filterClass={filterClass}
+            filterExam={filterExam}
+            test={toggleTest}
+          />
         </div>
         <div className="w-5/6 bg-white p-7 rounded-3xl border-slate-900 drop-shadow-2xl z-0 mr-16">
           <FullCalendar
@@ -106,7 +114,7 @@ export default function CustomCalendar({ details, events, filterClass, filterExa
             select={handleSelectedDates}
             themeSystem="default"
             navLinks={true}
-          /> 
+          />
           <ModalInfo
             event={selectEvent}
             openModal={modalOpen}

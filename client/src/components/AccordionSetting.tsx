@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Accordion, Checkbox, ListGroup } from "flowbite-react";
 
-export function AccordionSetting({ events, filterClass, filterExam }: any) {
+export function AccordionSetting({ events, filterClass, filterExam, test }: any) {
   const [checkedSubjects, setCheckedSubjects] = useState<{ [key: string]: boolean }>(() => {
     if (typeof window !== 'undefined') {
       const storedSubjects = localStorage.getItem("checkedSubjects");
@@ -26,6 +26,7 @@ export function AccordionSetting({ events, filterClass, filterExam }: any) {
       if (typeof window !== 'undefined') {
         localStorage.setItem("checkedSubjects", JSON.stringify(newState));
       }
+      test();
       return newState;
     });
   };

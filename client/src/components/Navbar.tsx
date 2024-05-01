@@ -60,7 +60,7 @@ export function CustomNavbar() {
             PSU Calendar
           </span>
         </Navbar.Brand>
-      
+
         <div className="flex md:order-2">
           <Dropdown
             arrowIcon={false}
@@ -111,7 +111,13 @@ export function CustomNavbar() {
               <ListItemPrefix>
                 <PowerIcon className="h-5 w-5" />
               </ListItemPrefix>
-              <a href="/" onClick={() => auth.signoutRedirect()}>
+              <a
+                href="/"
+                onClick={() => {
+                  auth.signoutRedirect();
+                  localStorage.removeItem("checkedSubjects");
+                }}
+              >
                 Sign Out
               </a>
             </ListItem>
