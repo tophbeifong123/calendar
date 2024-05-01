@@ -44,6 +44,7 @@ function Home() {
       console.log("MaxStopRecur", maxExamDate);
       const newEventsFromClass = classDate.map((item: any) => ({
         title: `${item.subjectCode} ${item.subjectNameThai} (${item.subjectNameEng}) `,
+        subjectCode: `${item.subjectCode}`,
         description: ` ${item.roomId || item.roomName || "ไม่ระบุห้องเรียน"}`,
         daysOfWeek: [item.classDate],
         startTime: `${item.startTime.substring(
@@ -62,6 +63,7 @@ function Home() {
 
       const newEventsFromExam = examDate.map((item: any) => ({
         title: `${item.subjectCode} ${item.subjectNameThai} (${item.subjectNameEng}) `,
+        subjectCode: `${item.subjectCode}`,
         description: ` ${item.roomId || item.roomName || "ประเภทการสอบ"}`,
         examTypeDesc: `${item.examTypeDesc || "ไม่ระบุชิ่อตึกสอบ"}`,
         examdateTypeDesc: `${item.examdateTypeDesc || "ไม่ระบุประเภทวันสอบ"}`,

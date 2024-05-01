@@ -10,7 +10,6 @@ export function FooterComponent() {
       <Footer.LinkGroup>
         <Footer.Link href="/home">Calendar</Footer.Link>
         <Footer.Link href="/Google">Google</Footer.Link>
-
       </Footer.LinkGroup>
     </Footer>
   );
