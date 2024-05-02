@@ -14,6 +14,7 @@ export default function CustomCalendar({
   events,
   filterClass,
   filterExam,
+  holidayDateFormat,
 }: any) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectEvent, setSelectEvents] = useState<any>(null);
@@ -21,29 +22,29 @@ export default function CustomCalendar({
   const [newEvent, setNewEvent] = useState<any>([]);
   const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
   const [test, setTest] = useState<boolean>(true);
-
+  console.log("events", events);
   useEffect(() => {
     const storedSubjects = localStorage.getItem("checkedSubjects");
     const checkedSubjects = storedSubjects ? JSON.parse(storedSubjects) : {};
-    console.log("checkedSubjects:", checkedSubjects);
 
     if (Array.isArray(events)) {
       const allFalse = Object.values(checkedSubjects).every(
         (value) => value === true
       );
       if (allFalse) {
-        setFilteredEvents(events);
+        setFilteredEvents([...events, ...holidayDateFormat]);
       } else {
         const filteredEvents = events.filter(
           (event: any) => checkedSubjects[event.subjectCode]
         );
-        console.log("filteredEvents", filteredEvents);
-        setFilteredEvents(filteredEvents);
+        const combinedEvents = [...filteredEvents, ...holidayDateFormat];
+        console.log("filteredEvents", combinedEvents);
+        setFilteredEvents(combinedEvents);
       }
     } else {
       console.error("Events is not an array:", events);
     }
-  }, [events,test]);
+  }, [events, test]);
 
   console.log("test events", filteredEvents);
 
@@ -75,7 +76,7 @@ export default function CustomCalendar({
   };
 
   const toggleTest = () => {
-    setTest(prevTest => !prevTest);
+    setTest((prevTest) => !prevTest);
   };
 
   return (

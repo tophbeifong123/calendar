@@ -20,6 +20,7 @@ function Home() {
   const [studentDetails, setStudentDetails] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [startRecur, setStartRecur] = useState<any>({});
+  const [holidayDateFormat,setHolidayDateFormat] = useState<any>([])
   const app = useRouter();
   console.log("test1", examDate);
   useEffect(() => {
@@ -86,6 +87,7 @@ function Home() {
 
       const newEventsFromHoliday = holidayDate.map((item: any) => ({
         title: `${item.summary} `,
+        subjectCode: `holidayDate`,
         description: ` ${item.description}`,
         start: `${item.start.date}`,
         end: `${item.end.date}`,
@@ -95,9 +97,9 @@ function Home() {
       const mergedEvents = [
         ...newEventsFromClass,
         ...newEventsFromExam,
-        ...newEventsFromHoliday,
       ];
       setEvents(mergedEvents);
+      setHolidayDateFormat(newEventsFromHoliday)
 
       console.log("MergeEvents", mergedEvents);
     }
@@ -182,7 +184,7 @@ function Home() {
       ) : (
         <>
           <div className="flex justify-center items-center h-screen bg-[#faf7f8]"> 
-            <CustomCalendar details={studentDetails} filterClass={classDate} filterExam={examDate} events={events} />
+            <CustomCalendar details={studentDetails} filterClass={classDate} filterExam={examDate} holidayDateFormat={holidayDateFormat} events={events} />
           </div>
           <FooterComponent />
         </>
