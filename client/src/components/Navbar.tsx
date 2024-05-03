@@ -33,8 +33,8 @@ export function CustomNavbar() {
   const [profileImg, setprofileImg] = useState<profileImg | null>(null);
   const value = useContext(ProfileAuthContext);
 
-  console.log("value", value);
-  console.log("test", auth.user?.profile);
+  // console.log("value", value);
+  // console.log("test", auth.user?.profile);
 
   const openDrawer = () => setIsDrawerOpen(true);
   const closeDrawer = () => setIsDrawerOpen(false);
@@ -68,13 +68,13 @@ export function CustomNavbar() {
             label={
               <Avatar
                 alt="User settings"
-                img={`data:image/png;base64,${value?.pictureBase64}`}
+                img={`data:image/png;base64,${value.profile?.pictureBase64}`}
                 rounded
               />
             }
           >
             <Dropdown.Header>
-              <span className="block text-sm">{value?.studentId}</span>
+              <span className="block text-sm">{value.profile?.studentId}</span>
             </Dropdown.Header>
             <Dropdown.Divider />
             <Link href="/">

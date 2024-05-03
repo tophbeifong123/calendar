@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { FooterComponent } from "@/components/Footer";
 import { Spinner } from "flowbite-react";
 import { AccordionSetting } from "@/components/AccordionSetting";
+import { ProfileAuthContext } from "@/contexts/Auth.context";
 
 function Home() {
   const auth = useAuth();
@@ -22,7 +23,8 @@ function Home() {
   const [startRecur, setStartRecur] = useState<any>({});
   const [holidayDateFormat,setHolidayDateFormat] = useState<any>([])
   const app = useRouter();
-  console.log("test1", examDate);
+  const value = useContext(ProfileAuthContext)
+  // console.log("test1", examDate);
   useEffect(() => {
     if (auth.isAuthenticated) {
       setLoading(true);
@@ -161,6 +163,7 @@ function Home() {
       setClassDate(result.data);
       setExamDate(resultExam.data);
       setHolidayDate(resultHoliday.data.items);
+
       console.log("classDate", result.data);
       console.log("examDate", resultExam.data);
       console.log("holidayData", resultHoliday.data.items.slice(0, 100));

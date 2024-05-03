@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid/index.js";
 import timeGridPlugin from "@fullcalendar/timegrid/index.js";
@@ -8,6 +8,10 @@ import Addevent from "./Addevent";
 import listPlugin from "@fullcalendar/list";
 import settingLogo from "../assets/icon/setting.svg";
 import { AccordionSetting } from "./AccordionSetting";
+import axios from "axios";
+import conf from "@/conf/main";
+import { useAuth } from "react-oidc-context";
+import { ProfileAuthContext } from "@/contexts/Auth.context";
 
 export default function CustomCalendar({
   details,
@@ -22,7 +26,41 @@ export default function CustomCalendar({
   const [newEvent, setNewEvent] = useState<any>([]);
   const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
   const [test, setTest] = useState<boolean>(true);
-  console.log("events", events);
+  const value = useContext(ProfileAuthContext);
+
+  interface EventData {
+    title: string;
+    description: string;
+    start: string;
+    end: string;
+    user: {
+      id: number;
+    } | null;
+  }
+
+  const test11: [{
+    title: string;
+    description: string;
+    start: string;
+    end: string;
+    borderColor:string;
+    backgroundColor:string;
+  }] = [{
+    
+    description: "test test",
+    start: "2020-07-01",
+    end: "2020-07-02",
+    borderColor: "#9AD1D4",
+    backgroundColor: "#B3E0E3",
+    title: "test first event",
+  }];
+
+  const eventsWithoutId = value.user?.events ? value.user.events.map(event => {
+    const { id, ...rest } = event;
+    return { ...rest, backgroundColor: "#B3E0E3", borderColor: "#9AD1D4", };
+  }) : [];
+
+  console.log("78901",filteredEvents);
   useEffect(() => {
     const storedSubjects = localStorage.getItem("checkedSubjects");
     const checkedSubjects = storedSubjects ? JSON.parse(storedSubjects) : {};
@@ -32,21 +70,23 @@ export default function CustomCalendar({
         (value) => value === true
       );
       if (allFalse) {
-        setFilteredEvents([...events, ...holidayDateFormat]);
+        setFilteredEvents([...events, ...holidayDateFormat, ...(eventsWithoutId ?? [])]);
       } else {
         const filteredEvents = events.filter(
           (event: any) => checkedSubjects[event.subjectCode]
         );
-        const combinedEvents = [...filteredEvents, ...holidayDateFormat];
-        console.log("filteredEvents", combinedEvents);
+        const combinedEvents = [
+          ...filteredEvents,
+          ...holidayDateFormat,
+          ...(eventsWithoutId ?? [])
+        ];
+        console.log("combinedEventsData", combinedEvents);
         setFilteredEvents(combinedEvents);
       }
     } else {
       console.error("Events is not an array:", events);
     }
-  }, [events, test]);
-
-  console.log("test events", filteredEvents);
+  }, [events, test, value.user]);
 
   const handleEventClick = (clickInfo: any) => {
     setSelectEvents(clickInfo.event);
@@ -57,19 +97,29 @@ export default function CustomCalendar({
     alert(arg.dateStr);
   };
 
-  const handleSelectedDates = (info: any) => {
-    alert("selected " + info.startStr + " to " + info.endStr);
-    const title = prompt("What's the name of the title");
-    console.log(info);
+  const handleSelectedDates = async (info: any) => {
+    alert("เลือกวันที่ " + info.startStr + " ถึง " + info.endStr);
+    const title = prompt("ชื่อกิจกรรม");
+    const description = prompt("รายละเอียด");
+
     if (title != null) {
-      const newEventData = {
-        title,
+      const newEventData: EventData = {
+        title: title || "ไม่ระบุ",
+        description: description || "ไม่ระบุ",
         start: info.startStr,
         end: info.endStr,
+        user: { id: value.user?.id ?? 0 },
       };
-      const updatedEvents = [...events, newEventData];
-      setNewEvent(updatedEvents);
-      console.log("here", updatedEvents);
+
+      try {
+        const postNewEvent = await axios.post(
+          `${conf.apiUrlPrefix}/event`,
+          newEventData
+        );
+        console.log("new event", postNewEvent);
+      } catch (error) {
+        console.error("Error posting new event:", error);
+      }
     } else {
       console.log("nothing");
     }
