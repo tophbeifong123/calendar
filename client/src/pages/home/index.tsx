@@ -42,11 +42,11 @@ function Home() {
           4
         )}`,
         lecturer: `${item.lecturerNameThai}`,
-        startRecur: `${startRecur[0].startRecur}`,
+        startRecur: `${startRecur.startRecur}`,
         endRecur: `${examDate[0].examDate.substring(0, 10)}T00:00:00`,
         section: `${item.section || "ไม่ระบุกลุ่ม"}`,
       }));
-      console.log("Events:", newEvents);
+      console.log("Eve+nts:", newEvents);
       setEvents(newEvents);
     }
   }, [classDate, examDate]);

@@ -1,5 +1,9 @@
 export class CreateScheduleDto {
-    readonly eduYear:string
-    readonly eduTerm:string
-    readonly startRecur:string
+    readonly subjectType:string;
+    readonly title:string;
+    readonly details:string;
+    readonly startTime:string;
+    readonly stopTime:string;
+    readonly photo:string;
+    readonly createdAt: string;
 }

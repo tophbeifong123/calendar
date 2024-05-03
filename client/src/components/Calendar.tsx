@@ -28,8 +28,8 @@ export default function CustomCalendar({ details, events }: any) {
     <>
       <div className="flex justify-center items-center mx-auto w-full h-screen">
         <div className="relative right-20 bottom-20 flex flex-col	items-center space-y-12">
-          <Addevent/>
-            add calendar
+            <Addevent/>
+            Edit
         </div>
           <div className="w-3/4 bg-white p-8 rounded-2xl border-slate-900 drop-shadow-xl z-0">
             <FullCalendar
@@ -43,12 +43,12 @@ export default function CustomCalendar({ details, events }: any) {
               height={"60vh"}
               events={events}
               eventClick={handleEventClick}
-            />
+              />
             <ModalInfo
               event={selectEvent}
               openModal={modalOpen}
               onClose={() => setModalOpen(false)}
-            />
+              />
           </div>
       </div>
     </>

@@ -5,15 +5,27 @@ import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne } from "t
 export class Schedule {
     @PrimaryGeneratedColumn()
     id : number
-
-    @Column({nullable: false})
-    eduYear : string
-
-    @Column({nullable: false})
-    eduTerm : string
-
-    @Column({nullable: false})
-    startRecur : string
     
+    @Column({nullable: true})
+    subjectType: string
+
+    @Column({nullable: true})
+    title: string
     
+    @Column({nullable: true})
+    details : string
+
+    @Column({nullable: true})
+    startTime : string
+    
+    @Column({nullable: true})
+    stopTime : string
+
+    @Column({nullable: true})
+    photo : string
+
+    @Column({nullable: true})
+    createdAt: string;
+
+
 }
