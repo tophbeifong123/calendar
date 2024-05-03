@@ -12,10 +12,10 @@ export default function Document() {
     <Html lang="en">
       <Head />
       <body>
-      <SessionContextProvider supabaseClient={supabase}>
-        <Main  />
-        <NextScript />
-      </SessionContextProvider>
+        <SessionContextProvider supabaseClient={supabase}>
+          <Main />
+          <NextScript />
+        </SessionContextProvider>
       </body>
     </Html>
   );

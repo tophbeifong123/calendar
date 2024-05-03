@@ -23,8 +23,12 @@ const config: Config = withMT({
   plugins: [
     require("daisyui"),
     flowbite.plugin(),
-  ]
-});
+  ],
+  daisyui: {
+    themes: [ "cupcake"],
+  },
+},
+);
 module.exports = config;
 
 export default config;

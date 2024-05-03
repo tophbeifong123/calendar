@@ -11,8 +11,7 @@ function Addevent() {
   const [modalOpen, setModalOpen] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [title, setTitle] = useState("");
-  const [details,setDetails] = useState("")
+  const [title, setTitle] = useState(""); // State variable for title
 
   const addEvent = async () => {
     try {
@@ -25,9 +24,10 @@ function Addevent() {
         `${conf.apiUrlPrefix}/schedules`,
         {
           title: title, // Use the title state variable here
-          details: details,
+          details: "Event details",
           startTime: startDate.toISOString(),
           stopTime: endDate.toISOString(),
+          // Add other properties if needed
         },
         {
           headers: {
@@ -84,28 +84,25 @@ function Addevent() {
                     placeholder="รายละเอียด"
                     className="textarea textarea-bordered w-full"
                     rows={4}
-                    value={details}
-                    onChange={(e) => setDetails(e.target.value)} // Corrected from e.target.details to e.target.value
                   />
                 </label>
-                  <div className="flex pt-3">
-                  <div className="mb-4">
-                  <KeyboardDateTimePicker
-                    label="Start Date and Time"
-                    value={startDate}
-                    onChange={(date) => date && setStartDate(date)}
-                    format="dd/MM/yyyy HH:mm"
-                  />
-                </div>
+                <div className="flex pt-3">
                 <div className="mb-4">
-                  <KeyboardDateTimePicker
-                    label="End Date and Time"
-                    value={endDate}
-                    onChange={(date) => date && setEndDate(date)}
-                    format="dd/MM/yyyy HH:mm"
-                  />
+                <KeyboardDateTimePicker
+                  label="Start Date and Time"
+                  value={startDate}
+                  onChange={(date) => date && setStartDate(date)}
+                  format="dd/MM/yyyy HH:mm"
+                />
               </div>
-
+              <div className="mb-4">
+                <KeyboardDateTimePicker
+                  label="End Date and Time"
+                  value={endDate}
+                  onChange={(date) => date && setEndDate(date)}
+                  format="dd/MM/yyyy HH:mm"
+                />
+              </div>
                 </div>
                 <div>
                   <Label

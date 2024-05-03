@@ -23,19 +23,18 @@ import {
 } from "@heroicons/react/24/solid";
 import { ProfileAuthContext, ProfileProvider } from "@/contexts/Auth.context";
 
-export function CustomNavbar({user}:any) {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  interface profileImg {
-    studentId: string;
-    pictureBase64: string;
-  }
+interface profileImg {
+  studentId: string;
+  pictureBase64: string;
+}
+export function CustomNavbar() {
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const auth = useAuth();
   const [profileImg, setprofileImg] = useState<profileImg | null>(null);
   const value = useContext(ProfileAuthContext);
 
-  console.log("value",value);
-  console.log("test",auth.user?.profile)
-  
+  // console.log("value", value);
+  // console.log("test", auth.user?.profile);
 
   const openDrawer = () => setIsDrawerOpen(true);
   const closeDrawer = () => setIsDrawerOpen(false);
@@ -46,10 +45,10 @@ export function CustomNavbar({user}:any) {
         <Navbar.Brand>
           <IconButton
             variant="text"
-            size="medium"
+            size="md"
             onClick={openDrawer}
             className="mr-2"
-            style={{ color: "#EEEEEE" }}
+            style={{ color: "#faf7f8" }}
           >
             {isDrawerOpen ? (
               <XMarkIcon className="h-8 w-full stroke-2" />
@@ -57,10 +56,11 @@ export function CustomNavbar({user}:any) {
               <Bars3Icon className="h-8 w-full stroke-2" />
             )}
           </IconButton>
-          <span className="self-center whitespace-nowrap text-xl font-semibold ml-1 flex flex-row">
+          <span className="self-center whitespace-nowrap text-xl font-semibold ml-1 flex flex-row text-[#e6e3e4]">
             PSU Calendar
           </span>
         </Navbar.Brand>
+
         <div className="flex md:order-2">
           <Dropdown
             arrowIcon={false}
@@ -68,13 +68,13 @@ export function CustomNavbar({user}:any) {
             label={
               <Avatar
                 alt="User settings"
-                img={`data:image/png;base64,${value?.pictureBase64}`}
+                img={`data:image/png;base64,${value.profile?.pictureBase64}`}
                 rounded
               />
             }
           >
             <Dropdown.Header>
-              <span className="block text-sm">{value?.studentId}</span>
+              <span className="block text-sm">{value.profile?.studentId}</span>
             </Dropdown.Header>
             <Dropdown.Divider />
             <Link href="/">
@@ -95,30 +95,32 @@ export function CustomNavbar({user}:any) {
             </Typography>
           </div>
           <List>
-            <Link href="/home">
-              <ListItem>
-                <ListItemPrefix>
-                  <CalendarDaysIcon className="h-5 w-5" />
-                </ListItemPrefix>
-                Calendar
-              </ListItem>
-            </Link>
-            <Link href="/Google">
-              <ListItem>
-                <ListItemPrefix>
-                  <LinkIcon className="h-5 w-5" />
-                </ListItemPrefix>
-                Google
-              </ListItem>
-            </Link>
-            <Link href="/">
-              <ListItem>
-                <ListItemPrefix>
-                  <PowerIcon className="h-5 w-5" />
-                </ListItemPrefix>
-                <a onClick={() => auth.signoutRedirect()}>Sign Out</a>
-              </ListItem>
-            </Link>
+            <ListItem>
+              <ListItemPrefix>
+                <CalendarDaysIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              <a href="/home">Calendar</a>
+            </ListItem>
+            <ListItem>
+              <ListItemPrefix>
+                <LinkIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              <a href="/Google">Google</a>
+            </ListItem>
+            <ListItem>
+              <ListItemPrefix>
+                <PowerIcon className="h-5 w-5" />
+              </ListItemPrefix>
+              <a
+                href="/"
+                onClick={() => {
+                  auth.signoutRedirect();
+                  localStorage.removeItem("checkedSubjects");
+                }}
+              >
+                Sign Out
+              </a>
+            </ListItem>
           </List>
         </Card>
       </Drawer>
