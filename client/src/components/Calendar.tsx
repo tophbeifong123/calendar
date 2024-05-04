@@ -38,23 +38,6 @@ export default function CustomCalendar({
     } | null;
   }
 
-  const test11: [{
-    title: string;
-    description: string;
-    start: string;
-    end: string;
-    borderColor:string;
-    backgroundColor:string;
-  }] = [{
-    
-    description: "test test",
-    start: "2020-07-01",
-    end: "2020-07-02",
-    borderColor: "#9AD1D4",
-    backgroundColor: "#B3E0E3",
-    title: "test first event",
-  }];
-
   const eventsWithoutId = value.user?.events ? value.user.events.map(event => {
     const { id, ...rest } = event;
     return { ...rest, backgroundColor: "#B3E0E3", borderColor: "#9AD1D4", };
@@ -110,12 +93,14 @@ export default function CustomCalendar({
         end: info.endStr,
         user: { id: value.user?.id ?? 0 },
       };
+      console.log("new event data", newEventData);
 
       try {
         const postNewEvent = await axios.post(
           `${conf.apiUrlPrefix}/event`,
           newEventData
         );
+        
         console.log("new event", postNewEvent);
       } catch (error) {
         console.error("Error posting new event:", error);
