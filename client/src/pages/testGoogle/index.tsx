@@ -2,15 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { CustomNavbar } from "@/components/Navbar";
 import { useAuth } from "react-oidc-context";
-import SlideBar from "@/components/SlideBar";
-import CustomCalendar from "@/components/Calendar";
-import DateTimePicker from "react-datetime-picker";
 import conf from "@/conf/main";
-import { useRouter } from "next/router";
 import { FooterComponent } from "@/components/Footer";
-import { Spinner } from "flowbite-react";
-import { AccordionSetting } from "@/components/AccordionSetting";
-import { ProfileAuthContext } from "@/contexts/Auth.context";
 import { useSession } from "@supabase/auth-helpers-react";
 
 function Home() {
@@ -19,7 +12,7 @@ function Home() {
     const [classDate, setClassDate] = useState<any[]>([]);
     const [examDate, setExamDate] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const startRecur = new Date();
+    const startRecur = "2020-07-13T00:00:00";
     const session = useSession();
 
     useEffect(() => {
@@ -48,18 +41,24 @@ function Home() {
             const newEventsFromClass = classDate.map((item) => ({
                 summary: `${item.subjectCode} ${item.subjectNameThai} (${item.subjectNameEng})`,
                 location: item.roomId || item.roomName || "ไม่ระบุห้องเรียน",
+                // start: {
+                //     // dateTime: `${item.classDate}T${item.startTime.substring(
+                //     //     0,
+                //     //     2
+                //     // )}:${item.startTime.substring(2, 4)}:00`
+                // },
+                // end: {
+                //     // dateTime: `${item.classDate}T${item.stopTime.substring(
+                //     //     0,
+                //     //     2
+                //     // )}:${item.stopTime.substring(2, 4)}:00`,
+                // },
                 start: {
-                    dateTime: `${item.classDate}T${item.startTime.substring(
-                        0,
-                        2
-                    )}:${item.startTime.substring(2, 4)}:00`,
+                    dateTime: "2024-05-01T13:00:00",
                     timeZone: "Asia/Bangkok",
                 },
                 end: {
-                    dateTime: `${item.classDate}T${item.stopTime.substring(
-                        0,
-                        2
-                    )}:${item.stopTime.substring(2, 4)}:00`,
+                    dateTime: "2024-05-01T16:00:00",
                     timeZone: "Asia/Bangkok",
                 },
                 description: `Lecturer: ${item.lecturerNameThai}\nSection: ${
@@ -108,6 +107,7 @@ function Home() {
                 colorId: "6", // Sets the background color, you can choose any color from Google Calendar's predefined colors
             }));
 
+            // const mergedEvents = [...newEventsFromClass, ...newEventsFromExam];
             const mergedEvents = [...newEventsFromClass, ...newEventsFromExam];
             setEvents(mergedEvents);
 
@@ -202,7 +202,7 @@ function Home() {
                         hello google
                         <button
                             onClick={() => {
-                                console.log("hited"),importEvent()
+                                console.log("hited"), importEvent();
                             }}
                             className="bg-blue-gray-600"
                         >
