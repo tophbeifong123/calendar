@@ -11,20 +11,17 @@ import { FooterComponent } from "@/components/Footer";
 import { Spinner } from "flowbite-react";
 import { AccordionSetting } from "@/components/AccordionSetting";
 import { ProfileAuthContext } from "@/contexts/Auth.context";
+import { useSession } from "@supabase/auth-helpers-react";
 
 function Home() {
     const auth = useAuth();
     const [events, setEvents] = useState<any>({});
     const [classDate, setClassDate] = useState<any[]>([]);
     const [examDate, setExamDate] = useState<any[]>([]);
-    const [holidayDate, setHolidayDate] = useState<any[]>([]);
-    const [studentDetails, setStudentDetails] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const startRecur = new Date();
-    const [holidayDateFormat, setHolidayDateFormat] = useState<any>([]);
-    const app = useRouter();
-    const value = useContext(ProfileAuthContext);
-    // console.log("test1", examDate);
+    const session = useSession();
+
     useEffect(() => {
         if (auth.isAuthenticated) {
             setLoading(true);
@@ -56,14 +53,14 @@ function Home() {
                         0,
                         2
                     )}:${item.startTime.substring(2, 4)}:00`,
-                    timeZone: "Asia/Bangkok", 
+                    timeZone: "Asia/Bangkok",
                 },
                 end: {
                     dateTime: `${item.classDate}T${item.stopTime.substring(
                         0,
                         2
                     )}:${item.stopTime.substring(2, 4)}:00`,
-                    timeZone: "Asia/Bangkok", 
+                    timeZone: "Asia/Bangkok",
                 },
                 description: `Lecturer: ${item.lecturerNameThai}\nSection: ${
                     item.section || "ไม่ระบุกลุ่ม"
@@ -78,22 +75,39 @@ function Home() {
 
             const newEventsFromExam = examDate.map((item) => ({
                 summary: `${item.subjectCode} ${item.subjectNameThai} (${item.subjectNameEng})`,
-                description: `${item.roomId || item.roomName || "ประเภทการสอบ"}\nExam Type: ${item.examTypeDesc || "ไม่ระบุชื่อตึกสอบ"}\nExam Date Type: ${item.examdateTypeDesc || "ไม่ระบุประเภทวันสอบ"}\nBuilding Name: ${item.buildingName || "ไม่ระบุชื่อตึกสอบ"}\nNo. of Examinee: ${item.noExaminee || "จำนวนผู้เข้าสอบ"}`,
+                description: `${
+                    item.roomId || item.roomName || "ประเภทการสอบ"
+                }\nExam Type: ${
+                    item.examTypeDesc || "ไม่ระบุชื่อตึกสอบ"
+                }\nExam Date Type: ${
+                    item.examdateTypeDesc || "ไม่ระบุประเภทวันสอบ"
+                }\nBuilding Name: ${
+                    item.buildingName || "ไม่ระบุชื่อตึกสอบ"
+                }\nNo. of Examinee: ${item.noExaminee || "จำนวนผู้เข้าสอบ"}`,
                 start: {
-                    dateTime: `${item.examDate.substring(0, 10)}T${item.examStartTime.substring(0, 2)}:${item.examStartTime.substring(2, 4)}:00`,
-                    timeZone: 'Asia/Bangkok' 
+                    dateTime: `${item.examDate.substring(
+                        0,
+                        10
+                    )}T${item.examStartTime.substring(
+                        0,
+                        2
+                    )}:${item.examStartTime.substring(2, 4)}:00`,
+                    timeZone: "Asia/Bangkok",
                 },
                 end: {
-                    dateTime: `${item.examDate.substring(0, 10)}T${item.examStopTime.substring(0, 2)}:${item.examStopTime.substring(2, 4)}:00`,
-                    timeZone: 'Asia/Bangkok' 
+                    dateTime: `${item.examDate.substring(
+                        0,
+                        10
+                    )}T${item.examStopTime.substring(
+                        0,
+                        2
+                    )}:${item.examStopTime.substring(2, 4)}:00`,
+                    timeZone: "Asia/Bangkok",
                 },
                 recurrence: [],
-                colorId: '6' // Sets the background color, you can choose any color from Google Calendar's predefined colors
+                colorId: "6", // Sets the background color, you can choose any color from Google Calendar's predefined colors
             }));
-            
-            
 
-            
             const mergedEvents = [...newEventsFromClass, ...newEventsFromExam];
             setEvents(mergedEvents);
 
@@ -120,21 +134,55 @@ function Home() {
                     },
                 }
             );
-            const resultHoliday = await axios.get(
-                `${conf.apiUrlPrefix}/api/fetch-holiday-google`
-            );
 
             setClassDate(result.data);
             setExamDate(resultExam.data);
-            setHolidayDate(resultHoliday.data.items);
-
             console.log("classDate", result.data);
             console.log("examDate", resultExam.data);
-            console.log("holidayData", resultHoliday.data.items.slice(0, 100));
         } catch (error) {
             console.error("Error fetching student detail:", error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const importEvent = async () => {
+        if (!session || !session.provider_token) {
+            alert("Please sign in first to create an event.");
+            return;
+        } else {
+            try {
+                const response = await fetch(
+                    "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+                    {
+                        method: "POST",
+                        headers: {
+                            Authorization: "Bearer " + session.provider_token,
+                            "Content-Type": "application/json", // Specify content type
+                        },
+                        body: JSON.stringify(events), // Assuming 'events' is the array containing the events to be imported
+                    }
+                );
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(data);
+                    alert("Event created, check your Google Calendar!");
+                } else {
+                    // Handle error response
+                    const errorData = await response.json();
+                    console.error(
+                        "Error creating event:",
+                        errorData.error.message
+                    );
+                    alert("Failed to create event. Please try again later.");
+                }
+            } catch (error) {
+                console.error("Error creating event:", error);
+                alert(
+                    "An error occurred while creating the event. Please try again later."
+                );
+            }
         }
     };
 
@@ -152,7 +200,14 @@ function Home() {
                 <>
                     <div className="flex flex-col justify-center items-center h-screen bg-[#faf7f8]">
                         hello google
-                        <button className="bg-blue-gray-600">hit me up</button>
+                        <button
+                            onClick={() => {
+                                console.log("hited"),importEvent()
+                            }}
+                            className="bg-blue-gray-600"
+                        >
+                            hit me up
+                        </button>
                     </div>
                     <FooterComponent />
                 </>
