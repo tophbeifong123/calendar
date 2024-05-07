@@ -1,5 +1,8 @@
+import conf from "@/conf/main";
+import { ProfileAuthContext } from "@/contexts/Auth.context";
+import axios from "axios";
 import { Button, Modal } from "flowbite-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 
 export default function ModalInfo({
   event,
@@ -11,6 +14,7 @@ export default function ModalInfo({
   onClose: () => void;
 }) {
   const [modalOpen, setModalOpen] = useState(openModal);
+  const value = useContext(ProfileAuthContext);
 
   useEffect(() => {
     setModalOpen(openModal);
@@ -26,6 +30,19 @@ export default function ModalInfo({
     return date.toLocaleString("en-US");
   };
 
+  const handleDeleteEvent = async (id: number) => {
+    try {
+      const deleteEventResult = await axios.delete(`${conf.apiUrlPrefix}/event/${id}`);
+      console.log("deleteEventResult", deleteEventResult);
+      if (value.triggerFetch) {
+        value.triggerFetch();
+      }
+      handleCloseModal();
+    } catch (error) {
+      console.error("error", error);
+    }
+  };
+
   if (!event) {
     return null;
   }
@@ -37,7 +54,22 @@ export default function ModalInfo({
       onClose={handleCloseModal}
       className="animate-modal"
     >
-      <Modal.Header className="bg-blue-200 text-sm text-white p-5">
+      <Modal.Header
+        className={`
+  ${
+    !event._def.extendedProps.examTypeDesc && event._def.extendedProps.allday
+      ? "bg-pink-300"
+      : ""
+  }
+  ${event._def.extendedProps.examTypeDesc ? "bg-orange-400" : ""}
+  ${
+    event._def.extendedProps.lecturer && !event._def.extendedProps.examTypeDesc
+      ? "bg-blue-300"
+      : ""
+  }
+  text-sm text-white p-5
+`}
+      >
         {event.title}
       </Modal.Header>
       <Modal.Body className="animate-opacity">
@@ -57,7 +89,7 @@ export default function ModalInfo({
                 <span className="font-bold">อาคารสอบ: </span>{" "}
                 {event._def.extendedProps.buildingName} <br />
                 <span className="font-bold">ห้องสอบ: </span>
-                  {event._def.extendedProps.description} <br />
+                {event._def.extendedProps.description} <br />
               </p>
             </>
           )}
@@ -65,7 +97,8 @@ export default function ModalInfo({
             event._def.extendedProps.allday && (
               <>
                 <p className="text-base leading-relaxed text-gray-500 font-thin dark:text-gray-400">
-                  <span className="font-bold">{event.description}</span>
+                  <span className="font-bold">รายละเอียด: </span>
+                  {event._def.extendedProps.description} <br />
                   <span className="font-bold">เริ่มวันที่: </span>
                   {formatDateTime(event.start)} <br />
                   <span className="font-bold">สิ้นสุดวันที่: </span>{" "}
@@ -89,8 +122,34 @@ export default function ModalInfo({
                 </p>
               </>
             )}
+
+          {!event._def.extendedProps.lecturer &&
+            !event._def.extendedProps.examTypeDesc &&
+            !event._def.extendedProps.subjectCode && (
+              <>
+                <p className="text-base leading-relaxed text-gray-500 font-thin dark:text-gray-400">
+                  <span className="font-bold">รายละเอียด: </span>
+                  {event._def.extendedProps.description} <br />
+                  <span className="font-bold">เวลา: </span>{" "}
+                  {formatDateTime(event.start)} - {formatDateTime(event.end)}
+                  <br />
+                </p>
+              </>
+            )}
         </div>
       </Modal.Body>
+      {!event._def.extendedProps.lecturer &&
+        !event._def.extendedProps.examTypeDesc &&
+        !event._def.extendedProps.subjectCode && (
+          <Modal.Footer className="justify-end my-auto p-3">
+            <Button color="red" onClick={()=> handleDeleteEvent(event._def.publicId)}>
+              ลบกิจกรรม
+            </Button>
+            <Button color="gray" onClick={handleCloseModal}>
+              ยกเลิก
+            </Button>
+          </Modal.Footer>
+        )}
     </Modal>
   );
 }

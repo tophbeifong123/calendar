@@ -13,6 +13,7 @@ import { useAuth } from "react-oidc-context";
 export const ProfileAuthContext = createContext<{
   profile: profileImg | null;
   user: User | null;
+  triggerFetch? : () => void;
 }>({ profile: null, user: null });
 interface profileImg {
   studentId: string;
@@ -38,6 +39,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
   const auth = useAuth();
   const [profile, setProfile] = useState<profileImg | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [fetchData, setFetchData] = useState<boolean>(true);
 
   const fetchProfile = async () => {
     try {
@@ -69,16 +71,19 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
+  const triggerFetch  = () => {
+    setFetchData(!fetchData);
+  };
+
   useEffect(() => {
     if (auth.isAuthenticated) {
       fetchProfile();
       fetchUser();
     }
-  }, [auth]);
-
+  }, [auth, fetchData]);
 
   return (
-    <ProfileAuthContext.Provider value={{ profile, user }}>
+    <ProfileAuthContext.Provider value={{ profile, user, triggerFetch  }}>
       {children}
     </ProfileAuthContext.Provider>
   );
