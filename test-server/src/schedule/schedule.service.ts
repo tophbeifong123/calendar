@@ -22,7 +22,7 @@ export class SchedulesService {
     });
     const findOptions: FindManyOptions<Schedule> = {
       where : query,
-      // relations : ['user']
+      relations : ['createBy', 'votedBy']
     }
     return this.schedulesRepository.find(findOptions);
   }
@@ -30,6 +30,7 @@ export class SchedulesService {
   async findOne(id: number): Promise<Schedule | null> {
     return this.schedulesRepository.findOne({
       where: { id : id },
+      relations : ['createBy', 'votedBy']
     });
   }
   

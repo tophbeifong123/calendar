@@ -35,27 +35,32 @@ function PostEvent() {
         console.error("User not authenticated");
         return;
       }
+      const formData = new FormData();
+      if (photo) {
+        formData.append("image", photo);
+      }
 
-      // const response = await axios.post(
-      //   `${conf.apiUrlPrefix}/schedules`,
-      //   {
-      //     subjectType: selectedSubject,
-      //     title: title,
-      //     details: detail,
-      //     startTime: startDate.toISOString(),
-      //     stopTime: endDate.toISOString(),
-      //     image: photo,
-      //   },
-      // );
-      // console.log("Posted Event:", response);
-      console.log(photo)
+      const uploadResponse = await axios.post(
+        `${conf.apiUrlPrefix}/schedules/upload`,
+        formData
+      );
+      const imageUrl = uploadResponse.data.filePath;
+      console.log("testImage", imageUrl);
+      const response = await axios.post(`${conf.apiUrlPrefix}/schedules`, {
+        subjectType: selectedSubject,
+        title: title,
+        description: detail,
+        startTime: startDate.toISOString(),
+        stopTime: endDate.toISOString(),
+        image: imageUrl,
+      });
+      console.log("Posted Event:", response);
+      console.log(photo);
     } catch (error) {
       console.error("Error creating event:", error);
     }
   };
 
-  
-  
   const fetchSubject = async () => {
     try {
       if (!auth || !auth.user) {
@@ -78,23 +83,21 @@ function PostEvent() {
     }
   };
 
-
-  const handleFileChange = (e:any) => {
+  const handleFileChange = (e: any) => {
     const file = e.target.files[0];
-    console.log("file test",file)
+    console.log("file test", file);
     if (file) {
       setPhoto(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        const result = reader.result; 
+        const result = reader.result;
         if (result) {
-          setPreviewPhoto(result as string); 
+          setPreviewPhoto(result as string);
         }
       };
       reader.readAsDataURL(file);
     }
   };
-  
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>

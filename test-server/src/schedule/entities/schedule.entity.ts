@@ -1,4 +1,5 @@
 
+import { User } from "src/user/entities/user.entity"
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, ManyToOne } from "typeorm"
 
 @Entity()
@@ -13,7 +14,7 @@ export class Schedule {
     title: string
     
     @Column({nullable: true})
-    details : string
+    description : string
 
     @Column({nullable: true})
     startTime : string
@@ -27,9 +28,12 @@ export class Schedule {
     @Column({nullable: true})
     vote: number
     
-    @Column({nullable: true})
-    createby: string
+    @ManyToOne(()=> User,(user) => user.createdSchedules)
+    createBy: User
+
+    @ManyToOne(()=> User,(user) => user.votedSchedules)
+    votedBy: User
 
     @Column({nullable: true})
-    createdAt: string;
+    createdDate: string;
 }

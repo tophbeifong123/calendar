@@ -21,7 +21,7 @@ export class UsersService {
     });
     const findOptions: FindManyOptions<User> = {
       where : query,
-      relations: { events: true },
+      relations: ['events', 'createdSchedules', 'votedSchedules'],
     }
     return this.usersRepository.find(findOptions);
   }
@@ -29,7 +29,7 @@ export class UsersService {
   async findOne(id: number): Promise<User | null> {
     return this.usersRepository.findOne({
       where: { id: id },
-      relations: { events: true },
+      relations: ['events', 'createdSchedules', 'votedSchedules'],
     });
   }
 
