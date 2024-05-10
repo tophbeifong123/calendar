@@ -12,6 +12,8 @@ import { EventModule } from './event/event.module';
 import { Event } from './event/entities/event.entity';
 import { TermdateModule } from './termdate/termdate.module';
 import { Termdate } from './termdate/entities/termdate.entity';
+import { MulterModule } from '@nestjs/platform-express';
+
 
 @Module({
   imports: [
@@ -20,6 +22,9 @@ import { Termdate } from './termdate/entities/termdate.entity';
       database: './app.sqlite',
       entities: [User, Api, Schedule, Event, Termdate],
       synchronize: process.env.NODE_ENV != 'production',
+    }),
+    MulterModule.register({
+      dest: '../uploads',
     }),
     UserModule,
     ApiModule,

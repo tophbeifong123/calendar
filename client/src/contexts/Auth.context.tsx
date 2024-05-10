@@ -13,7 +13,7 @@ import { useAuth } from "react-oidc-context";
 export const ProfileAuthContext = createContext<{
   profile: profileImg | null;
   user: User | null;
-  triggerFetch? : () => void;
+  triggerFetch?: () => void;
 }>({ profile: null, user: null });
 interface profileImg {
   studentId: string;
@@ -52,7 +52,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
         }
       );
       setProfile(profileResult.data[0]);
-      // console.log("ProfileData",profileResult.data[0]);
+      console.log("ProfileData", profileResult.data[0]);
     } catch (error) {
       console.error("error", error);
     }
@@ -64,14 +64,21 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
       const userResult = await axios.get(
         `${conf.apiUrlPrefix}/user?studentId=${auth.user?.profile.nickname}`
       );
-      setUser(userResult.data[0]);
-      // console.log("user", userResult.data[0]);
+
+      if (!userResult.data || userResult.data.length === 0) {
+        const newUserResult = await axios.post(`${conf.apiUrlPrefix}/user`, {
+          studentId: auth.user?.profile.nickname,
+        });
+        setUser(newUserResult.data);
+      } else {
+        setUser(userResult.data[0]);
+      }
     } catch (error) {
       console.error("error", error);
     }
   };
 
-  const triggerFetch  = () => {
+  const triggerFetch = () => {
     setFetchData(!fetchData);
   };
 
@@ -83,7 +90,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
   }, [auth, fetchData]);
 
   return (
-    <ProfileAuthContext.Provider value={{ profile, user, triggerFetch  }}>
+    <ProfileAuthContext.Provider value={{ profile, user, triggerFetch }}>
       {children}
     </ProfileAuthContext.Provider>
   );

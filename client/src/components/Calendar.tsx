@@ -4,7 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid/index.js";
 import timeGridPlugin from "@fullcalendar/timegrid/index.js";
 import interactionPlugin from "@fullcalendar/interaction/index.js";
 import ModalInfo from "./ModalInfo";
-import Addevent from "./Addevent";
+import Addevent from "./PostEvent";
 import listPlugin from "@fullcalendar/list";
 import settingLogo from "../assets/icon/setting.svg";
 import { AccordionSetting } from "./AccordionSetting";
@@ -12,6 +12,8 @@ import axios from "axios";
 import conf from "@/conf/main";
 import { useAuth } from "react-oidc-context";
 import { ProfileAuthContext } from "@/contexts/Auth.context";
+import PostEvent from "./PostEvent";
+import AddEvent from "./AddEvent";
 
 export default function CustomCalendar({
   details,
@@ -26,6 +28,7 @@ export default function CustomCalendar({
   const [newEvent, setNewEvent] = useState<any>([]);
   const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
   const [test, setTest] = useState<boolean>(true);
+  const [modalAddEvent, setModalAddEvent] = useState<Boolean>(false)
   const value = useContext(ProfileAuthContext);
 
   interface EventData {
@@ -38,10 +41,17 @@ export default function CustomCalendar({
     } | null;
   }
 
-  const eventsWithoutId = value.user?.events ? value.user.events.map(event => {
-    const { id, ...rest } = event;
-    return { id, ...rest, backgroundColor: "#B3E0E3", borderColor: "#9AD1D4", };
-  }) : [];
+  const eventsWithoutId = value.user?.events
+    ? value.user.events.map((event) => {
+        const { id, ...rest } = event;
+        return {
+          id,
+          ...rest,
+          backgroundColor: "#B3E0E3",
+          borderColor: "#9AD1D4",
+        };
+      })
+    : [];
 
   useEffect(() => {
     const storedSubjects = localStorage.getItem("checkedSubjects");
@@ -52,7 +62,11 @@ export default function CustomCalendar({
         (value) => value === true
       );
       if (allFalse) {
-        setFilteredEvents([...events, ...holidayDateFormat, ...(eventsWithoutId ?? [])]);
+        setFilteredEvents([
+          ...events,
+          ...holidayDateFormat,
+          ...(eventsWithoutId ?? []),
+        ]);
       } else {
         const filteredEvents = events.filter(
           (event: any) => checkedSubjects[event.subjectCode]
@@ -60,7 +74,7 @@ export default function CustomCalendar({
         const combinedEvents = [
           ...filteredEvents,
           ...holidayDateFormat,
-          ...(eventsWithoutId ?? [])
+          ...(eventsWithoutId ?? []),
         ];
         console.log("combinedEventsData", combinedEvents);
         setFilteredEvents(combinedEvents);
@@ -99,7 +113,7 @@ export default function CustomCalendar({
           `${conf.apiUrlPrefix}/event`,
           newEventData
         );
-        
+
         console.log("new event", postNewEvent);
         if (value.triggerFetch) {
           value.triggerFetch();
@@ -120,7 +134,7 @@ export default function CustomCalendar({
     <>
       <div className="flex justify-center items-center  w-full h-screen">
         <div className="items-center relative bottom-20 flex flex-col mx-auto">
-          <Addevent />
+          <PostEvent/>
           <a className="mt-3">Edit</a>
           <AccordionSetting
             events={events}
@@ -159,6 +173,7 @@ export default function CustomCalendar({
             onClose={() => setModalOpen(false)}
           />
         </div>
+        <AddEvent/>
       </div>
     </>
   );

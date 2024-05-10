@@ -1,31 +1,40 @@
-import React, { useState, useEffect } from "react";
-import { FileInput, Label } from "flowbite-react";
-import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import DateFnsUtils from '@date-io/date-fns';
+import React, { useState, useEffect, useContext } from "react";
+import { Button, FileInput, Label } from "flowbite-react";
+import {
+  KeyboardDateTimePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 import axios from "axios";
 import conf from "@/conf/main";
 import { useAuth } from "react-oidc-context";
+import { ProfileAuthContext } from "@/contexts/Auth.context";
+import toast, { Toaster } from 'react-hot-toast';
+interface EventData {
+  title: string;
+  description: string;
+  start: string;
+  end: string;
+  user: {
+    id: number;
+  } | null;
+}
 
-function Addevent() {
+function AddEvent() {
   const auth = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [subjectType, setSubjctType] = useState<any>({});
-  const [selectedSubject, setSelectedSubject] = useState("");
   const [title, setTitle] = useState("");
   const [detail, setDetail] = useState("");
-  const [photo, setPhoto] = useState("");
-  const [previewPhoto, setPreviewPhoto] = useState(""); // State to hold the preview image data URL
+  const value = useContext(ProfileAuthContext);
 
   useEffect(() => {
     if (auth.isAuthenticated) {
-      fetchSubject();
     } else {
       console.log("No access token available");
     }
   }, [auth]);
-
 
   const addEvent = async () => {
     try {
@@ -33,79 +42,51 @@ function Addevent() {
         console.error("User not authenticated");
         return;
       }
-      
+      const newEventData: EventData = {
+        title: title || "ไม่ระบุ",
+        description: detail || "ไม่ระบุ",
+        start: startDate.toISOString(),
+        end: startDate.toISOString(),
+        user: { id: value.user?.id ?? 0 },
+      };
       const response = await axios.post(
-        `${conf.apiUrlPrefix}/schedules`,
-        {
-          subjectType: selectedSubject,
-          title: title, 
-          details: detail,
-          startTime: startDate.toISOString(),
-          stopTime: endDate.toISOString(),
-          photo: photo
-        },
-        {
-          headers: {
-            credential: "api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF",
-            token: auth.user.access_token,
-          },
-        }
+        `${conf.apiUrlPrefix}/event`,
+        newEventData
       );
-      console.log("Created event:", response.data);
+      console.log("Created event:", response);
+      if (value.triggerFetch) {
+        value.triggerFetch();
+      }
+      toast.success('สร้างกิจกรรมสำเร็จแล้ว');
     } catch (error) {
       console.error("Error creating event:", error);
+      toast.error('สร้างกิจกรรมไม่สำเร็จ');
     }
   };
- 
-  const fetchSubject = async () => {
-    try {
-      if (!auth || !auth.user) {
-        console.error("User not authenticated");
-        return;
-      }
-      
-      const subject = await axios.get(
-        `${conf.apiUrlPrefix}/api/fetch-student-class-date?eduYear=2563&eduTerm=1`,
-        {
-          headers: {
-            credential: "api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF",
-            token: auth.user.access_token,
-          },
-        }
-      );
-      setSubjctType(subject.data);
-      console.log('data = ', subject.data);
-      
-    } catch (error) {
-      console.log('error Subject', error);
-      
-    }
-  }
 
-  // Function to handle file selection and preview
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPhoto(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewPhoto(reader.result); // Set the preview image data URL
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-  
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <>
         <button
-          className="btn btn-circle btn-outline hover:btn-neutral"
+          className="btn btn-circle fixed bg-[#faf7f8] bottom-10 left-10 z-5 rounded-full p-2 shadow-sm w-[50px] h-[50px]"
           onClick={() => setModalOpen(true)}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-full h-full"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z"
+            />
           </svg>
         </button>
+        <Toaster position="bottom-right"/>
         {modalOpen && (
           <div
             className={`modal-overlay fixed flex justify-center items-center top-0 left-0 z-10 bg-black bg-opacity-50 w-full h-full`}
@@ -119,46 +100,42 @@ function Addevent() {
                   ✕
                 </button>
               </form>
-              <h3 className="font-bold text-lg bg-n">สร้างประกาศ</h3>
-              <p className="pt-5">
+              <h3 className="font-bold text-lg bg-n text-center">
+                สร้างกิจกรรม
+              </h3>
+              <p className="pt-4">
                 <label className="form-control ">
                   <div className="label">
-                    <span className="block text-gray-700 text-sm font-bold mb-2">วิชา</span>
+                    <span className="block text-gray-700 text-sm font-bold mb-2">
+                      ชื่อกิจกรรม
+                    </span>
                   </div>
-                  <select
-                    value={selectedSubject}
-                    onChange={(e) => setSelectedSubject(e.target.value)}
-                  >
-                    <option value="">เลื่อกวิชา</option>
-                    {Object.values(subjectType).map((subject:any) => (
-                      <option key={subject.subjectId} value={subject.subjectId}>
-                        {subject.subjectNameThai}
-                      </option>
-                    ))}
-                  </select>
+                  <input
+                    type="text"
+                    placeholder="หัวข้อเรื่อง"
+                    className="input input-bordered w-full "
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
                 </label>
-                <label className="form-control ">
+                <label className="form-control w-full">
                   <div className="label">
-                    <span className="block text-gray-700 text-sm font-bold mb-2">Event title</span>
-                  </div>
-                  <input type="text" placeholder="หัวข้อเรื่อง" className="input input-bordered w-full max-w-xs" value={title} onChange={(e) => setTitle(e.target.value)} />
-                </label>
-                <label className="form-control w-full max-w-xs pb-">
-                  <div className="label">
-                    <span className="block text-gray-700 text-sm font-bold mb-2">Details</span>
+                    <span className="block text-gray-700 text-sm font-bold mb-2 mt-2">
+                      รายละเอียด
+                    </span>
                   </div>
                   <textarea
                     placeholder="รายละเอียด"
                     className="textarea textarea-bordered w-full"
                     rows={4}
-                    value={detail} 
+                    value={detail}
                     onChange={(e) => setDetail(e.target.value)}
                   />
                 </label>
-                <div className="flex pt-3">
+                <div className="flex pt-3 mt-2">
                   <div className="mb-4">
                     <KeyboardDateTimePicker
-                      label="Start Date and Time"
+                      label="วันที่และเวลาเริ่มต้น"
                       value={startDate}
                       onChange={(date) => date && setStartDate(date)}
                       format="dd/MM/yyyy HH:mm"
@@ -166,68 +143,31 @@ function Addevent() {
                   </div>
                   <div className="mb-4">
                     <KeyboardDateTimePicker
-                      label="End Date and Time"
+                      label="วันที่และเวลาสิ้นสุด"
                       value={endDate}
                       onChange={(date) => date && setEndDate(date)}
                       format="dd/MM/yyyy HH:mm"
                     />
                   </div>
                 </div>
-                <div>
-                  <Label
-                    htmlFor="dropzone-file"
-                    className="flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600"
-                  >
-                    <div className="flex flex-col items-center justify-center pb-6 pt-5">
-                      {previewPhoto && <img src={previewPhoto} alt="Preview" className="mb-4 h-32 w-auto" />} {/* Display preview image */}
-                      <svg
-                        className={`mb-4 h-8 w-8 text-gray-500 dark:text-gray-400 ${previewPhoto ? 'hidden' : ''}`}
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 20 16"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                        />
-                      </svg>
-                      <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                        <span className="font-semibold">Click to upload</span> or
-                        drag and drop
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        SVG, PNG, JPG or GIF (MAX. 800x400px)
-                      </p>
-                    </div>
-                    {/* Input for uploading photo */}
-                    <FileInput
-                      id="dropzone-file"
-                      className="hidden"
-                      onChange={handleFileChange} // Handle file selection
-                    />
-                  </Label>
-                </div>
               </p>
+              <Button
+                gradientDuoTone="pinkToOrange"
+                className="px-6 mt-6 mx-auto "
+                onClick={() => {
+                  setModalOpen(false);
+                  addEvent();
+                }}
+              >
+                สร้าง
+              </Button>
             </div>
-            <button 
-              type="button" 
-              className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" 
-              onClick={() => {
-                setModalOpen(false);
-                addEvent();
-              }}
-            >
-              Save
-            </button>
           </div>
         )}
       </>
+      
     </MuiPickersUtilsProvider>
   );
 }
 
-export default Addevent;
+export default AddEvent;

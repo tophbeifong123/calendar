@@ -22,7 +22,7 @@ export class Schedule {
     stopTime : string
 
     @Column({nullable: true})
-    photo : string
+    image : string
     
     @Column({nullable: true})
     vote: number

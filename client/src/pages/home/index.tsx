@@ -59,7 +59,7 @@ function Home() {
           4
         )}`,
         lecturer: `${item.lecturerNameThai}`,
-        startRecur: `${startRecur.startRecur}`,
+        startRecur: `${startRecur}`,
         endRecur: `${maxExamDate.examDate.substring(0, 10)}T00:00:00`,
         section: `${item.section || "ไม่ระบุกลุ่ม"}`,
       }));
@@ -127,7 +127,7 @@ function Home() {
       const result = await axios.get(
         `${conf.apiUrlPrefix}/termdates?eduYear=2563&eduTerm=1`
       );
-      setStartRecur(result.data);
+      setStartRecur(result.data[0].startRecur);
       console.log("startRecur", result.data[0].startRecur);
     } catch (error) {
       console.error("Error fetching StartRecur:", error);

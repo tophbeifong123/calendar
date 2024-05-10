@@ -175,7 +175,7 @@ function Home() {
                         "Error creating event:",
                         errorData.error.message
                     );
-                    alert("Failed to create event. Please try again later.");
+
                 }
             } catch (error) {
                 console.error("Error creating event:", error);
