@@ -59,7 +59,7 @@ function Home() {
           4
         )}`,
         lecturer: `${item.lecturerNameThai}`,
-        startRecur: `${startRecur[0].startRecur}`,
+        startRecur: `${startRecur.startRecur}`,
         endRecur: `${maxExamDate.examDate.substring(0, 10)}T00:00:00`,
         section: `${item.section || "ไม่ระบุกลุ่ม"}`,
       }));

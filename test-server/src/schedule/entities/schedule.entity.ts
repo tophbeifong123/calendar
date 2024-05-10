@@ -23,9 +23,13 @@ export class Schedule {
 
     @Column({nullable: true})
     photo : string
+    
+    @Column({nullable: true})
+    vote: number
+    
+    @Column({nullable: true})
+    createby: string
 
     @Column({nullable: true})
     createdAt: string;
-
-
 }

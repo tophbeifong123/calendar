@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FileInput, Label } from "flowbite-react";
 import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from '@date-io/date-fns';
@@ -11,7 +11,21 @@ function Addevent() {
   const [modalOpen, setModalOpen] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [title, setTitle] = useState(""); // State variable for title
+  const [subjectType, setSubjctType] = useState<any>({});
+  const [selectedSubject, setSelectedSubject] = useState("");
+  const [title, setTitle] = useState("");
+  const [detail, setDetail] = useState("");
+  const [photo, setPhoto] = useState("");
+  const [previewPhoto, setPreviewPhoto] = useState(""); // State to hold the preview image data URL
+
+  useEffect(() => {
+    if (auth.isAuthenticated) {
+      fetchSubject();
+    } else {
+      console.log("No access token available");
+    }
+  }, [auth]);
+
 
   const addEvent = async () => {
     try {
@@ -23,11 +37,12 @@ function Addevent() {
       const response = await axios.post(
         `${conf.apiUrlPrefix}/schedules`,
         {
-          title: title, // Use the title state variable here
-          details: "Event details",
+          subjectType: selectedSubject,
+          title: title, 
+          details: detail,
           startTime: startDate.toISOString(),
           stopTime: endDate.toISOString(),
-          // Add other properties if needed
+          photo: photo
         },
         {
           headers: {
@@ -37,13 +52,49 @@ function Addevent() {
         }
       );
       console.log("Created event:", response.data);
-      // Handle success or update UI accordingly
     } catch (error) {
       console.error("Error creating event:", error);
-      // Handle error or show error message
     }
   };
+ 
+  const fetchSubject = async () => {
+    try {
+      if (!auth || !auth.user) {
+        console.error("User not authenticated");
+        return;
+      }
+      
+      const subject = await axios.get(
+        `${conf.apiUrlPrefix}/api/fetch-student-class-date?eduYear=2563&eduTerm=1`,
+        {
+          headers: {
+            credential: "api_key=JwnMeh+gj2rjD4PmSRhgbz13m9mKx2EF",
+            token: auth.user.access_token,
+          },
+        }
+      );
+      setSubjctType(subject.data);
+      console.log('data = ', subject.data);
+      
+    } catch (error) {
+      console.log('error Subject', error);
+      
+    }
+  }
 
+  // Function to handle file selection and preview
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPhoto(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewPhoto(reader.result); // Set the preview image data URL
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <>
@@ -72,6 +123,22 @@ function Addevent() {
               <p className="pt-5">
                 <label className="form-control ">
                   <div className="label">
+                    <span className="block text-gray-700 text-sm font-bold mb-2">วิชา</span>
+                  </div>
+                  <select
+                    value={selectedSubject}
+                    onChange={(e) => setSelectedSubject(e.target.value)}
+                  >
+                    <option value="">เลื่อกวิชา</option>
+                    {Object.values(subjectType).map((subject:any) => (
+                      <option key={subject.subjectId} value={subject.subjectId}>
+                        {subject.subjectNameThai}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="form-control ">
+                  <div className="label">
                     <span className="block text-gray-700 text-sm font-bold mb-2">Event title</span>
                   </div>
                   <input type="text" placeholder="หัวข้อเรื่อง" className="input input-bordered w-full max-w-xs" value={title} onChange={(e) => setTitle(e.target.value)} />
@@ -84,25 +151,27 @@ function Addevent() {
                     placeholder="รายละเอียด"
                     className="textarea textarea-bordered w-full"
                     rows={4}
+                    value={detail} 
+                    onChange={(e) => setDetail(e.target.value)}
                   />
                 </label>
                 <div className="flex pt-3">
-                <div className="mb-4">
-                <KeyboardDateTimePicker
-                  label="Start Date and Time"
-                  value={startDate}
-                  onChange={(date) => date && setStartDate(date)}
-                  format="dd/MM/yyyy HH:mm"
-                />
-              </div>
-              <div className="mb-4">
-                <KeyboardDateTimePicker
-                  label="End Date and Time"
-                  value={endDate}
-                  onChange={(date) => date && setEndDate(date)}
-                  format="dd/MM/yyyy HH:mm"
-                />
-              </div>
+                  <div className="mb-4">
+                    <KeyboardDateTimePicker
+                      label="Start Date and Time"
+                      value={startDate}
+                      onChange={(date) => date && setStartDate(date)}
+                      format="dd/MM/yyyy HH:mm"
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <KeyboardDateTimePicker
+                      label="End Date and Time"
+                      value={endDate}
+                      onChange={(date) => date && setEndDate(date)}
+                      format="dd/MM/yyyy HH:mm"
+                    />
+                  </div>
                 </div>
                 <div>
                   <Label
@@ -110,8 +179,9 @@ function Addevent() {
                     className="flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 hover:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-gray-500 dark:hover:bg-gray-600"
                   >
                     <div className="flex flex-col items-center justify-center pb-6 pt-5">
+                      {previewPhoto && <img src={previewPhoto} alt="Preview" className="mb-4 h-32 w-auto" />} {/* Display preview image */}
                       <svg
-                        className="mb-4 h-8 w-8 text-gray-500 dark:text-gray-400"
+                        className={`mb-4 h-8 w-8 text-gray-500 dark:text-gray-400 ${previewPhoto ? 'hidden' : ''}`}
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -133,12 +203,26 @@ function Addevent() {
                         SVG, PNG, JPG or GIF (MAX. 800x400px)
                       </p>
                     </div>
-                    <FileInput id="dropzone-file" className="hidden" />
+                    {/* Input for uploading photo */}
+                    <FileInput
+                      id="dropzone-file"
+                      className="hidden"
+                      onChange={handleFileChange} // Handle file selection
+                    />
                   </Label>
                 </div>
               </p>
             </div>
-            <button type="button" className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" onClick={addEvent}>save</button>
+            <button 
+              type="button" 
+              className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800" 
+              onClick={() => {
+                setModalOpen(false);
+                addEvent();
+              }}
+            >
+              Save
+            </button>
           </div>
         )}
       </>
