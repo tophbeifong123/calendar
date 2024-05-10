@@ -38,29 +38,11 @@ export default function CustomCalendar({
     } | null;
   }
 
-  const test11: [{
-    title: string;
-    description: string;
-    start: string;
-    end: string;
-    borderColor:string;
-    backgroundColor:string;
-  }] = [{
-    
-    description: "test test",
-    start: "2020-07-01",
-    end: "2020-07-02",
-    borderColor: "#9AD1D4",
-    backgroundColor: "#B3E0E3",
-    title: "test first event",
-  }];
-
   const eventsWithoutId = value.user?.events ? value.user.events.map(event => {
     const { id, ...rest } = event;
-    return { ...rest, backgroundColor: "#B3E0E3", borderColor: "#9AD1D4", };
+    return { id, ...rest, backgroundColor: "#B3E0E3", borderColor: "#9AD1D4", };
   }) : [];
 
-  console.log("78901",filteredEvents);
   useEffect(() => {
     const storedSubjects = localStorage.getItem("checkedSubjects");
     const checkedSubjects = storedSubjects ? JSON.parse(storedSubjects) : {};
@@ -102,7 +84,7 @@ export default function CustomCalendar({
     const title = prompt("ชื่อกิจกรรม");
     const description = prompt("รายละเอียด");
 
-    if (title != null) {
+    if (title != null && description != null) {
       const newEventData: EventData = {
         title: title || "ไม่ระบุ",
         description: description || "ไม่ระบุ",
@@ -110,13 +92,18 @@ export default function CustomCalendar({
         end: info.endStr,
         user: { id: value.user?.id ?? 0 },
       };
+      console.log("new event data", newEventData);
 
       try {
         const postNewEvent = await axios.post(
           `${conf.apiUrlPrefix}/event`,
           newEventData
         );
+        
         console.log("new event", postNewEvent);
+        if (value.triggerFetch) {
+          value.triggerFetch();
+        }
       } catch (error) {
         console.error("Error posting new event:", error);
       }

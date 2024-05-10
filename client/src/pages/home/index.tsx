@@ -21,9 +21,9 @@ function Home() {
   const [studentDetails, setStudentDetails] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [startRecur, setStartRecur] = useState<any>({});
-  const [holidayDateFormat,setHolidayDateFormat] = useState<any>([])
+  const [holidayDateFormat, setHolidayDateFormat] = useState<any>([]);
   const app = useRouter();
-  const value = useContext(ProfileAuthContext)
+  const value = useContext(ProfileAuthContext);
   // console.log("test1", examDate);
   useEffect(() => {
     if (auth.isAuthenticated) {
@@ -96,12 +96,9 @@ function Home() {
         backgroundColor: "#FFC7C7",
         allday: true,
       }));
-      const mergedEvents = [
-        ...newEventsFromClass,
-        ...newEventsFromExam,
-      ];
+      const mergedEvents = [...newEventsFromClass, ...newEventsFromExam];
       setEvents(mergedEvents);
-      setHolidayDateFormat(newEventsFromHoliday)
+      setHolidayDateFormat(newEventsFromHoliday);
 
       console.log("MergeEvents", mergedEvents);
     }
@@ -128,7 +125,7 @@ function Home() {
   const fectStartRecur = async () => {
     try {
       const result = await axios.get(
-        `${conf.apiUrlPrefix}/schedules?eduYear=2563&eduTerm=1`
+        `${conf.apiUrlPrefix}/termdates?eduYear=2563&eduTerm=1`
       );
       setStartRecur(result.data);
       console.log("startRecur", result.data[0].startRecur);
@@ -186,8 +183,14 @@ function Home() {
         </>
       ) : (
         <>
-          <div className="flex justify-center items-center h-screen bg-[#faf7f8]"> 
-            <CustomCalendar details={studentDetails} filterClass={classDate} filterExam={examDate} holidayDateFormat={holidayDateFormat} events={events} />
+          <div className="flex justify-center items-center h-screen bg-[#faf7f8]">
+            <CustomCalendar
+              details={studentDetails}
+              filterClass={classDate}
+              filterExam={examDate}
+              holidayDateFormat={holidayDateFormat}
+              events={events}
+            />
           </div>
           <FooterComponent />
         </>
