@@ -58,11 +58,20 @@ function AddEvent() {
         value.triggerFetch();
       }
       toast.success('สร้างกิจกรรมสำเร็จแล้ว');
+      resetForm();
     } catch (error) {
       console.error("Error creating event:", error);
       toast.error('สร้างกิจกรรมไม่สำเร็จ');
     }
   };
+
+  const resetForm = () => {
+    setTitle("");
+    setDetail("");
+    setStartDate(new Date());
+    setEndDate(new Date());
+  };
+
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
