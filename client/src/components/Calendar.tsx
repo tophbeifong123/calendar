@@ -14,6 +14,7 @@ import { useAuth } from "react-oidc-context";
 import { ProfileAuthContext } from "@/contexts/Auth.context";
 import PostEvent from "./PostEvent";
 import AddEvent from "./AddEvent";
+import ListPost from "./ListPost";
 
 export default function CustomCalendar({
   details,
@@ -135,7 +136,8 @@ export default function CustomCalendar({
       <div className="flex justify-center items-center  w-full h-screen">
         <div className="items-center relative bottom-20 flex flex-col mx-auto">
           <PostEvent/>
-          <a className="mt-3">Edit</a>
+          {/* <a className="mt-3">Edit</a> */}
+          <ListPost/>
           <AccordionSetting
             events={events}
             filterClass={filterClass}
