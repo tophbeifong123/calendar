@@ -8,7 +8,7 @@ export class Schedule {
     id : number
     
     @Column({nullable: true})
-    subjectType: string
+    subjectCode: string
 
     @Column({nullable: true})
     title: string

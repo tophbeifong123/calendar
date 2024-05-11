@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Button, FileInput, Label, Select } from "flowbite-react";
 import {
   KeyboardDateTimePicker,
@@ -8,19 +8,22 @@ import DateFnsUtils from "@date-io/date-fns";
 import axios from "axios";
 import conf from "@/conf/main";
 import { useAuth } from "react-oidc-context";
+import { ProfileAuthContext } from "@/contexts/Auth.context";
+import toast, { Toaster } from 'react-hot-toast';
 
 function PostEvent() {
   const auth = useAuth();
   const [modalOpen, setModalOpen] = useState<Boolean>(false);
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
-  const [subjectType, setSubjctType] = useState<any>({});
+  const [subjectType, setSubjctType] = useState<any>([]);
   const [selectedSubject, setSelectedSubject] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [detail, setDetail] = useState<string>("");
   const [photo, setPhoto] = useState<File | null>(null);
   const [previewPhoto, setPreviewPhoto] = useState<string>("");
-
+  const value = useContext(ProfileAuthContext);
+  // console.log("selectedSubject", selectedSubject);
   useEffect(() => {
     if (auth.isAuthenticated) {
       fetchSubject();
@@ -29,7 +32,7 @@ function PostEvent() {
     }
   }, [auth]);
 
-  const addEvent = async () => {
+  const PostEvent = async () => {
     try {
       if (!auth?.user) {
         console.error("User not authenticated");
@@ -47,15 +50,20 @@ function PostEvent() {
       const imageUrl = uploadResponse.data.filePath;
       console.log("testImage", imageUrl);
       const response = await axios.post(`${conf.apiUrlPrefix}/schedules`, {
-        subjectType: selectedSubject,
+        subjectCode: selectedSubject,
         title: title,
         description: detail,
         startTime: startDate.toISOString(),
         stopTime: endDate.toISOString(),
         image: imageUrl,
+        createBy: { id: value.user?.id ?? 0 },
+        vote: 0,
+        createdDate: new Date().toISOString(),
       });
       console.log("Posted Event:", response);
       console.log(photo);
+      toast.success('สร้างประกาศสำเร็จแล้ว');
+      format();
     } catch (error) {
       console.error("Error creating event:", error);
     }
@@ -76,17 +84,7 @@ function PostEvent() {
           },
         }
       );
-
-      const examSubject = await axios.get(
-        `${conf.apiUrlPrefix}/api/fetch-student-exam-date?eduYear=2563&eduTerm=1`,
-        {
-          headers: {
-            token: auth.user.access_token,
-          },
-        }
-      );
-      const mergeSubjectType = [...classSubject.data, ...examSubject.data]
-      setSubjctType(mergeSubjectType);
+      setSubjctType(classSubject.data);
       // console.log("data = ", subject.data);
     } catch (error) {
       console.log("error Subject", error);
@@ -107,6 +105,15 @@ function PostEvent() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const format = () => {
+    setTitle("");
+    setDetail("");
+    setStartDate(new Date());
+    setEndDate(new Date());
+    setPreviewPhoto("");
+    setPhoto(null);
   };
 
   return (
@@ -131,6 +138,7 @@ function PostEvent() {
             />
           </svg>
         </button>
+        <Toaster position="bottom-right"/>
         {modalOpen && (
           <div
             className={`modal-overlay fixed flex justify-center items-center top-0 left-0 z-10 bg-black bg-opacity-50 w-full h-full`}
@@ -144,7 +152,9 @@ function PostEvent() {
                   ✕
                 </button>
               </form>
-              <h3 className="font-bold text-lg bg-n text-center">สร้างประกาศ</h3>
+              <h3 className="font-bold text-lg bg-n text-center">
+                สร้างประกาศ
+              </h3>
               <p className="pt-5">
                 <label className="form-control ">
                   <div className="label">
@@ -154,27 +164,32 @@ function PostEvent() {
                   </div>
                   <Select
                     value={selectedSubject}
-                    onChange={(e) => setSelectedSubject(e.target.value)}
+                    onChange={(e) => {
+                      const selectedSubjectName = e.target.value;
+                      const selectedSubject = subjectType.find(
+                        (subject: any) =>
+                          subject.subjectNameThai === selectedSubjectName
+                      );
+                      const selectedSubjectCode = selectedSubject?.subjectCode;
+                      setSelectedSubject(selectedSubjectCode);
+                    }}
                   >
                     <option value="">เลือกวิชา</option>
-                    {Object.values(subjectType).map(
-                      (subject: any, index: number) => {
-                        const isDuplicate =
-                          Object.values(subjectType).filter(
+                    {subjectType
+                      .filter(
+                        (subject: any, index: number, self: any) =>
+                          index ===
+                          self.findIndex(
                             (s: any) =>
                               s.subjectNameThai === subject.subjectNameThai
-                          ).length > 1;
-                        if (!isDuplicate) {
-                          return (
-                            <option key={index} value={subject.subjectNameThai}>
-                              {subject.subjectNameThai}
-                            </option>
-                          );
-                        }
-                        return null;
-                      }
-                    )}
-                  </Select >
+                          )
+                      )
+                      .map((subject: any, index: number) => (
+                        <option key={index} value={subject.subjectNameThai}>
+                          {subject.subjectNameThai}
+                        </option>
+                      ))}
+                  </Select>
                 </label>
                 <label className="form-control ">
                   <div className="label">
@@ -273,6 +288,7 @@ function PostEvent() {
                 className="px-6 mt-6 mx-auto "
                 onClick={() => {
                   setModalOpen(false);
+                  PostEvent();
                 }}
               >
                 สร้าง
