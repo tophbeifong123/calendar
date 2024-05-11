@@ -137,7 +137,6 @@ export default function CustomCalendar({
         <div className="items-center relative bottom-20 flex flex-col mx-auto">
           <PostEvent/>
           {/* <a className="mt-3">Edit</a> */}
-          <ListPost/>
           <AccordionSetting
             events={events}
             filterClass={filterClass}

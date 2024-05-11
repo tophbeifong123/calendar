@@ -9,7 +9,8 @@ import axios from "axios";
 import conf from "@/conf/main";
 import { useAuth } from "react-oidc-context";
 import { ProfileAuthContext } from "@/contexts/Auth.context";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
+import ListPost from "./ListPost";
 
 function PostEvent() {
   const auth = useAuth();
@@ -22,6 +23,7 @@ function PostEvent() {
   const [detail, setDetail] = useState<string>("");
   const [photo, setPhoto] = useState<File | null>(null);
   const [previewPhoto, setPreviewPhoto] = useState<string>("");
+  const [reloadPosts, setReloadPosts] = useState<Boolean>(false);
   const value = useContext(ProfileAuthContext);
   // console.log("selectedSubject", selectedSubject);
   useEffect(() => {
@@ -31,6 +33,10 @@ function PostEvent() {
       console.log("No access token available");
     }
   }, [auth]);
+
+  const handlePostSuccess = () => {
+    setReloadPosts((prevState) => !prevState);
+  };
 
   const PostEvent = async () => {
     try {
@@ -62,7 +68,8 @@ function PostEvent() {
       });
       console.log("Posted Event:", response);
       console.log(photo);
-      toast.success('สร้างประกาศสำเร็จแล้ว');
+      handlePostSuccess();
+      toast.success("สร้างประกาศสำเร็จแล้ว");
       format();
     } catch (error) {
       console.error("Error creating event:", error);
@@ -120,7 +127,7 @@ function PostEvent() {
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <>
         <button
-          className="btn btn-circle btn-outline hover:btn-neutral"
+          className="btn btn-circle btn-outline hover:btn-neutral mb-5"
           onClick={() => setModalOpen(true)}
         >
           <svg
@@ -138,7 +145,8 @@ function PostEvent() {
             />
           </svg>
         </button>
-        <Toaster position="bottom-right"/>
+        <ListPost fetchPost={reloadPosts} subjectData={subjectType}/>
+        <Toaster position="bottom-right" />
         {modalOpen && (
           <div
             className={`modal-overlay fixed flex justify-center items-center top-0 left-0 z-10 bg-black bg-opacity-50 w-full h-full`}
@@ -164,14 +172,8 @@ function PostEvent() {
                   </div>
                   <Select
                     value={selectedSubject}
-                    onChange={(e) => {
-                      const selectedSubjectName = e.target.value;
-                      const selectedSubject = subjectType.find(
-                        (subject: any) =>
-                          subject.subjectNameThai === selectedSubjectName
-                      );
-                      const selectedSubjectCode = selectedSubject?.subjectCode;
-                      setSelectedSubject(selectedSubjectCode);
+                    onChange={(e: any) => {
+                      setSelectedSubject(e.target.value);
                     }}
                   >
                     <option value="">เลือกวิชา</option>
@@ -185,7 +187,7 @@ function PostEvent() {
                           )
                       )
                       .map((subject: any, index: number) => (
-                        <option key={index} value={subject.subjectNameThai}>
+                        <option key={index} value={subject.subjectCode}>
                           {subject.subjectNameThai}
                         </option>
                       ))}
