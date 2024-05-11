@@ -16,7 +16,7 @@ const config: Config = withMT({
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
     }, fontFamily: {
-      'thsarabun': ['THSarabunNew', 'sans-serif'],
+      'thsarabun': ['Sarabun', 'sans-serif'],
       roboto: ['Roboto', 'sans-serif'],
     },
   },

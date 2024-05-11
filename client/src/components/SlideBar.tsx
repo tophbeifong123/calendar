@@ -14,7 +14,6 @@ export default function SlideBar() {
           <Sidebar.Item
             href="/Google"
             icon={AiFillCarryOut}
-            // label="Pro"
             labelColor="dark"
           >
             Google

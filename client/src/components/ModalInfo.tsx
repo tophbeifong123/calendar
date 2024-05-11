@@ -32,7 +32,9 @@ export default function ModalInfo({
 
   const handleDeleteEvent = async (id: number) => {
     try {
-      const deleteEventResult = await axios.delete(`${conf.apiUrlPrefix}/event/${id}`);
+      const deleteEventResult = await axios.delete(
+        `${conf.apiUrlPrefix}/event/${id}`
+      );
       console.log("deleteEventResult", deleteEventResult);
       if (value.triggerFetch) {
         value.triggerFetch();
@@ -46,7 +48,7 @@ export default function ModalInfo({
   if (!event) {
     return null;
   }
-  console.log("modal event", event);
+  // console.log("modal event", event);
 
   return (
     <Modal
@@ -58,22 +60,22 @@ export default function ModalInfo({
         className={`
   ${
     !event._def.extendedProps.examTypeDesc && event._def.extendedProps.allday
-      ? "bg-pink-300"
+      ? "bg-[#FFC7C7]"
       : ""
   }
-  ${event._def.extendedProps.examTypeDesc ? "bg-orange-400" : ""}
+  ${event._def.extendedProps.examTypeDesc ? "bg-warning" : ""}
   ${
     event._def.extendedProps.lecturer && !event._def.extendedProps.examTypeDesc
-      ? "bg-blue-300"
+      ? "bg-info"
       : ""
   }
-  text-sm text-white p-5
+  text-sm text-white p-5 
 `}
       >
         {event.title}
       </Modal.Header>
-      <Modal.Body className="animate-opacity">
-        <div className="space-y-6">
+      <Modal.Body className="animate-opacity bg-base-100 rounded-xl shadow-sm">
+        <div className="space-y-6 py-3">
           {event._def.extendedProps.examTypeDesc && (
             <>
               <p className="text-base leading-relaxed text-gray-500 font-thin dark:text-gray-400">
@@ -141,11 +143,15 @@ export default function ModalInfo({
       {!event._def.extendedProps.lecturer &&
         !event._def.extendedProps.examTypeDesc &&
         !event._def.extendedProps.subjectCode && (
-          <Modal.Footer className="justify-end my-auto p-3">
-            <Button color="red" onClick={()=> handleDeleteEvent(event._def.publicId)}>
+          <Modal.Footer className="justify-end my-auto p-3 bg-base-100">
+            <Button
+              size={"sm"}
+              color="red"
+              onClick={() => handleDeleteEvent(event._def.publicId)}
+            >
               ลบกิจกรรม
             </Button>
-            <Button color="gray" onClick={handleCloseModal}>
+            <Button color="gray" onClick={handleCloseModal} size={"sm"}>
               ยกเลิก
             </Button>
           </Modal.Footer>
