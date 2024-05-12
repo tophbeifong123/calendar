@@ -159,9 +159,9 @@ function Home() {
             alert("โปรดเข้าสู่ระบบก่อนเพื่อสร้างกิจกรรม");
             return;
         }
-    
+
         try {
-            const requests = events.map(async (event:any) => {
+            const requests = events.map(async (event: any) => {
                 const response = await fetch(
                     "https://www.googleapis.com/calendar/v3/calendars/primary/events",
                     {
@@ -173,7 +173,7 @@ function Home() {
                         body: JSON.stringify(event), // ส่งแต่ละกิจกรรมแยกกัน
                     }
                 );
-    
+
                 if (!response.ok) {
                     // จัดการข้อผิดพลาด
                     const errorData = await response.json();
@@ -184,46 +184,36 @@ function Home() {
                     throw new Error("เกิดข้อผิดพลาดขณะสร้างกิจกรรม");
                 }
             });
-    
+
             await Promise.all(requests);
-    
+
             // แจ้งเตือนหลังจากทำงานเสร็จสมบูรณ์ทั้งหมด
-            alert("สร้างกิจกรรมเสร็จสมบูรณ์ โปรดตรวจสอบที่ปฏิทิน Google ของคุณ!");
+            alert(
+                "สร้างกิจกรรมเสร็จสมบูรณ์ โปรดตรวจสอบที่ปฏิทิน Google ของคุณ!"
+            );
         } catch (error) {
             console.error("เกิดข้อผิดพลาดในการสร้างกิจกรรม:", error);
-            alert(
-                "เกิดข้อผิดพลาดขณะสร้างกิจกรรม โปรดลองอีกครั้งในภายหลัง"
-            );
+            alert("เกิดข้อผิดพลาดขณะสร้างกิจกรรม โปรดลองอีกครั้งในภายหลัง");
         }
     };
-    
+
     return (
-        <>
-            <CustomNavbar />
-            {loading ? (
-                <>
-                    <div className="flex justify-center items-center h-screen bg-[#faf7f8]">
-                        <progress className="progress w-56"></progress>
-                    </div>
-                    <FooterComponent />
-                </>
-            ) : (
-                <>
-                    <div className="flex flex-col justify-center items-center h-screen bg-[#faf7f8]">
-                        hello google
-                        <button
-                            onClick={() => {
-                                console.log("hited"), importEvent();
-                            }}
-                            className="bg-blue-gray-600"
-                        >
-                            hit me up
-                        </button>
-                    </div>
-                    <FooterComponent />
-                </>
-            )}
-        </>
+        <div
+            onClick={() => {
+                console.log("hited"), importEvent();
+            }}
+            className="flex items-center justify-center h-screen dark:bg-gray-800"
+        >
+            <button className="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150">
+                <img
+                    className="w-6 h-6"
+                    src="https://www.svgrepo.com/show/475656/google-color.svg"
+                    loading="lazy"
+                    alt="google logo"
+                />
+                <span>Import to Google</span>
+            </button>
+        </div>
     );
 }
 
