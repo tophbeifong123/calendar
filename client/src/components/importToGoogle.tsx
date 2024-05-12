@@ -5,9 +5,8 @@ import { useAuth } from "react-oidc-context";
 import conf from "@/conf/main";
 import { FooterComponent } from "@/components/Footer";
 import { useSession } from "@supabase/auth-helpers-react";
-import ImportToGoogle from "@/components/importToGoogle";
 
-function Home() {
+function ImportToGoogle() {
     const auth = useAuth();
     const [events, setEvents] = useState<any>({});
     const [classDate, setClassDate] = useState<any[]>([]);
@@ -199,26 +198,23 @@ function Home() {
     };
 
     return (
-        <>
-            <CustomNavbar />
-            {loading ? (
-                <>
-                    <div className="flex justify-center items-center h-screen bg-[#faf7f8]">
-                        <progress className="progress w-56"></progress>
-                    </div>
-                    <FooterComponent />
-                </>
-            ) : (
-                <>
-                    <div className="flex flex-col justify-center items-center h-screen bg-[#faf7f8]">
-                        hello google
-                        <ImportToGoogle />
-                    </div>
-                    <FooterComponent />
-                </>
-            )}
-        </>
+        <div
+            onClick={() => {
+                console.log("hited"), importEvent();
+            }}
+            className="flex items-center justify-center h-screen dark:bg-gray-800"
+        >
+            <button className="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150">
+                <img
+                    className="w-6 h-6"
+                    src="https://www.svgrepo.com/show/475656/google-color.svg"
+                    loading="lazy"
+                    alt="google logo"
+                />
+                <span>Import to Google</span>
+            </button>
+        </div>
     );
 }
 
-export default Home;
+export default ImportToGoogle;
