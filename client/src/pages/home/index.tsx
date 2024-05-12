@@ -2,14 +2,10 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { CustomNavbar } from "@/components/Navbar";
 import { useAuth } from "react-oidc-context";
-import SlideBar from "@/components/SlideBar";
 import CustomCalendar from "@/components/Calendar";
-import DateTimePicker from "react-datetime-picker";
 import conf from "@/conf/main";
 import { useRouter } from "next/router";
 import { FooterComponent } from "@/components/Footer";
-import { Spinner } from "flowbite-react";
-import { AccordionSetting } from "@/components/AccordionSetting";
 import { ProfileAuthContext } from "@/contexts/Auth.context";
 
 function Home() {
@@ -18,6 +14,8 @@ function Home() {
   const [classDate, setClassDate] = useState<any[]>([]);
   const [examDate, setExamDate] = useState<any[]>([]);
   const [holidayDate, setHolidayDate] = useState<any[]>([]);
+  const [postDate, setPostDate] = useState<any[]>([]);
+  const [postDateFormat, setPostDateFormat] = useState<any[]>([]);
   const [studentDetails, setStudentDetails] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [startRecur, setStartRecur] = useState<any>({});
@@ -38,7 +36,7 @@ function Home() {
   }, [auth]);
 
   useEffect(() => {
-    if (classDate.length > 0 && examDate.length > 0 && startRecur) {
+    if (classDate.length > 0 && examDate.length > 0 && startRecur || postDate.length > 0) {
       const maxExamDate = examDate.reduce((maxDate, currentDate) => {
         const currentExamDate = new Date(currentDate.examDate);
         const maxExamDate = new Date(maxDate.examDate);
@@ -96,8 +94,22 @@ function Home() {
         backgroundColor: "#FFC7C7",
         allday: true,
       }));
+
+      const newEventsFromPost = postDate.map((item: any) => ({
+        title: `${item.subjectCode} ${item.title} `,
+        subjectCode: `${item.subjectCode}`,
+        description: ` ${item.description}`,
+        start: `${item.startTime}`,
+        end: `${item.stopTime}`,
+        image: `${item.image}`,
+        createDate: `${item.createDate}`,
+        status: `${item.status}`,
+        backgroundColor: item.status ? '#C3FF93' : '#EEEEEE',
+        allday: true,
+      }));
       const mergedEvents = [...newEventsFromClass, ...newEventsFromExam];
       setEvents(mergedEvents);
+      setPostDateFormat(newEventsFromPost);
       setHolidayDateFormat(newEventsFromHoliday);
 
       console.log("MergeEvents", mergedEvents);
@@ -157,8 +169,14 @@ function Home() {
         `${conf.apiUrlPrefix}/api/fetch-holiday-google`
       );
 
+      const resultPost = await axios.get(
+        `${conf.apiUrlPrefix}/schedules`
+      );
+
+      setPostDate(resultPost.data)
       setClassDate(result.data);
       setExamDate(resultExam.data);
+      setPostDate(resultPost.data)
       setHolidayDate(resultHoliday.data.items);
 
       console.log("classDate", result.data);
@@ -188,6 +206,7 @@ function Home() {
               details={studentDetails}
               filterClass={classDate}
               filterExam={examDate}
+              postDateFormat={postDateFormat}
               holidayDateFormat={holidayDateFormat}
               events={events}
             />

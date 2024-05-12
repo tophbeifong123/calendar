@@ -30,6 +30,7 @@ interface Event {
 
 interface User {
   id: number;
+  studentId: string;
   events?: Event[];
 }
 

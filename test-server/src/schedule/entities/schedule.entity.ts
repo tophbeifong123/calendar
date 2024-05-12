@@ -36,4 +36,7 @@ export class Schedule {
 
     @Column({nullable: true})
     createdDate: string;
+
+    @Column({nullable: true})
+    status: boolean;
 }

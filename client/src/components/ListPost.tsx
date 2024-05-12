@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import conf from "@/conf/main";
 import { Button, Select } from "flowbite-react";
 import PostEvent from "./PostEvent";
+import { ProfileAuthContext } from "@/contexts/Auth.context";
+import toast, { Toaster } from "react-hot-toast";
 
 interface Post {
+  id: number;
   subjectCode: string;
   title: string;
   description: string;
@@ -23,7 +26,8 @@ function ListPost({ fetchPost, subjectData }: any) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedSubject, setSelectedSubject] = useState<string>("");
-
+  const [deletePost, setDeletePost] = useState<boolean>(false);
+  const value = useContext(ProfileAuthContext);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -41,7 +45,20 @@ function ListPost({ fetchPost, subjectData }: any) {
     };
 
     fetchData();
-  }, [fetchPost, selectedSubject]);
+  }, [fetchPost, selectedSubject, deletePost]);
+
+  const handleDelete = async (id: number) => {
+    try {
+      const resDelete = await axios.delete(
+        `${conf.apiUrlPrefix}/schedules/${id}`
+      );
+      setDeletePost(!deletePost);
+      toast.success("ลบประกาศสำเร็จแล้ว");
+      console.log("resDelete", resDelete);
+    } catch (error) {
+      console.error("Error delete post:", error);
+    }
+  };
 
   return (
     <>
@@ -64,6 +81,7 @@ function ListPost({ fetchPost, subjectData }: any) {
           />
         </svg>
       </button>
+      <Toaster position="bottom-right" />
       {modalOpen && (
         <div className="modal-overlay fixed flex justify-center items-center top-0 left-0 z-10 bg-black bg-opacity-50 w-full h-full">
           <div className="modal-box p-6 bg-white rounded-lg shadow-lg">
@@ -137,7 +155,15 @@ function ListPost({ fetchPost, subjectData }: any) {
                         <strong>ผู้โพสต์:</strong> {post.createBy.studentId}
                       </p>
                       <div className="card-actions justify-end">
-                        <button className="btn btn-primary">Vote</button>
+                        {value.user?.studentId === post.createBy.studentId && (
+                          <button
+                            className="btn btn-secondary"
+                            onClick={() => handleDelete(post.id)}
+                          >
+                            Delete
+                          </button>
+                        )}
+                        <button className="btn btn-info">Vote</button>
                       </div>
                     </div>
                   </div>

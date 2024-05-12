@@ -65,6 +65,7 @@ function PostEvent() {
         createBy: { id: value.user?.id ?? 0 },
         vote: 0,
         createdDate: new Date().toISOString(),
+        status: false,
       });
       console.log("Posted Event:", response);
       console.log(photo);
@@ -145,7 +146,7 @@ function PostEvent() {
             />
           </svg>
         </button>
-        <ListPost fetchPost={reloadPosts} subjectData={subjectType}/>
+        <ListPost fetchPost={reloadPosts} subjectData={subjectType} />
         <Toaster position="bottom-right" />
         {modalOpen && (
           <div

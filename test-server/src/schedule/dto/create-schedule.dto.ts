@@ -10,5 +10,6 @@ export class CreateScheduleDto {
     readonly createBy: User;
     readonly createdDate: string;
     readonly vote: number;
+    readonly status: boolean;
 
 }

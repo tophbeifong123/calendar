@@ -21,6 +21,7 @@ export default function CustomCalendar({
   events,
   filterClass,
   filterExam,
+  postDateFormat,
   holidayDateFormat,
 }: any) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -65,6 +66,7 @@ export default function CustomCalendar({
       if (allFalse) {
         setFilteredEvents([
           ...events,
+          ...postDateFormat,
           ...holidayDateFormat,
           ...(eventsWithoutId ?? []),
         ]);
@@ -74,6 +76,7 @@ export default function CustomCalendar({
         );
         const combinedEvents = [
           ...filteredEvents,
+          ...postDateFormat,
           ...holidayDateFormat,
           ...(eventsWithoutId ?? []),
         ];
