@@ -124,7 +124,7 @@ function ListPost({ fetchPost, subjectData }: any) {
                     key={index}
                     className="card card-compact w-96 bg-base-100 shadow-xl mt-10 mx-auto"
                   >
-                    <div className="flex justify-center">
+                    <div className="flex justify-center items-center mt-3">
                       {new Date(post.createdDate).toLocaleString("en-GB", {
                       day: "2-digit",
                       month: "2-digit",
@@ -139,7 +139,7 @@ function ListPost({ fetchPost, subjectData }: any) {
                         <img
                           src={post.image}
                           alt="Post Image"
-                          className="h-[240px] mt-6 "
+                          className="h-[240px] mt-3 "
                         />
                       ) : (
                         <p className="text-center text-gray-500">ไม่มีรูปภาพ</p>
