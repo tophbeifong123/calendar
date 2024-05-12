@@ -12,6 +12,7 @@ import {
   KeyboardDateTimePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
+import ImportToGoogle from "@/components/ImportToGoogle";
 
 function Google() {
   const [start, setStart] = useState<Date | null>(new Date());
@@ -106,12 +107,13 @@ function Google() {
   console.log(eventDescription);
 
   return (
-    <>
+    <div className="h-screen bg-for-calendar">
       <MuiPickersUtilsProvider utils={LocaleUtils}>
         <CustomNavbar />
-        <div className=" h-full w-full bg-[#faf7f8]">
-          <div className="p-10  rounded-xl drop-shadow-xl justify-center items-center">
-            <h2 className="text-center">import Calendar</h2>
+        <div className="flex h-full w-full justify-center items-center">
+          <div className="p-10  rounded-xl drop-shadow-xl justify-center items-center space-y-10">
+            
+          
             {session ? (
               <>
                 <h2 className="text-2xl mb-4">
@@ -197,10 +199,11 @@ function Google() {
                 Sign In With Google
               </button>
             )}
+            <ImportToGoogle />
           </div>
         </div>
       </MuiPickersUtilsProvider>
-    </>
+    </div>
   );
 }
 
