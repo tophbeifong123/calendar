@@ -211,7 +211,7 @@ function ImportToGoogle() {
                     loading="lazy"
                     alt="google logo"
                 />
-                <span>Import to Google</span>
+                <span>Import your events to Google Calendar</span>
             </button>
         </div>
     );
