@@ -124,6 +124,16 @@ function ListPost({ fetchPost, subjectData }: any) {
                     key={index}
                     className="card card-compact w-96 bg-base-100 shadow-xl mt-10 mx-auto"
                   >
+                    <div className="flex justify-center">
+                      {new Date(post.createdDate).toLocaleString("en-GB", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                    </div>
+
                     <figure>
                       {post.image ? (
                         <img

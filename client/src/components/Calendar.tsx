@@ -13,7 +13,7 @@ import conf from "@/conf/main";
 import { useAuth } from "react-oidc-context";
 import { ProfileAuthContext } from "@/contexts/Auth.context";
 import PostEvent from "./PostEvent";
-import AddEvent from "./AddEvent";
+import AddEvent from "./Addevent";
 import ListPost from "./ListPost";
 
 export default function CustomCalendar({
