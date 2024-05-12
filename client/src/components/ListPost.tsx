@@ -28,6 +28,8 @@ function ListPost({ fetchPost, subjectData }: any) {
   const [selectedSubject, setSelectedSubject] = useState<string>("");
   const [deletePost, setDeletePost] = useState<boolean>(false);
   const value = useContext(ProfileAuthContext);
+  const [vote,setVote] = useState<number>(0)
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -45,7 +47,7 @@ function ListPost({ fetchPost, subjectData }: any) {
     };
 
     fetchData();
-  }, [fetchPost, selectedSubject, deletePost]);
+  }, [fetchPost, selectedSubject, deletePost, vote]);
 
   const handleDelete = async (id: number) => {
     try {
@@ -59,6 +61,22 @@ function ListPost({ fetchPost, subjectData }: any) {
       console.error("Error delete post:", error);
     }
   };
+
+  const VoteUpdate = async (id: number) => {
+    try {
+      setVote(vote+1);
+      const response = await axios.put(
+        `${conf.apiUrlPrefix}/schedules/${id}`,{
+          vote:vote
+        }
+      );
+      toast.success("โหวตสำเร็จแล้ว!!");
+    } catch (error) {
+      console.error("Error update vote:", error);
+      toast.error("เกิดข้อผิดพลาดในการโหวต");      
+    }
+  };
+  
 
   return (
     <>
@@ -164,6 +182,9 @@ function ListPost({ fetchPost, subjectData }: any) {
                       <p>
                         <strong>ผู้โพสต์:</strong> {post.createBy.studentId}
                       </p>
+                      <p>
+                        <strong>vote:</strong> {post.vote}/5
+                      </p>
                       <div className="card-actions justify-end">
                         {value.user?.studentId === post.createBy.studentId && (
                           <button
@@ -173,8 +194,8 @@ function ListPost({ fetchPost, subjectData }: any) {
                             Delete
                           </button>
                         )}
-                        <button className="btn btn-info">Vote</button>
-                      </div>
+                        <button className="btn btn-info" onClick={() => VoteUpdate(post.id)}>Vote</button>
+                        </div>
                     </div>
                   </div>
                 ))
