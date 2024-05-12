@@ -32,6 +32,8 @@ export default function CustomCalendar({
   const [test, setTest] = useState<boolean>(true);
   const [modalAddEvent, setModalAddEvent] = useState<Boolean>(false)
   const value = useContext(ProfileAuthContext);
+  
+  console.log(selectEvent)
 
   interface EventData {
     title: string;

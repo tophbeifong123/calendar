@@ -36,7 +36,10 @@ function Home() {
   }, [auth]);
 
   useEffect(() => {
-    if (classDate.length > 0 && examDate.length > 0 && startRecur || postDate.length > 0) {
+    if (
+      (classDate.length > 0 && examDate.length > 0 && startRecur) ||
+      postDate.length > 0
+    ) {
       const maxExamDate = examDate.reduce((maxDate, currentDate) => {
         const currentExamDate = new Date(currentDate.examDate);
         const maxExamDate = new Date(maxDate.examDate);
@@ -96,6 +99,7 @@ function Home() {
       }));
 
       const newEventsFromPost = postDate.map((item: any) => ({
+        id: `${item.id} `,
         title: `${item.subjectCode} ${item.title} `,
         subjectCode: `${item.subjectCode}`,
         description: ` ${item.description}`,
@@ -104,8 +108,9 @@ function Home() {
         image: `${item.image}`,
         createDate: `${item.createDate}`,
         status: `${item.status}`,
-        backgroundColor: item.status ? '#C3FF93' : '#EEEEEE',
+        backgroundColor: item.status ? "#C3FF93" : "#EEEEEE",
         allday: true,
+        createBy: `${item.createBy.studentId}`,
       }));
       const mergedEvents = [...newEventsFromClass, ...newEventsFromExam];
       setEvents(mergedEvents);
@@ -169,14 +174,12 @@ function Home() {
         `${conf.apiUrlPrefix}/api/fetch-holiday-google`
       );
 
-      const resultPost = await axios.get(
-        `${conf.apiUrlPrefix}/schedules`
-      );
+      const resultPost = await axios.get(`${conf.apiUrlPrefix}/schedules`);
 
-      setPostDate(resultPost.data)
+      setPostDate(resultPost.data);
       setClassDate(result.data);
       setExamDate(resultExam.data);
-      setPostDate(resultPost.data)
+      setPostDate(resultPost.data);
       setHolidayDate(resultHoliday.data.items);
 
       console.log("classDate", result.data);
