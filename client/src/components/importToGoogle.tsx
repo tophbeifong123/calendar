@@ -6,7 +6,7 @@ import conf from "@/conf/main";
 import { FooterComponent } from "@/components/Footer";
 import { useSession } from "@supabase/auth-helpers-react";
 
-function Home() {
+function ImportToGoogle() {
     const auth = useAuth();
     const [events, setEvents] = useState<any>({});
     const [classDate, setClassDate] = useState<any[]>([]);
@@ -217,4 +217,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default ImportToGoogle;

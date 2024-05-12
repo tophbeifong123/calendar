@@ -5,6 +5,7 @@ import { useAuth } from "react-oidc-context";
 import conf from "@/conf/main";
 import { FooterComponent } from "@/components/Footer";
 import { useSession } from "@supabase/auth-helpers-react";
+import ImportToGoogle from "@/components/importToGoogle";
 
 function Home() {
     const auth = useAuth();
@@ -159,9 +160,9 @@ function Home() {
             alert("โปรดเข้าสู่ระบบก่อนเพื่อสร้างกิจกรรม");
             return;
         }
-    
+
         try {
-            const requests = events.map(async (event:any) => {
+            const requests = events.map(async (event: any) => {
                 const response = await fetch(
                     "https://www.googleapis.com/calendar/v3/calendars/primary/events",
                     {
@@ -173,7 +174,7 @@ function Home() {
                         body: JSON.stringify(event), // ส่งแต่ละกิจกรรมแยกกัน
                     }
                 );
-    
+
                 if (!response.ok) {
                     // จัดการข้อผิดพลาด
                     const errorData = await response.json();
@@ -184,19 +185,19 @@ function Home() {
                     throw new Error("เกิดข้อผิดพลาดขณะสร้างกิจกรรม");
                 }
             });
-    
+
             await Promise.all(requests);
-    
+
             // แจ้งเตือนหลังจากทำงานเสร็จสมบูรณ์ทั้งหมด
-            alert("สร้างกิจกรรมเสร็จสมบูรณ์ โปรดตรวจสอบที่ปฏิทิน Google ของคุณ!");
+            alert(
+                "สร้างกิจกรรมเสร็จสมบูรณ์ โปรดตรวจสอบที่ปฏิทิน Google ของคุณ!"
+            );
         } catch (error) {
             console.error("เกิดข้อผิดพลาดในการสร้างกิจกรรม:", error);
-            alert(
-                "เกิดข้อผิดพลาดขณะสร้างกิจกรรม โปรดลองอีกครั้งในภายหลัง"
-            );
+            alert("เกิดข้อผิดพลาดขณะสร้างกิจกรรม โปรดลองอีกครั้งในภายหลัง");
         }
     };
-    
+
     return (
         <>
             <CustomNavbar />
@@ -211,14 +212,7 @@ function Home() {
                 <>
                     <div className="flex flex-col justify-center items-center h-screen bg-[#faf7f8]">
                         hello google
-                        <button
-                            onClick={() => {
-                                console.log("hited"), importEvent();
-                            }}
-                            className="bg-blue-gray-600"
-                        >
-                            hit me up
-                        </button>
+                        <ImportToGoogle />
                     </div>
                     <FooterComponent />
                 </>
