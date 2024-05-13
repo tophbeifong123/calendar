@@ -64,11 +64,20 @@ function ListPost({ fetchPost, subjectData }: any) {
 
   const VoteUpdate = async (id: number) => {
     try {
-      setVote(vote+1);
-      const response = await axios.put(
-        `${conf.apiUrlPrefix}/schedules/${id}`,{
-          vote:vote
+      const updatedPosts = posts.map(post => {
+        if (post.id === id) {
+          return {
+            ...post,
+            vote: post.vote + 1
+          };
         }
+        return post;
+      });
+      setPosts(updatedPosts); 
+
+      const response = await axios.put(
+        `${conf.apiUrlPrefix}/schedules/${id}`,
+        { vote: updatedPosts.find(post => post.id === id)?.vote } 
       );
       toast.success("โหวตสำเร็จแล้ว!!");
     } catch (error) {
