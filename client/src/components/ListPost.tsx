@@ -14,6 +14,7 @@ interface Post {
   startTime: string;
   stopTime: string;
   image: string;
+  status:boolean;
   vote: number;
   createdDate: string;
   createBy: {
@@ -74,11 +75,27 @@ function ListPost({ fetchPost, subjectData }: any) {
         return post;
       });
       setPosts(updatedPosts); 
-
+  
+      // เช็คว่าคะแนนโหวตถึง 5 หรือไม่ ถ้าถึงให้อัปเดตสถานะเป็น true
+      const updatedStatus = updatedPosts.map(post => {
+        if (post.id === id && post.vote === 5) {
+          return {
+            ...post,
+            status: true
+          };
+        }
+        return post;
+      });
+  
+      // ส่งคำร้องขอไปยังเซิร์ฟเวอร์เพื่ออัปเดตสถานะ
       const response = await axios.put(
         `${conf.apiUrlPrefix}/schedules/${id}`,
-        { vote: updatedPosts.find(post => post.id === id)?.vote } 
+        { 
+          vote: updatedPosts.find(post => post.id === id)?.vote,
+          status: updatedStatus.find(post => post.id === id)?.status 
+        } 
       );
+  
       toast.success("โหวตสำเร็จแล้ว!!");
     } catch (error) {
       console.error("Error update vote:", error);
@@ -86,6 +103,7 @@ function ListPost({ fetchPost, subjectData }: any) {
     }
   };
   
+    
 
   return (
     <>
