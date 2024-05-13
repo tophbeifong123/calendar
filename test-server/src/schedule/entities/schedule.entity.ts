@@ -22,7 +22,7 @@ export class Schedule {
     @Column({nullable: true})
     stopTime : string
 
-    @Column({nullable: true})
+    @Column({nullable: false})
     image : string
     
     @Column({nullable: true})

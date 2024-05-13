@@ -106,11 +106,13 @@ function Home() {
         start: `${item.startTime}`,
         end: `${item.stopTime}`,
         image: `${item.image}`,
-        createDate: `${item.createDate}`,
+        createdDate: `${item.createdDate}`,
         status: `${item.status}`,
-        backgroundColor: item.status ? "#C3FF93" : "#EEEEEE",
+        backgroundColor: item.vote >= 5 ? "#C3FF93" : "#EEEEEE",
         allday: true,
         createBy: `${item.createBy.studentId}`,
+        vote: `${item.vote}`,
+        votedBy: `${item.votedBy}`,
       }));
       const mergedEvents = [...newEventsFromClass, ...newEventsFromExam];
       setEvents(mergedEvents);
@@ -197,14 +199,14 @@ function Home() {
       <CustomNavbar />
       {loading ? (
         <>
-          <div className="flex justify-center items-center h-screen bg-for-calendar">
+          <div className="flex justify-center items-center h-screen ">
             <progress className="progress w-56"></progress>
           </div>
           <FooterComponent />
         </>
       ) : (
         <>
-          <div className="flex justify-center items-center h-screen bg-for-calendar">
+          <div className="flex justify-center items-center h-screen ">
             <CustomCalendar
               details={studentDetails}
               filterClass={classDate}

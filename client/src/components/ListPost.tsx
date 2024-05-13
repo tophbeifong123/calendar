@@ -14,10 +14,13 @@ interface Post {
   startTime: string;
   stopTime: string;
   image: string;
-  status:boolean;
   vote: number;
   createdDate: string;
   createBy: {
+    id: number;
+    studentId: string;
+  };
+  votedBy: {
     id: number;
     studentId: string;
   };
@@ -25,11 +28,11 @@ interface Post {
 
 function ListPost({ fetchPost, subjectData }: any) {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [newFetch, setNewFetch] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedSubject, setSelectedSubject] = useState<string>("");
-  const [deletePost, setDeletePost] = useState<boolean>(false);
   const value = useContext(ProfileAuthContext);
-  const [vote,setVote] = useState<number>(0)
+  const [vote, setVote] = useState<number>(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,14 +51,14 @@ function ListPost({ fetchPost, subjectData }: any) {
     };
 
     fetchData();
-  }, [fetchPost, selectedSubject, deletePost, vote]);
+  }, [fetchPost, selectedSubject, newFetch]);
 
   const handleDelete = async (id: number) => {
     try {
       const resDelete = await axios.delete(
         `${conf.apiUrlPrefix}/schedules/${id}`
       );
-      setDeletePost(!deletePost);
+      setNewFetch(!newFetch);
       toast.success("ลบประกาศสำเร็จแล้ว");
       console.log("resDelete", resDelete);
     } catch (error) {
@@ -63,47 +66,19 @@ function ListPost({ fetchPost, subjectData }: any) {
     }
   };
 
-  const VoteUpdate = async (id: number) => {
+  const VoteUpdate = async (id: number, vote: number) => {
     try {
-      const updatedPosts = posts.map(post => {
-        if (post.id === id) {
-          return {
-            ...post,
-            vote: post.vote + 1
-          };
-        }
-        return post;
+      const response = await axios.put(`${conf.apiUrlPrefix}/schedules/${id}`, {
+        vote: vote + 1,
+        votedBy: { id: value.user?.id ?? 0 },
       });
-      setPosts(updatedPosts); 
-  
-      // เช็คว่าคะแนนโหวตถึง 5 หรือไม่ ถ้าถึงให้อัปเดตสถานะเป็น true
-      const updatedStatus = updatedPosts.map(post => {
-        if (post.id === id && post.vote === 5) {
-          return {
-            ...post,
-            status: true
-          };
-        }
-        return post;
-      });
-  
-      // ส่งคำร้องขอไปยังเซิร์ฟเวอร์เพื่ออัปเดตสถานะ
-      const response = await axios.put(
-        `${conf.apiUrlPrefix}/schedules/${id}`,
-        { 
-          vote: updatedPosts.find(post => post.id === id)?.vote,
-          status: updatedStatus.find(post => post.id === id)?.status 
-        } 
-      );
-  
       toast.success("โหวตสำเร็จแล้ว!!");
+      setNewFetch(!newFetch);
     } catch (error) {
       console.error("Error update vote:", error);
-      toast.error("เกิดข้อผิดพลาดในการโหวต");      
+      toast.error("เกิดข้อผิดพลาดในการโหวต");
     }
   };
-  
-    
 
   return (
     <>
@@ -169,14 +144,23 @@ function ListPost({ fetchPost, subjectData }: any) {
                     key={index}
                     className="card card-compact w-96 bg-base-100 shadow-xl mt-10 mx-auto"
                   >
-                    <div className="flex justify-center items-center mt-3">
+                    <div className="flex ml-7 mt-3">
+                      {post.vote >= 5 ? (
+                        <div className="badge bg-[#C3FF93] mr-4">
+                          ยืนยันแล้ว
+                        </div>
+                      ) : post.vote < 5 ? (
+                        <div className="badge badge-ghost mr-4">
+                          ยังไม่ยืนยัน
+                        </div>
+                      ) : null}
                       {new Date(post.createdDate).toLocaleString("en-GB", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </div>
 
                     <figure>
@@ -210,7 +194,7 @@ function ListPost({ fetchPost, subjectData }: any) {
                         <strong>ผู้โพสต์:</strong> {post.createBy.studentId}
                       </p>
                       <p>
-                        <strong>vote:</strong> {post.vote}/5
+                        <strong>รับทราบแล้ว:</strong> {post.vote} คน
                       </p>
                       <div className="card-actions justify-end">
                         {value.user?.studentId === post.createBy.studentId && (
@@ -218,11 +202,27 @@ function ListPost({ fetchPost, subjectData }: any) {
                             className="btn btn-secondary"
                             onClick={() => handleDelete(post.id)}
                           >
-                            Delete
+                            ลบประกาศ
                           </button>
                         )}
-                        <button className="btn btn-info" onClick={() => VoteUpdate(post.id)}>Vote</button>
-                        </div>
+                        <button
+                          className="btn btn-info"
+                          onClick={() => {
+                            const isVotedByCurrentUser =
+                              post.votedBy &&
+                              post.votedBy.studentId === value.user?.studentId;
+                            if (!isVotedByCurrentUser) {
+                              VoteUpdate(post.id, post.vote);
+                            }
+                          }}
+                          disabled={
+                            post.votedBy &&
+                            post.votedBy.studentId === value.user?.studentId
+                          }
+                        >
+                          ยืนยัน/รับทราบ
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))

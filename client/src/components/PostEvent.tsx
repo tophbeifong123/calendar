@@ -44,17 +44,20 @@ function PostEvent() {
         console.error("User not authenticated");
         return;
       }
+
+      let imageUrl = "";
+
       const formData = new FormData();
       if (photo) {
         formData.append("image", photo);
+        const uploadResponse = await axios.post(
+          `${conf.apiUrlPrefix}/schedules/upload`,
+          formData
+        );
+        imageUrl = uploadResponse.data.filePath;
+        console.log("testImage", imageUrl);
       }
 
-      const uploadResponse = await axios.post(
-        `${conf.apiUrlPrefix}/schedules/upload`,
-        formData
-      );
-      const imageUrl = uploadResponse.data.filePath;
-      console.log("testImage", imageUrl);
       const response = await axios.post(`${conf.apiUrlPrefix}/schedules`, {
         subjectCode: selectedSubject,
         title: title,

@@ -63,6 +63,20 @@ export default function ModalInfo({
     }
   };
 
+  const VoteUpdate = async (id: number, vote: number) => {
+    try {
+      const response = await axios.put(`${conf.apiUrlPrefix}/schedules/${id}`, {
+        vote: vote + 1,
+        votedBy: { id: value.user?.id ?? 0 },
+      });
+      toast.success("โหวตสำเร็จแล้ว!!");
+      handleCloseModal();
+    } catch (error) {
+      console.error("Error update vote:", error);
+      toast.error("เกิดข้อผิดพลาดในการโหวต");
+    }
+  };
+
   return (
     <Modal
       show={modalOpen}
@@ -86,9 +100,9 @@ export default function ModalInfo({
 `}
       >
         {event.title}{" "}
-        {event._def.extendedProps.status === "true" ? (
+        {event._def.extendedProps.vote >= 5 ? (
           <div className="badge bg-[#C3FF93] ml-1">ยืนยันแล้ว</div>
-        ) : event._def.extendedProps.status === "false" ? (
+        ) : event._def.extendedProps.vote < 5 ? (
           <div className="badge badge-ghost ml-1">ยังไม่ยืนยัน</div>
         ) : null}
       </Modal.Header>
@@ -161,12 +175,23 @@ export default function ModalInfo({
           {event._def.extendedProps.image && (
             <>
               <div className="card card-compact w-96 bg-base-100 shadow-xl my-10 mx-auto">
+                <div className="flex justify-center items-center mt-3">
+                  {new Date(
+                    event._def.extendedProps.createdDate
+                  ).toLocaleString("en-GB", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </div>
                 <figure>
                   {event._def.extendedProps.image ? (
                     <img
                       src={event._def.extendedProps.image}
                       alt="Post Image"
-                      className="h-[240px] mt-6 "
+                      className="h-[240px] mt-3"
                     />
                   ) : (
                     <p className="text-center text-gray-500">ไม่มีรูปภาพ</p>
@@ -192,7 +217,7 @@ export default function ModalInfo({
                     <strong>ผู้โพสต์:</strong>{" "}
                     {event._def.extendedProps.createBy}
                   </p>
-                  <div className="card-actions justify-end">
+                  <div className="card-actions justify-end mt-2">
                     {value.user?.studentId ===
                       event._def.extendedProps.createBy && (
                       <button
@@ -201,10 +226,23 @@ export default function ModalInfo({
                           handleDelete(event._def.extendedProps.id)
                         }
                       >
-                        Delete
+                        ลบประกาศ
                       </button>
                     )}
-                    <button className="btn btn-info">Vote</button>
+                    <button
+                          className="btn btn-info"
+                          onClick={() => {
+                            const isVotedByCurrentUser =
+                            event._def.extendedProps.votedBy &&
+                            event._def.extendedProps.votedBy.studentId === value.user?.studentId;
+                            if (!isVotedByCurrentUser) {
+                              VoteUpdate(event._def.extendedProps.id, event._def.extendedProps.vote);
+                            }
+                          }}
+                          disabled
+                        >
+                          ยืนยัน/รับทราบ
+                        </button>
                   </div>
                 </div>
               </div>
