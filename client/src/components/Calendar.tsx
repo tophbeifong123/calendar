@@ -15,6 +15,8 @@ import { ProfileAuthContext } from "@/contexts/Auth.context";
 import PostEvent from "./PostEvent";
 import AddEvent from "./Addevent";
 import ListPost from "./ListPost";
+import { useSession } from "@supabase/auth-helpers-react";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function CustomCalendar({
   details,
@@ -30,10 +32,11 @@ export default function CustomCalendar({
   const [newEvent, setNewEvent] = useState<any>([]);
   const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
   const [test, setTest] = useState<boolean>(true);
-  const [modalAddEvent, setModalAddEvent] = useState<Boolean>(false)
+  const [modalAddEvent, setModalAddEvent] = useState<Boolean>(false);
   const value = useContext(ProfileAuthContext);
-  
-  console.log(selectEvent)
+  const session = useSession();
+
+  console.log(selectEvent);
 
   interface EventData {
     title: string;
@@ -43,6 +46,15 @@ export default function CustomCalendar({
     user: {
       id: number;
     } | null;
+  }
+
+  interface EventGoogle {
+    summary: string;
+    description: string;
+    start: any;
+    end: any;
+    recurrence: [];
+    colorId: string;
   }
 
   const eventsWithoutId = value.user?.events
@@ -112,6 +124,21 @@ export default function CustomCalendar({
         end: info.endStr,
         user: { id: value.user?.id ?? 0 },
       };
+
+      const newEventGoogle: EventGoogle = {
+        summary: title || "ไม่ระบุ",
+        description: description || "ไม่ระบุ",
+        start: {
+          dateTime: `${info.startStr}T00:00:00`,
+          timeZone: "Asia/Bangkok",
+        },
+        end: {
+          dateTime: `${info.endStr}T00:00:00`,
+          timeZone: "Asia/Bangkok",
+        },
+        recurrence: [],
+        colorId: "9",
+      };
       console.log("new event data", newEventData);
 
       try {
@@ -121,9 +148,25 @@ export default function CustomCalendar({
         );
 
         console.log("new event", postNewEvent);
+
+        if (value.user?.google) {
+          const responseGoogle = await fetch(
+            "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+            {
+              method: "POST",
+              headers: {
+                Authorization: "Bearer " + session?.provider_token,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(newEventGoogle),
+            }
+          );
+          console.log("responseGoogle", responseGoogle);
+        }
         if (value.triggerFetch) {
           value.triggerFetch();
         }
+        toast.success("สร้างกิจกรรมสำเร็จแล้ว");
       } catch (error) {
         console.error("Error posting new event:", error);
       }
@@ -140,7 +183,7 @@ export default function CustomCalendar({
     <>
       <div className="flex justify-center items-center  w-full h-screen">
         <div className="items-center relative bottom-20 flex flex-col mx-auto">
-          <PostEvent/>
+          <PostEvent />
           {/* <a className="mt-3">Edit</a> */}
           <AccordionSetting
             events={events}
@@ -179,7 +222,7 @@ export default function CustomCalendar({
             onClose={() => setModalOpen(false)}
           />
         </div>
-        <AddEvent/>
+        <AddEvent />
       </div>
     </>
   );

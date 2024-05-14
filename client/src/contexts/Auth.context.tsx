@@ -32,6 +32,7 @@ interface User {
   id: number;
   studentId: string;
   events?: Event[];
+  google: boolean;
 }
 
 export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
@@ -69,6 +70,7 @@ export const ProfileProvider: React.FC<{ children: ReactNode }> = ({
       if (!userResult.data || userResult.data.length === 0) {
         const newUserResult = await axios.post(`${conf.apiUrlPrefix}/user`, {
           studentId: auth.user?.profile.nickname,
+          google: false,
         });
         setUser(newUserResult.data);
       } else {

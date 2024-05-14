@@ -37,6 +37,7 @@ export default function ModalInfo({
         `${conf.apiUrlPrefix}/event/${id}`
       );
       console.log("deleteEventResult", deleteEventResult);
+      toast.success("ลบกิจกรรมสำเร็จแล้ว!!");
       if (value.triggerFetch) {
         value.triggerFetch();
       }

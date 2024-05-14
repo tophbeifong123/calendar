@@ -10,6 +10,9 @@ export class User {
     @Column({unique:true})
     studentId: string;
 
+    @Column({nullable: true})
+    google: boolean;
+
     @OneToMany(()=> Event,(event) => event.user)
     events: Event[]
 

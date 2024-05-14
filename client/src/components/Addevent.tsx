@@ -9,7 +9,8 @@ import axios from "axios";
 import conf from "@/conf/main";
 import { useAuth } from "react-oidc-context";
 import { ProfileAuthContext } from "@/contexts/Auth.context";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
+import { useSession } from "@supabase/auth-helpers-react";
 interface EventData {
   title: string;
   description: string;
@@ -20,6 +21,15 @@ interface EventData {
   } | null;
 }
 
+interface EventGoogle {
+  summary: string;
+  description: string;
+  start: any;
+  end: any;
+  recurrence: [];
+  colorId: string;
+}
+
 function AddEvent() {
   const auth = useAuth();
   const [modalOpen, setModalOpen] = useState(false);
@@ -28,6 +38,7 @@ function AddEvent() {
   const [title, setTitle] = useState("");
   const [detail, setDetail] = useState("");
   const value = useContext(ProfileAuthContext);
+  const session = useSession();
 
   useEffect(() => {
     if (auth.isAuthenticated) {
@@ -42,6 +53,21 @@ function AddEvent() {
         console.error("User not authenticated");
         return;
       }
+      const newEventGoogle: EventGoogle = {
+        summary: title || "ไม่ระบุ",
+        description: detail || "ไม่ระบุ",
+        start: {
+          dateTime: startDate.toISOString(),
+          timeZone: "Asia/Bangkok",
+        },
+        end: {
+          dateTime: startDate.toISOString(),
+          timeZone: "Asia/Bangkok",
+        },
+        recurrence: [],
+        colorId: "9",
+      };
+
       const newEventData: EventData = {
         title: title || "ไม่ระบุ",
         description: detail || "ไม่ระบุ",
@@ -53,15 +79,31 @@ function AddEvent() {
         `${conf.apiUrlPrefix}/event`,
         newEventData
       );
+
+      if (value.user?.google) {
+        const responseGoogle = await fetch(
+          "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+          {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + session?.provider_token,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newEventGoogle),
+          }
+        );
+        console.log("Created event on google:", responseGoogle);
+      }
+
       console.log("Created event:", response);
       if (value.triggerFetch) {
         value.triggerFetch();
       }
-      toast.success('สร้างกิจกรรมสำเร็จแล้ว');
+      toast.success("สร้างกิจกรรมสำเร็จแล้ว");
       resetForm();
     } catch (error) {
       console.error("Error creating event:", error);
-      toast.error('สร้างกิจกรรมไม่สำเร็จ');
+      toast.error("สร้างกิจกรรมไม่สำเร็จ");
     }
   };
 
@@ -71,7 +113,6 @@ function AddEvent() {
     setStartDate(new Date());
     setEndDate(new Date());
   };
-
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -95,7 +136,7 @@ function AddEvent() {
             />
           </svg>
         </button>
-        <Toaster position="bottom-right"/>
+        <Toaster position="bottom-right" />
         {modalOpen && (
           <div
             className={`modal-overlay fixed flex justify-center items-center top-0 left-0 z-10 bg-black bg-opacity-50 w-full h-full`}
@@ -174,7 +215,6 @@ function AddEvent() {
           </div>
         )}
       </>
-      
     </MuiPickersUtilsProvider>
   );
 }

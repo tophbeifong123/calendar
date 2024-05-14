@@ -12,7 +12,8 @@ import {
   KeyboardDateTimePicker,
   MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
-import ImportToGoogle from "@/components/ImportToGoogle";
+import ImportToGoogle from "@/components/importToGoogle";
+
 
 function Google() {
   const [start, setStart] = useState<Date | null>(new Date());
@@ -117,14 +118,14 @@ function Google() {
             {session ? (
               <>
                 <h2 className="text-2xl mb-4">
-                  Hey there {session.user.email}
+                สวัสดี {session.user.email}
                 </h2>
                 <div className="mb-4">
                   <label
                     htmlFor="start"
                     className="block text-gray-700 text-sm font-bold mb-2"
                   >
-                    Start of your event
+                    เริ่มต้นกิจกรรมของคุณ
                   </label>
                   <KeyboardDateTimePicker
                     label="Start Date and Time"
@@ -138,7 +139,7 @@ function Google() {
                     htmlFor="end"
                     className="block text-gray-700 text-sm font-bold mb-2"
                   >
-                    End of your event
+                    สิ้นสุดกิจกรรมของคุณ
                   </label>
                   <KeyboardDateTimePicker
                     label="End Date and Time"
@@ -152,7 +153,7 @@ function Google() {
                     htmlFor="eventName"
                     className="block text-gray-700 text-sm font-bold mb-2"
                   >
-                    Event name
+                    ชื่อกิจกรรม
                   </label>
                   <input
                     type="text"
@@ -166,7 +167,7 @@ function Google() {
                     htmlFor="eventDescription"
                     className="block text-gray-700 text-sm font-bold mb-2"
                   >
-                    Event description
+                    คำอธิบายเหตุการณ์
                   </label>
                   <input
                     type="text"
@@ -180,13 +181,13 @@ function Google() {
                     onClick={() => createCalendarEvent()}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   >
-                    Create Calendar Event
+                    สร้างกิจกรรมในปฏิทิน
                   </button>
                   <button
                     onClick={() => signOut()}
                     className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   >
-                    Sign Out
+                    ออกจากระบบ
                   </button>
                 </div>
               </>
@@ -196,7 +197,7 @@ function Google() {
                 onClick={() => googleSignIn()}
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "
               >
-                Sign In With Google
+                ลงชื่อเข้าใช้ด้วย Google
               </button>
             )}
             <ImportToGoogle />
