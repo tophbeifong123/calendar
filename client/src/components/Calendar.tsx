@@ -184,13 +184,14 @@ export default function CustomCalendar({
       <div className="flex justify-center items-center  w-full h-screen">
         <div className="items-center relative bottom-20 flex flex-col mx-auto">
           <PostEvent />
-          {/* <a className="mt-3">Edit</a> */}
+          
           <AccordionSetting
             events={events}
             filterClass={filterClass}
             filterExam={filterExam}
             test={toggleTest}
           />
+          
         </div>
         <div className="w-5/6 bg-white p-7 rounded-3xl border-slate-900 drop-shadow-2xl z-0 mr-16">
           <FullCalendar
