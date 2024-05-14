@@ -218,6 +218,10 @@ export default function ModalInfo({
                     <strong>ผู้โพสต์:</strong>{" "}
                     {event._def.extendedProps.createBy}
                   </p>
+                  <p>
+                    <strong>ผู้โพสต์:</strong>{" "}
+                    {event._def.extendedProps.createBy}
+                  </p>
                   <div className="card-actions justify-end mt-2">
                     {value.user?.studentId ===
                       event._def.extendedProps.createBy && (

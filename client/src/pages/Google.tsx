@@ -128,7 +128,7 @@ function Google() {
                     เริ่มต้นกิจกรรมของคุณ
                   </label>
                   <KeyboardDateTimePicker
-                    label="Start Date and Time"
+                    label="เริ่มต้นกิจกรรมของคุณ"
                     value={start}
                     onChange={handleStartChange}
                     initialFocusedDate={null}
@@ -142,7 +142,7 @@ function Google() {
                     สิ้นสุดกิจกรรมของคุณ
                   </label>
                   <KeyboardDateTimePicker
-                    label="End Date and Time"
+                    label="สิ้นสุดกิจกรรมของคุณ"
                     value={end}
                     onChange={handleEndChange}
                     initialFocusedDate={null}

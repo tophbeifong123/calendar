@@ -115,17 +115,11 @@ function ImportToGoogle() {
           summary: `${item.title}`,
           description: `${item.description}`,
           start: {
-            dateTime: `${item.start.substring(
-              0,
-              19
-            )}`,
+            dateTime: `${item.start.substring(0, 19)}`,
             timeZone: "Asia/Bangkok",
           },
           end: {
-            dateTime: `${item.end.substring(
-              0,
-              19
-            )}`,
+            dateTime: `${item.end.substring(0, 19)}`,
             timeZone: "Asia/Bangkok",
           },
           recurrence: [],
@@ -246,7 +240,11 @@ function ImportToGoogle() {
           loading="lazy"
           alt="google logo"
         />
-        <span>Import your events to Google Calendar</span>
+        <span>
+          {value.user?.google
+            ? "คุณได้นำเข้าและกำลังซิงค์อยู่"
+            : "นำเข้ากิจกรรมของคุณไปยัง Google Calendar"}
+        </span>
       </button>
     </div>
   );

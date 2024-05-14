@@ -41,7 +41,7 @@ export function CustomNavbar() {
 
   return (
     <>
-      <Navbar fluid rounded className="bg-[#222831]">
+      <Navbar fluid rounded className="bg-[#141E46]">
         <Navbar.Brand>
           <IconButton
             variant="text"

@@ -199,14 +199,14 @@ function Home() {
       <CustomNavbar />
       {loading ? (
         <>
-          <div className="flex justify-center items-center h-screen ">
+          <div className="flex justify-center items-center h-screen bg-for-calendar">
             <progress className="progress w-56"></progress>
           </div>
           <FooterComponent />
         </>
       ) : (
         <>
-          <div className="flex justify-center items-center h-screen ">
+          <div className="flex justify-center items-center h-screen bg-for-calendar">
             <CustomCalendar
               details={studentDetails}
               filterClass={classDate}
