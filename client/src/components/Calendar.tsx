@@ -17,6 +17,7 @@ import AddEvent from "./Addevent";
 import ListPost from "./ListPost";
 import { useSession } from "@supabase/auth-helpers-react";
 import toast, { Toaster } from "react-hot-toast";
+import { Button } from "flowbite-react";
 
 export default function CustomCalendar({
   details,
@@ -43,6 +44,7 @@ export default function CustomCalendar({
     description: string;
     start: string;
     end: string;
+    eventIdGoogle: string;
     user: {
       id: number;
     } | null;
@@ -117,13 +119,7 @@ export default function CustomCalendar({
     const description = prompt("รายละเอียด");
 
     if (title != null && description != null) {
-      const newEventData: EventData = {
-        title: title || "ไม่ระบุ",
-        description: description || "ไม่ระบุ",
-        start: info.startStr,
-        end: info.endStr,
-        user: { id: value.user?.id ?? 0 },
-      };
+      let createdEventId: string = "";
 
       const newEventGoogle: EventGoogle = {
         summary: title || "ไม่ระบุ",
@@ -139,16 +135,8 @@ export default function CustomCalendar({
         recurrence: [],
         colorId: "9",
       };
-      console.log("new event data", newEventData);
 
       try {
-        const postNewEvent = await axios.post(
-          `${conf.apiUrlPrefix}/event`,
-          newEventData
-        );
-
-        console.log("new event", postNewEvent);
-
         if (value.user?.google) {
           const responseGoogle = await fetch(
             "https://www.googleapis.com/calendar/v3/calendars/primary/events",
@@ -161,17 +149,50 @@ export default function CustomCalendar({
               body: JSON.stringify(newEventGoogle),
             }
           );
-          console.log("responseGoogle", responseGoogle);
+
+          if (responseGoogle.ok) {
+            const createdEvent = await responseGoogle.json();
+            createdEventId = createdEvent.id;
+            console.log("Event ID:", createdEvent.id);
+          } else {
+            console.error(
+              "Failed to create event on Google:",
+              responseGoogle.statusText
+            );
+            toast.error("Failed to create event on Google Calendar");
+            return;
+          }
         }
+
+        const newEventData: EventData = {
+          title: title || "ไม่ระบุ",
+          description: description || "ไม่ระบุ",
+          start: info.startStr,
+          end: info.endStr,
+          eventIdGoogle: createdEventId,
+          user: { id: value.user?.id ?? 0 },
+        };
+
+        console.log("new event data", newEventData);
+
+        const postNewEvent = await axios.post(
+          `${conf.apiUrlPrefix}/event`,
+          newEventData
+        );
+
+        console.log("Created event in backend:", postNewEvent);
+
         if (value.triggerFetch) {
           value.triggerFetch();
         }
+
         toast.success("สร้างกิจกรรมสำเร็จแล้ว");
       } catch (error) {
-        console.error("Error posting new event:", error);
+        console.error("Error creating event:", error);
+        toast.error("สร้างกิจกรรมไม่สำเร็จ");
       }
     } else {
-      console.log("nothing");
+      console.log("No title or description provided");
     }
   };
 
@@ -184,14 +205,13 @@ export default function CustomCalendar({
       <div className="flex justify-center items-center  w-full h-screen mb-10">
         <div className="items-center relative bottom-20 flex flex-col mx-auto">
           <PostEvent />
-          
+
           <AccordionSetting
             events={events}
             filterClass={filterClass}
             filterExam={filterExam}
             test={toggleTest}
           />
-          
         </div>
         <div className="w-5/6 bg-white p-7 rounded-3xl border-slate-900 drop-shadow-2xl z-0 mr-16">
           <FullCalendar

@@ -26,6 +26,7 @@ interface Event {
   description: string;
   start: string;
   end: string;
+  eventIdGoogle: string;
 }
 
 interface User {

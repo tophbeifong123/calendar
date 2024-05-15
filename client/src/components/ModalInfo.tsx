@@ -1,5 +1,6 @@
 import conf from "@/conf/main";
 import { ProfileAuthContext } from "@/contexts/Auth.context";
+import { useSession } from "@supabase/auth-helpers-react";
 import axios from "axios";
 import { Button, Modal } from "flowbite-react";
 import { useState, useEffect, useContext } from "react";
@@ -16,6 +17,7 @@ export default function ModalInfo({
 }) {
   const [modalOpen, setModalOpen] = useState(openModal);
   const value = useContext(ProfileAuthContext);
+  const session = useSession();
 
   useEffect(() => {
     setModalOpen(openModal);
@@ -31,13 +33,34 @@ export default function ModalInfo({
     return date.toLocaleString("en-US");
   };
 
-  const handleDeleteEvent = async (id: number) => {
+  const handleDeleteEvent = async (id: number, googleEventId: string) => {
     try {
       const deleteEventResult = await axios.delete(
         `${conf.apiUrlPrefix}/event/${id}`
       );
       console.log("deleteEventResult", deleteEventResult);
       toast.success("ลบกิจกรรมสำเร็จแล้ว!!");
+      if (value.user?.google && googleEventId) {
+        const responseDelete = await fetch(
+          `https://www.googleapis.com/calendar/v3/calendars/primary/events/${googleEventId}`,
+          {
+            method: "DELETE",
+            headers: {
+              Authorization: "Bearer " + session?.provider_token,
+            },
+          }
+        );
+
+        if (responseDelete.ok) {
+          console.log(`Successfully deleted event with ID: ${googleEventId}`);
+        } else {
+          console.error(
+            `Failed to delete event with ID: ${googleEventId}`,
+            responseDelete.statusText
+          );
+        }
+      }
+
       if (value.triggerFetch) {
         value.triggerFetch();
       }
@@ -235,19 +258,23 @@ export default function ModalInfo({
                       </button>
                     )}
                     <button
-                          className="btn btn-info"
-                          onClick={() => {
-                            const isVotedByCurrentUser =
-                            event._def.extendedProps.votedBy &&
-                            event._def.extendedProps.votedBy.studentId === value.user?.studentId;
-                            if (!isVotedByCurrentUser) {
-                              VoteUpdate(event._def.extendedProps.id, event._def.extendedProps.vote);
-                            }
-                          }}
-                          disabled
-                        >
-                          ยืนยัน/รับทราบ
-                        </button>
+                      className="btn btn-info"
+                      onClick={() => {
+                        const isVotedByCurrentUser =
+                          event._def.extendedProps.votedBy &&
+                          event._def.extendedProps.votedBy.studentId ===
+                            value.user?.studentId;
+                        if (!isVotedByCurrentUser) {
+                          VoteUpdate(
+                            event._def.extendedProps.id,
+                            event._def.extendedProps.vote
+                          );
+                        }
+                      }}
+                      disabled
+                    >
+                      ยืนยัน/รับทราบ
+                    </button>
                   </div>
                 </div>
               </div>
@@ -262,7 +289,12 @@ export default function ModalInfo({
             <Button
               size={"sm"}
               color="red"
-              onClick={() => handleDeleteEvent(event._def.publicId)}
+              onClick={() =>
+                handleDeleteEvent(
+                  event._def.publicId,
+                  event._def.extendedProps.eventIdGoogle
+                )
+              }
             >
               ลบกิจกรรม
             </Button>

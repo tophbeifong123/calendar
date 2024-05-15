@@ -16,6 +16,7 @@ interface EventData {
   description: string;
   start: string;
   end: string;
+  eventIdGoogle: string;
   user: {
     id: number;
   } | null;
@@ -68,17 +69,7 @@ function AddEvent() {
         colorId: "9",
       };
 
-      const newEventData: EventData = {
-        title: title || "ไม่ระบุ",
-        description: detail || "ไม่ระบุ",
-        start: startDate.toISOString(),
-        end: startDate.toISOString(),
-        user: { id: value.user?.id ?? 0 },
-      };
-      const response = await axios.post(
-        `${conf.apiUrlPrefix}/event`,
-        newEventData
-      );
+      let createdEventId: string = "";
 
       if (value.user?.google) {
         const responseGoogle = await fetch(
@@ -92,8 +83,31 @@ function AddEvent() {
             body: JSON.stringify(newEventGoogle),
           }
         );
+        if (responseGoogle.ok) {
+          const createdEvent = await responseGoogle.json();
+          createdEventId = createdEvent.id;
+          console.log("Event ID:", createdEvent.id);
+        } else {
+          console.error(
+            "Failed to create event on Google:",
+            responseGoogle.statusText
+          );
+        }
         console.log("Created event on google:", responseGoogle);
       }
+      const newEventData: EventData = {
+        title: title || "ไม่ระบุ",
+        description: detail || "ไม่ระบุ",
+        start: startDate.toISOString(),
+        end: startDate.toISOString(),
+        eventIdGoogle: createdEventId,
+        user: { id: value.user?.id ?? 0 },
+      };
+
+      const response = await axios.post(
+        `${conf.apiUrlPrefix}/event`,
+        newEventData
+      );
 
       console.log("Created event:", response);
       if (value.triggerFetch) {
