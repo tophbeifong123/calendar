@@ -22,5 +22,8 @@ export class Event {
     @ManyToOne(()=> User,(user) => user.events)
     user: User
 
+    @Column({nullable: true})
+    eventIdGoogle: string;
+
     
 }
