@@ -18,7 +18,7 @@ export function AccordionSetting({
         const initialSubjects: { [key: string]: boolean } = {};
         [...filterClass, ...filterExam].forEach((subject: any) => {
           initialSubjects[subject.subjectCode] = true;
-          initialSubjects["000-000"] = false; // 000-000 เป็น subjectCode ของวันหยุดนะ
+          initialSubjects["000-000"] = false;
         });
 
         localStorage.setItem(
@@ -46,11 +46,9 @@ export function AccordionSetting({
   const displayedSubjects: string[] = [];
 
   return (
-    <div className="flex flex-col justify-center mx-auto">
-      <ListGroup className="w-48 mt-20 ">
-        <ListGroup.Item>
-          <a className="mx-auto">รายวิชาของฉัน</a>
-        </ListGroup.Item>
+    <div className="flex flex-col justify-center mx-auto bg-white p-5 rounded-lg shadow-md mb-20">
+      <h2 className="flex flex-row text-lg font-semibold text-center mb-4">รายวิชาของฉัน</h2>
+      <ListGroup>
         {filterClass.length > 0 || filterExam.length > 0 ? (
           <>
             {filterClass.map((subject: any) => {
@@ -59,12 +57,15 @@ export function AccordionSetting({
                 return (
                   <ListGroup.Item
                     key={subject.id}
-                    className="flex items-center justify-between"
+                    className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md transition-colors duration-200"
                   >
-                    <span className="flex-grow">{subject.subjectCode}</span>
+                    <span className=" flex-grow text-sm font-medium text-gray-700">
+                      {subject.subjectCode}
+                    </span>
                     <Checkbox
                       defaultChecked={checkedSubjects[subject.subjectCode]}
                       onChange={() => toggleCheckbox(subject.subjectCode)}
+                      className="ml-2"
                     />
                   </ListGroup.Item>
                 );
@@ -77,12 +78,15 @@ export function AccordionSetting({
                 return (
                   <ListGroup.Item
                     key={subject.id}
-                    className="flex items-center justify-between"
+                    className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md transition-colors duration-200"
                   >
-                    <span className="flex-grow">{subject.subjectCode}</span>
+                    <span className="flex-grow text-sm font-medium text-gray-700">
+                      {subject.subjectCode}
+                    </span>
                     <Checkbox
                       defaultChecked={checkedSubjects[subject.subjectCode]}
                       onChange={() => toggleCheckbox(subject.subjectCode)}
+                      className="ml-2"
                     />
                   </ListGroup.Item>
                 );
@@ -91,7 +95,9 @@ export function AccordionSetting({
             })}
           </>
         ) : (
-          <ListGroup.Item>ไม่มีข้อมูลการเรียนหรือการสอบ</ListGroup.Item>
+          <ListGroup.Item className="text-center text-gray-500">
+            ไม่มีข้อมูลการเรียนหรือการสอบ
+          </ListGroup.Item>
         )}
       </ListGroup>
     </div>

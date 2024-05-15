@@ -131,7 +131,7 @@ function PostEvent() {
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <>
         <button
-          className="btn btn-circle btn-outline hover:btn-neutral mb-5"
+          className="btn btn-circle fixed bg-[#ebebeb] bottom-28 right-28 z-5 rounded-full p-2 shadow-sm w-[50px] h-[50px] z-10"
           onClick={() => setModalOpen(true)}
         >
           <svg 
@@ -149,6 +149,7 @@ function PostEvent() {
             />
           </svg>
         </button>
+        <label className="fixed  bottom-32 right-4 z-5 rounded-full z-10">แจ้งประกาศ</label>
         {/* <a className="mt-3">ประกาศ</a> */}
         <ListPost fetchPost={reloadPosts} subjectData={subjectType} />
         <Toaster position="bottom-right" />
@@ -226,8 +227,8 @@ function PostEvent() {
                     onChange={(e) => setDetail(e.target.value)}
                   />
                 </label>
-                <div className="flex pt-3">
-                  <div className="mb-4">
+                <div className="flex justify-between mb-4 mt-4">
+                  <div className="w-1/2 pr-2">
                     <KeyboardDateTimePicker
                       label="วันที่และเวลาเริ่มต้น"
                       value={startDate}
@@ -235,7 +236,7 @@ function PostEvent() {
                       format="dd/MM/yyyy HH:mm"
                     />
                   </div>
-                  <div className="mb-4">
+                  <div className="w-1/2 pl-2">
                     <KeyboardDateTimePicker
                       label="วันที่และเวลาสิ้นสุด"
                       value={endDate}

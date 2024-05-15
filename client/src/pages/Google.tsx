@@ -14,7 +14,6 @@ import {
 } from "@material-ui/pickers";
 import ImportToGoogle from "@/components/importToGoogle";
 
-
 function Google() {
   const [start, setStart] = useState<Date | null>(new Date());
   const [end, setEnd] = useState<Date | null>(new Date());
@@ -102,23 +101,16 @@ function Google() {
     setEventDescription(e.target.value);
   };
 
-  console.log(session);
-  console.log(start);
-  console.log(eventName);
-  console.log(eventDescription);
-
   return (
-    <div className="h-screen bg-for-calendar">
+    <div className="h-screen bg-gray-100">
       <MuiPickersUtilsProvider utils={LocaleUtils}>
         <CustomNavbar />
         <div className="flex h-full w-full justify-center items-center">
-          <div className="p-10  rounded-xl drop-shadow-xl justify-center items-center space-y-10">
-            
-          
+          <div className="bg-white p-10 rounded-xl shadow-lg space-y-6 w-full max-w-lg">
             {session ? (
               <>
-                <h2 className="text-2xl mb-4">
-                สวัสดี {session.user.email}
+                <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
+                  สวัสดี {session.user.email}
                 </h2>
                 <div className="mb-4">
                   <label
@@ -131,7 +123,7 @@ function Google() {
                     label="เริ่มต้นกิจกรรมของคุณ"
                     value={start}
                     onChange={handleStartChange}
-                    initialFocusedDate={null}
+                    className="w-full"
                   />
                 </div>
                 <div className="mb-4">
@@ -145,7 +137,7 @@ function Google() {
                     label="สิ้นสุดกิจกรรมของคุณ"
                     value={end}
                     onChange={handleEndChange}
-                    initialFocusedDate={null}
+                    className="w-full"
                   />
                 </div>
                 <div className="mb-4">
@@ -158,6 +150,7 @@ function Google() {
                   <input
                     type="text"
                     id="eventName"
+                    value={eventName}
                     onChange={handleEventNameChange}
                     className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
@@ -167,24 +160,25 @@ function Google() {
                     htmlFor="eventDescription"
                     className="block text-gray-700 text-sm font-bold mb-2"
                   >
-                    คำอธิบายเหตุการณ์
+                    คำอธิบาย
                   </label>
                   <input
                     type="text"
                     id="eventDescription"
+                    value={eventDescription}
                     onChange={handleEventDescriptionChange}
                     className="border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
                 </div>
                 <div className="flex justify-between">
                   <button
-                    onClick={() => createCalendarEvent()}
+                    onClick={createCalendarEvent}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   >
                     สร้างกิจกรรมในปฏิทิน
                   </button>
                   <button
-                    onClick={() => signOut()}
+                    onClick={signOut}
                     className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                   >
                     ออกจากระบบ
@@ -192,11 +186,17 @@ function Google() {
                 </div>
               </>
             ) : (
-
               <button
-                onClick={() => googleSignIn()}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline "
+                onClick={googleSignIn}
+                className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow transition duration-200 ease-in-out flex items-center justify-center w-full"
               >
+                <svg
+                  className="w-4 h-4 mr-2 fill-current"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 488 512"
+                >
+                  <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
+                </svg>
                 ลงชื่อเข้าใช้ด้วย Google
               </button>
             )}

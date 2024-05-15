@@ -181,7 +181,7 @@ export default function CustomCalendar({
 
   return (
     <>
-      <div className="flex justify-center items-center  w-full h-screen">
+      <div className="flex justify-center items-center  w-full h-screen mb-10">
         <div className="items-center relative bottom-20 flex flex-col mx-auto">
           <PostEvent />
           
