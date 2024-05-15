@@ -131,16 +131,16 @@ function PostEvent() {
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <>
         <button
-          className="btn btn-circle fixed bg-[#ebebeb] bottom-28 right-28 z-5 rounded-full p-2 shadow-sm w-[50px] h-[50px] z-10"
+          className="btn btn-circle fixed bg-[#ebebeb] bottom-28 left-10 z-5 rounded-full p-2 shadow-sm w-[45px] h-[45px] z-10"
           onClick={() => setModalOpen(true)}
         >
-          <svg 
+          <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            className="w-6 h-6"
+            className="w-6"
           >
             <path
               stroke-linecap="round"
@@ -149,7 +149,9 @@ function PostEvent() {
             />
           </svg>
         </button>
-        <label className="fixed  bottom-32 right-4 z-5 rounded-full z-10">แจ้งประกาศ</label>
+        <label className="fixed  bottom-32 left-[90px] z-5 rounded-full z-10 ">
+          แจ้งประกาศ
+        </label>
         {/* <a className="mt-3">ประกาศ</a> */}
         <ListPost fetchPost={reloadPosts} subjectData={subjectType} />
         <Toaster position="bottom-right" />

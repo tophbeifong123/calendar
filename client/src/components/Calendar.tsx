@@ -159,7 +159,6 @@ export default function CustomCalendar({
               "Failed to create event on Google:",
               responseGoogle.statusText
             );
-            toast.error("Failed to create event on Google Calendar");
             return;
           }
         }
@@ -169,7 +168,7 @@ export default function CustomCalendar({
           description: description || "ไม่ระบุ",
           start: info.startStr,
           end: info.endStr,
-          eventIdGoogle: createdEventId,
+          eventIdGoogle: createdEventId || "ไม่ระบุ",
           user: { id: value.user?.id ?? 0 },
         };
 
@@ -203,9 +202,8 @@ export default function CustomCalendar({
   return (
     <>
       <div className="flex justify-center items-center  w-full h-screen mb-10">
-        <div className="items-center relative bottom-20 flex flex-col mx-auto">
+        <div className="items-center relative bottom-[100px] flex flex-col mx-auto">
           <PostEvent />
-
           <AccordionSetting
             events={events}
             filterClass={filterClass}

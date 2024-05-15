@@ -132,7 +132,7 @@ function AddEvent() {
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <>
         <button
-          className="btn btn-circle fixed bg-[#ebebeb] bottom-10 right-28 z-5 rounded-full p-2 shadow-sm w-[50px] h-[50px]"
+          className="btn btn-circle fixed bg-[#ebebeb] bottom-10 left-10 z-5 rounded-full p-2 shadow-sm w-[45px] h-[45px]"
           onClick={() => setModalOpen(true)}
         >
           <svg
@@ -141,7 +141,7 @@ function AddEvent() {
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="w-full h-full"
+            className="w-6"
           >
             <path
               strokeLinecap="round"
@@ -150,8 +150,9 @@ function AddEvent() {
             />
           </svg>
         </button>
-        <label className="fixed  bottom-14 right-4 z-5 rounded-full z-10">สร้างกิจกรรม</label>
-        <Toaster position="bottom-right" />
+        <label className="fixed  bottom-14 left-[90px] z-5 rounded-full z-10">
+          สร้างกิจกรรม
+        </label>
         {modalOpen && (
           <div
             className={`modal-overlay fixed flex justify-center items-center top-0 left-0 z-10 bg-black bg-opacity-50 w-full h-full`}

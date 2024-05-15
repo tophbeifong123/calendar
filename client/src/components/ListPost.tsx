@@ -83,7 +83,7 @@ function ListPost({ fetchPost, subjectData }: any) {
   return (
     <>
       <button
-        className="btn btn-circle fixed bg-[#ebebeb] bottom-48 right-28 z-5 rounded-full p-2 shadow-sm w-[50px] h-[50px] z-10"
+        className="btn btn-circle fixed bg-[#ebebeb] bottom-[160px] left-10 z-5 rounded-full p-2 shadow-sm w-[45px] h-[45px] z-10"
         onClick={() => setModalOpen(true)}
       >
         <svg
@@ -92,7 +92,7 @@ function ListPost({ fetchPost, subjectData }: any) {
           viewBox="0 0 24 24"
           strokeWidth="1.5"
           stroke="currentColor"
-          className="w-6 h-6"
+          className="w-6"
         >
           <path
             strokeLinecap="round"
@@ -101,7 +101,9 @@ function ListPost({ fetchPost, subjectData }: any) {
           />
         </svg>
       </button>
-      <label className="fixed  bottom-52 right-10 z-5 rounded-full z-10">ประกาศ</label>
+      <label className="fixed  bottom-[173px] left-[90px] z-5 rounded-full z-10 text-left">
+        ประกาศ
+      </label>
       <Toaster position="bottom-right" />
       {modalOpen && (
         <div className="modal-overlay fixed flex justify-center items-center top-0 left-0 z-10 bg-black bg-opacity-50 w-full h-full">

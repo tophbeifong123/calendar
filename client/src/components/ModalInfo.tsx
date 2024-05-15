@@ -39,7 +39,13 @@ export default function ModalInfo({
         `${conf.apiUrlPrefix}/event/${id}`
       );
       console.log("deleteEventResult", deleteEventResult);
+
+      if (value.triggerFetch) {
+        value.triggerFetch();
+      }
       toast.success("ลบกิจกรรมสำเร็จแล้ว!!");
+
+      handleCloseModal();
       if (value.user?.google && googleEventId) {
         const responseDelete = await fetch(
           `https://www.googleapis.com/calendar/v3/calendars/primary/events/${googleEventId}`,
@@ -60,11 +66,6 @@ export default function ModalInfo({
           );
         }
       }
-
-      if (value.triggerFetch) {
-        value.triggerFetch();
-      }
-      handleCloseModal();
     } catch (error) {
       console.error("error", error);
     }

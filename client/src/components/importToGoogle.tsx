@@ -111,20 +111,31 @@ function ImportToGoogle() {
       }));
 
       const newEventsFromUser =
-        value.user?.events?.map((item) => ({
-          summary: `${item.title}`,
-          description: `${item.description}`,
-          start: {
-            dateTime: `${item.start.substring(0, 19)}`,
-            timeZone: "Asia/Bangkok",
-          },
-          end: {
-            dateTime: `${item.end.substring(0, 19)}`,
-            timeZone: "Asia/Bangkok",
-          },
-          recurrence: [],
-          colorId: "9",
-        })) || [];
+        value.user?.events?.map((item) => {
+          const startDateTime =
+            item.start.length >= 19
+              ? item.start.substring(0, 19)
+              : `${item.start.substring(0, 10)}T00:00:00`;
+          const endDateTime =
+            item.end.length >= 19
+              ? item.end.substring(0, 19)
+              : `${item.end.substring(0, 10)}T00:00:00`;
+
+          return {
+            summary: `${item.title}`,
+            description: `${item.description}`,
+            start: {
+              dateTime: startDateTime,
+              timeZone: "Asia/Bangkok",
+            },
+            end: {
+              dateTime: endDateTime,
+              timeZone: "Asia/Bangkok",
+            },
+            recurrence: [],
+            colorId: "9",
+          };
+        }) || [];
 
       // const mergedEvents = [...newEventsFromClass, ...newEventsFromExam];
       const mergedEvents = [
@@ -232,7 +243,7 @@ function ImportToGoogle() {
     >
       {session?.provider_token ? (
         <button
-          className="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150"
+          className="px-4 py-2 border flex gap-2 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-200 hover:border-slate-400 dark:hover:border-slate-500 hover:text-slate-900 dark:hover:text-slate-300 hover:shadow transition duration-150 mt-3"
           disabled={value.user?.google}
         >
           <img

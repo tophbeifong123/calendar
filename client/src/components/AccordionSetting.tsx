@@ -46,8 +46,8 @@ export function AccordionSetting({
   const displayedSubjects: string[] = [];
 
   return (
-    <div className="flex flex-col justify-center mx-auto bg-white p-5 rounded-lg shadow-md mb-20">
-      <h2 className="flex flex-row text-lg font-semibold text-center mb-4">รายวิชาของฉัน</h2>
+    <div className="flex flex-col justify-center bg-white p-2 rounded-lg shadow-md w-[170px]">
+      <h2 className="flex flex-row text-md font-base text-center mb-2 mx-auto ">รายวิชาของฉัน</h2>
       <ListGroup>
         {filterClass.length > 0 || filterExam.length > 0 ? (
           <>
@@ -57,7 +57,7 @@ export function AccordionSetting({
                 return (
                   <ListGroup.Item
                     key={subject.id}
-                    className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md transition-colors duration-200"
+                    className="flex items-center justify-between hover:bg-gray-100  rounded-md transition-colors duration-200"
                   >
                     <span className=" flex-grow text-sm font-medium text-gray-700">
                       {subject.subjectCode}
@@ -78,7 +78,7 @@ export function AccordionSetting({
                 return (
                   <ListGroup.Item
                     key={subject.id}
-                    className="flex items-center justify-between hover:bg-gray-100 p-2 rounded-md transition-colors duration-200"
+                    className="flex items-center justify-between hover:bg-gray-100 rounded-md transition-colors duration-200"
                   >
                     <span className="flex-grow text-sm font-medium text-gray-700">
                       {subject.subjectCode}
