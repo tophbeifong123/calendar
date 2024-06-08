@@ -1,6 +1,7 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { CustomNavbar } from "@/components/Navbar";
 import SlideBar from "@/components/SlideBar";
+import toast, { Toaster } from 'react-hot-toast';
 import {
   useSession,
   useSessionContext,
@@ -24,23 +25,37 @@ function Google() {
   const supabase = useSupabaseClient();
   const { isLoading } = useSessionContext();
 
-  async function googleSignIn() {
-    const { error } = await supabase.auth.signInWithOAuth({
+  const [sessionMock, setSessionMock] = useState<any>(null);
+
+  
+  const googleSignIn = async () => {
+    const { error, data } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
+        redirectTo: 'http://localhost:3000/Google',
         scopes: "https://www.googleapis.com/auth/calendar",
       },
     });
+    
     if (error) {
       alert("Error logging in to Google provider with Supabase");
       console.log(error);
+    } else {
+      setSessionMock(data);
     }
-  }
+  };
 
-  async function signOut() {
+  useEffect(() => {
+    if (session) {
+      toast.success('เข้าสู่ระบบสำเร็จ');
+    }
+  }, [session]);
+
+  const signOut = async () => {
     await supabase.auth.signOut();
-  }
-
+    setSessionMock(null);
+    toast.success('ออกจากระบบสำเร็จ');
+  };
   async function createCalendarEvent() {
     console.log("Creating calendar event");
 
@@ -103,10 +118,11 @@ function Google() {
 
   return (
     <div className="h-screen bg-gray-100">
+      <Toaster position="bottom-right" />
       <MuiPickersUtilsProvider utils={LocaleUtils}>
         <CustomNavbar />
         <div className="flex h-full w-full justify-center items-center">
-          <div className="bg-white p-10 rounded-xl shadow-lg space-y-6 w-full max-w-lg">
+          <div className="bg-white p-10 rounded-xl shadow-lg  w-full max-w-lg">
             {session ? (
               <>
                 <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">
