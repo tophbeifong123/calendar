@@ -47,7 +47,9 @@ export function AccordionSetting({
 
   return (
     <div className="flex flex-col justify-center bg-white p-2 rounded-lg shadow-md w-[170px]">
-      <h2 className="flex flex-row text-md font-base text-center mb-2 mx-auto ">รายวิชาของฉัน</h2>
+      <h2 className="flex flex-row text-md font-base text-center mb-2 mx-auto ">
+        รายวิชาของฉัน
+      </h2>
       <ListGroup>
         {filterClass.length > 0 || filterExam.length > 0 ? (
           <>

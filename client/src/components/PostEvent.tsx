@@ -11,6 +11,7 @@ import { useAuth } from "react-oidc-context";
 import { ProfileAuthContext } from "@/contexts/Auth.context";
 import toast, { Toaster } from "react-hot-toast";
 import ListPost from "./ListPost";
+import { format, toDate, toZonedTime } from 'date-fns-tz';
 
 function PostEvent() {
   const auth = useAuth();
@@ -25,7 +26,8 @@ function PostEvent() {
   const [previewPhoto, setPreviewPhoto] = useState<string>("");
   const [reloadPosts, setReloadPosts] = useState<Boolean>(false);
   const value = useContext(ProfileAuthContext);
-  // console.log("selectedSubject", selectedSubject);
+  // console.log("selectedSubject", selectedSubject);\
+  console.log(toLocalISOString(startDate, "Asia/Bangkok"))
   useEffect(() => {
     if (auth.isAuthenticated) {
       fetchSubject();
@@ -37,6 +39,14 @@ function PostEvent() {
   const handlePostSuccess = () => {
     setReloadPosts((prevState) => !prevState);
   };
+
+  function toLocalISOString(date:any, timeZone:any) {
+    // Convert date to the specified time zone
+    const zonedDate = toZonedTime(date, timeZone);
+  
+    // Format the zoned date in ISO format
+    return format(zonedDate, "yyyy-MM-dd'T'HH:mm:ss.SSS", { timeZone });
+  }
 
   const PostEvent = async () => {
     try {
@@ -62,7 +72,7 @@ function PostEvent() {
         subjectCode: selectedSubject,
         title: title,
         description: detail,
-        startTime: startDate.toISOString(),
+        startTime: toLocalISOString(startDate, "Asia/Bangkok"),
         stopTime: endDate.toISOString(),
         image: imageUrl,
         createBy: { id: value.user?.id ?? 0 },
@@ -74,7 +84,7 @@ function PostEvent() {
       console.log(photo);
       handlePostSuccess();
       toast.success("สร้างประกาศสำเร็จแล้ว");
-      format();
+      formatData();
     } catch (error) {
       console.error("Error creating event:", error);
     }
@@ -118,7 +128,7 @@ function PostEvent() {
     }
   };
 
-  const format = () => {
+  const formatData = () => {
     setTitle("");
     setDetail("");
     setStartDate(new Date());
@@ -126,6 +136,8 @@ function PostEvent() {
     setPreviewPhoto("");
     setPhoto(null);
   };
+
+  
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>

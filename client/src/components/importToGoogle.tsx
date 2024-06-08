@@ -12,6 +12,7 @@ function ImportToGoogle() {
   const [events, setEvents] = useState<any>({});
   const [classDate, setClassDate] = useState<any[]>([]);
   const [examDate, setExamDate] = useState<any[]>([]);
+  const [postDate, setPostDate] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const startRecur = "2020-07-13T00:00:00";
   const session = useSession();
@@ -22,7 +23,6 @@ function ImportToGoogle() {
       setLoading(true);
       fectStudentClassDate();
     } else {
-      // app.push("/")
       console.log("No access token available");
     }
   }, [auth]);
@@ -107,7 +107,7 @@ function ImportToGoogle() {
           timeZone: "Asia/Bangkok",
         },
         recurrence: [],
-        colorId: "6", // Sets the background color, you can choose any color from Google Calendar's predefined colors
+        colorId: "6",
       }));
 
       const newEventsFromUser =
@@ -137,8 +137,25 @@ function ImportToGoogle() {
           };
         }) || [];
 
+      const newEventsFromPost = postDate?.map((item) => ({
+        summary: `${item.subjectCode} ${item.title}`,
+        description: `${item.description}`,
+        start: {
+          dateTime: `${item.startTime.substring(0, 19)}+07:00`,
+          timeZone: "Asia/Bangkok",
+        },
+        end: {
+          dateTime:  `${item.stopTime.substring(0, 19)}+07:00`,
+          timeZone: "Asia/Bangkok",
+        },
+        recurrence: [],
+        colorId: "10",
+      }));
+
       // const mergedEvents = [...newEventsFromClass, ...newEventsFromExam];
+
       const mergedEvents = [
+        ...newEventsFromPost,
         ...newEventsFromClass,
         ...newEventsFromExam,
         ...newEventsFromUser,
@@ -146,8 +163,9 @@ function ImportToGoogle() {
       setEvents(mergedEvents);
 
       console.log("MergeEvents", mergedEvents);
+    } else if (postDate) {
     }
-  }, [classDate, examDate]);
+  }, [classDate, examDate, postDate]);
 
   const fectStudentClassDate = async () => {
     setLoading(true);
@@ -169,10 +187,15 @@ function ImportToGoogle() {
         }
       );
 
+      const resultConfirmPost = await axios.get(
+        `${conf.apiUrlPrefix}/schedules?studentId=9910990001` //โกง
+      );
+
       setClassDate(result.data);
       setExamDate(resultExam.data);
-      console.log("classDate", result.data);
-      console.log("examDate", resultExam.data);
+      setPostDate(resultConfirmPost.data);
+      // console.log("classDate", result.data);
+      // console.log("examDate", resultExam.data);
     } catch (error) {
       console.error("Error fetching student detail:", error);
     } finally {

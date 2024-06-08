@@ -185,7 +185,8 @@ export default function ModalInfo({
 
           {!event._def.extendedProps.lecturer &&
             !event._def.extendedProps.examTypeDesc &&
-            !event._def.extendedProps.subjectCode && (
+            !event._def.extendedProps.subjectCode &&
+            !event._def.extendedProps.vote && (
               <>
                 <p className="text-base leading-relaxed text-gray-500 font-thin dark:text-gray-400">
                   <span className="font-bold">รายละเอียด: </span>
@@ -244,7 +245,7 @@ export default function ModalInfo({
                   </p>
                   <p>
                     <strong>
-                      รับทราบแล้ว: {event._def.extendedProps.vote} คน
+                      ยืนยันแล้ว: {event._def.extendedProps.vote} คน
                     </strong>{" "}
                   </p>
                   <div className="card-actions justify-end mt-2">
@@ -286,7 +287,8 @@ export default function ModalInfo({
       </Modal.Body>
       {!event._def.extendedProps.lecturer &&
         !event._def.extendedProps.examTypeDesc &&
-        !event._def.extendedProps.subjectCode && (
+        !event._def.extendedProps.subjectCode &&
+        !event._def.extendedProps.vote && (
           <Modal.Footer className="justify-end my-auto p-3 bg-base-100">
             <Button
               size={"sm"}

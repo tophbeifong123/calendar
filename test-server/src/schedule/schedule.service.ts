@@ -15,16 +15,20 @@ export class SchedulesService {
   ) {}
 
   async findAll(query: { [key: string]: any }): Promise<Schedule[]> {
-    Object.keys(query).forEach((key) => {
-      if (typeof query[key] === 'string') {
-        query[key] = Like(`${query[key]}%`);
-      }
-    });
-    const findOptions: FindManyOptions<Schedule> = {
-      where : query,
-      relations : ['createBy', 'votedBy']
+    const studentId = query.studentId;
+    delete query.studentId; // Remove studentId from query
+
+    const qb = this.schedulesRepository.createQueryBuilder('schedule')
+      .leftJoinAndSelect('schedule.createBy', 'createBy')
+      .leftJoinAndSelect('schedule.votedBy', 'votedBy')
+      .where(query);
+
+    // Apply votedBy filter
+    if (studentId) {
+      qb.andWhere('votedBy.studentId = :studentId', { studentId });
     }
-    return this.schedulesRepository.find(findOptions);
+
+    return qb.getMany();
   }
 
   async findOne(id: number): Promise<Schedule | null> {

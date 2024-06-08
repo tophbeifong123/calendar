@@ -5,6 +5,7 @@ import { Button, Select } from "flowbite-react";
 import PostEvent from "./PostEvent";
 import { ProfileAuthContext } from "@/contexts/Auth.context";
 import toast, { Toaster } from "react-hot-toast";
+import { format, toZonedTime } from 'date-fns-tz';
 
 interface Post {
   id: number;
@@ -32,7 +33,7 @@ function ListPost({ fetchPost, subjectData }: any) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedSubject, setSelectedSubject] = useState<string>("");
   const value = useContext(ProfileAuthContext);
-  const [vote, setVote] = useState<number>(0);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,6 +80,8 @@ function ListPost({ fetchPost, subjectData }: any) {
       toast.error("เกิดข้อผิดพลาดในการโหวต");
     }
   };
+
+
 
   return (
     <>
@@ -187,17 +190,17 @@ function ListPost({ fetchPost, subjectData }: any) {
                       <p>{post.description}</p>
                       <p>
                         <strong>เริ่มต้นเมื่อ:</strong>{" "}
-                        {new Date(post.startTime).toLocaleString()}
+                        {post.startTime.substring(0,10)} / {post.startTime.substring(11,19)}
                       </p>
                       <p>
                         <strong>สิ้นสุดเมื่อ:</strong>{" "}
-                        {new Date(post.stopTime).toLocaleString()}
+                        {post.stopTime.substring(0,10)} / {post.stopTime.substring(11,19)}
                       </p>
                       <p>
                         <strong>ผู้โพสต์:</strong> {post.createBy.studentId}
                       </p>
                       <p>
-                        <strong>รับทราบแล้ว:</strong> {post.vote} คน
+                        <strong>ยืนยันแล้ว:</strong> {post.vote} คน
                       </p>
                       <div className="card-actions justify-end">
                         {value.user?.studentId === post.createBy.studentId && (
@@ -212,15 +215,13 @@ function ListPost({ fetchPost, subjectData }: any) {
                           className="btn btn-info"
                           onClick={() => {
                             const isVotedByCurrentUser =
-                              post.votedBy &&
-                              post.votedBy.studentId === value.user?.studentId;
+                              post.votedBy?.studentId === value.user?.studentId;
                             if (!isVotedByCurrentUser) {
                               VoteUpdate(post.id, post.vote);
                             }
                           }}
                           disabled={
-                            post.votedBy &&
-                            post.votedBy.studentId === value.user?.studentId
+                            post.votedBy?.studentId === value.user?.studentId
                           }
                         >
                           ยืนยัน/รับทราบ

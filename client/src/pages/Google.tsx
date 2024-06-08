@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { CustomNavbar } from "@/components/Navbar";
 import SlideBar from "@/components/SlideBar";
-import toast, { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from "react-hot-toast";
 import {
   useSession,
   useSessionContext,
@@ -27,16 +27,15 @@ function Google() {
 
   const [sessionMock, setSessionMock] = useState<any>(null);
 
-  
   const googleSignIn = async () => {
     const { error, data } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: 'http://localhost:3000/Google',
+        redirectTo: "http://localhost:3000/Google",
         scopes: "https://www.googleapis.com/auth/calendar",
       },
     });
-    
+
     if (error) {
       alert("Error logging in to Google provider with Supabase");
       console.log(error);
@@ -45,16 +44,10 @@ function Google() {
     }
   };
 
-  useEffect(() => {
-    if (session) {
-      toast.success('เข้าสู่ระบบสำเร็จ');
-    }
-  }, [session]);
-
   const signOut = async () => {
     await supabase.auth.signOut();
     setSessionMock(null);
-    toast.success('ออกจากระบบสำเร็จ');
+    toast.success("ออกจากระบบสำเร็จ");
   };
   async function createCalendarEvent() {
     console.log("Creating calendar event");
