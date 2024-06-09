@@ -143,12 +143,13 @@ function ImportToGoogle() {
           timeZone: "Asia/Bangkok",
         },
         end: {
-          dateTime:  `${item.stopTime.substring(0, 19)}+07:00`,
+          dateTime: `${item.stopTime.substring(0, 19)}+07:00`,
           timeZone: "Asia/Bangkok",
         },
         recurrence: [],
         colorId: "10",
       }));
+      console.log("responseGoogle",newEventsFromPost)
 
       // const mergedEvents = [...newEventsFromClass, ...newEventsFromExam];
 

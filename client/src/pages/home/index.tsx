@@ -209,14 +209,14 @@ function Home() {
       <CustomNavbar />
       {loading ? (
         <>
-          <div className="flex justify-center items-center h-screen bg-gradient-to-r from-orange-100 to-blue-100">
+          <div className="flex justify-center items-center h-screen bg-base-200">
             <progress className="progress w-56"></progress>
           </div>
           <FooterComponent />
         </>
       ) : (
         <>
-          <div className="flex justify-center items-center h-screen bg-gradient-to-r from-orange-100 to-blue-100">
+          <div className="flex justify-center items-center h-screen bg-base-200">
             <CustomCalendar
               fetch={triggerFetchPost}
               details={studentDetails}

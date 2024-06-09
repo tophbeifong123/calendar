@@ -31,11 +31,11 @@ interface EventGoogle {
   description: string;
   start: any;
   end: any;
-  recurrence: [];
+  // recurrence: any;
   colorId: string;
 }
 
-function ListPost({ fetchPost, subjectData , fetch}: any) {
+function ListPost({ fetchPost, subjectData, fetch }: any) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [newFetch, setNewFetch] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -60,17 +60,14 @@ function ListPost({ fetchPost, subjectData , fetch}: any) {
     };
 
     fetchData();
-  }, [fetchPost, selectedSubject, newFetch]);
+  }, [fetchPost, selectedSubject, newFetch, fetch]);
 
   const handleDelete = async (id: number) => {
     try {
-      const resDelete = await axios.delete(
-        `${conf.apiUrlPrefix}/schedules/${id}`
-      );
+      await axios.delete(`${conf.apiUrlPrefix}/schedules/${id}`);
       setNewFetch(!newFetch);
       toast.success("ลบประกาศสำเร็จแล้ว");
       fetch();
-      // console.log("resDelete", resDelete);
     } catch (error) {
       console.error("Error delete post:", error);
     }
@@ -82,45 +79,58 @@ function ListPost({ fetchPost, subjectData , fetch}: any) {
     title: string,
     description: string,
     startDate: any,
-    endDate: any
+    endDate: any,
+    subjectCode: string
   ) => {
     try {
-      const response = await axios.put(`${conf.apiUrlPrefix}/schedules/${id}`, {
+      await axios.put(`${conf.apiUrlPrefix}/schedules/${id}`, {
         vote: vote + 1,
         votedBy: { id: value.user?.id ?? 0 },
       });
+  
       if (value.user?.google) {
-        const startDateObj = new Date(startDate);
-        const endDateObj = new Date(endDate);
-        const newEventGoogle: EventGoogle = {
-          summary: title || "ไม่ระบุ",
-          description: description || "ไม่ระบุ",
+        const startDateTime = new Date(startDate);
+        const endDateTime = new Date(endDate);
+        const newEventGoogle = {
+          summary: "ไม่ระบุ",
+          description: "ไม่ระบุ",
           start: {
-            dateTime: startDateObj.toISOString(),
+            dateTime: startDate.toISOString(),
             timeZone: "Asia/Bangkok",
           },
           end: {
-            dateTime: endDateObj.toISOString(),
+            dateTime: endDate.toISOString(),
             timeZone: "Asia/Bangkok",
           },
           recurrence: [],
           colorId: "10",
         };
-
+  
+        console.log(newEventGoogle);
+  
         const responseGoogle = await fetch(
           "https://www.googleapis.com/calendar/v3/calendars/primary/events",
           {
             method: "POST",
             headers: {
-              Authorization: "Bearer " + session?.provider_token,
+              Authorization: `Bearer ${session?.provider_token}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify(newEventGoogle),
           }
         );
-        console.log(responseGoogle);
+  
+        console.log("responseGoogle", responseGoogle);
+  
+        if (responseGoogle.ok) {
+          const event = await responseGoogle.json();
+          console.log("Event created:", event);
+        } else {
+          const errorResponse = await responseGoogle.json();
+          console.error("Error creating event:", errorResponse);
+        }
       }
-
+  
       toast.success("โหวตสำเร็จแล้ว!!");
       setNewFetch(!newFetch);
     } catch (error) {
@@ -128,11 +138,13 @@ function ListPost({ fetchPost, subjectData , fetch}: any) {
       toast.error("เกิดข้อผิดพลาดในการโหวต");
     }
   };
+  
+
 
   return (
     <>
       <button
-        className="btn btn-circle fixed bg-[#ebebeb] bottom-[160px] left-10 z-5 rounded-full p-2 shadow-sm w-[45px] h-[45px] z-10"
+        className="btn btn-circle fixed bg-[#ebebeb] bottom-[160px] left-5 z-5 rounded-full p-2 shadow-sm w-[45px] h-[45px] z-10"
         onClick={() => setModalOpen(true)}
       >
         <svg
@@ -150,7 +162,7 @@ function ListPost({ fetchPost, subjectData , fetch}: any) {
           />
         </svg>
       </button>
-      <label className="fixed  bottom-[173px] left-[90px] z-5 rounded-full z-10 text-left">
+      <label className="fixed  bottom-[173px] left-[70px] z-5 rounded-full z-10 text-left">
         ประกาศ
       </label>
       <Toaster position="bottom-right" />
@@ -269,7 +281,8 @@ function ListPost({ fetchPost, subjectData , fetch}: any) {
                                 post.title,
                                 post.description,
                                 post.startTime,
-                                post.stopTime
+                                post.stopTime,
+                                post.subjectCode
                               );
                             }
                           }}

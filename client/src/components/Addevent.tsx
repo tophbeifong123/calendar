@@ -54,6 +54,7 @@ function AddEvent() {
         console.error("User not authenticated");
         return;
       }
+      console.log(startDate.toISOString(), endDate.toISOString());
       const newEventGoogle: EventGoogle = {
         summary: title || "ไม่ระบุ",
         description: detail || "ไม่ระบุ",
@@ -62,7 +63,7 @@ function AddEvent() {
           timeZone: "Asia/Bangkok",
         },
         end: {
-          dateTime: startDate.toISOString(),
+          dateTime: endDate.toISOString(),
           timeZone: "Asia/Bangkok",
         },
         recurrence: [],
@@ -132,7 +133,7 @@ function AddEvent() {
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <>
         <button
-          className="btn btn-circle fixed bg-[#ebebeb] bottom-10 left-10 z-5 rounded-full p-2 shadow-sm w-[45px] h-[45px]"
+          className="btn btn-circle fixed bg-[#ebebeb] bottom-10 left-5 z-5 rounded-full p-2 shadow-sm w-[45px] h-[45px]"
           onClick={() => setModalOpen(true)}
         >
           <svg
@@ -150,7 +151,7 @@ function AddEvent() {
             />
           </svg>
         </button>
-        <label className="fixed  bottom-14 left-[90px] z-5 rounded-full z-10">
+        <label className="fixed  bottom-14 left-[70px] z-5 rounded-full z-10">
           สร้างกิจกรรม
         </label>
         {modalOpen && (

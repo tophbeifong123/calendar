@@ -48,8 +48,10 @@ function PostEvent({ fetch }: any) {
 
   function toLocalISOString(date: any, timeZone: any) {
     const zonedDate = toZonedTime(date, timeZone);
-    return format(zonedDate, "yyyy-MM-dd'T'HH:mm:ss.SSS", { timeZone });
+    return format(zonedDate, "yyyy-MM-dd'T'HH:mm:ss.SSS", { timeZone })+ 'Z';
   }
+
+  console.log(startDate, endDate);  
 
   const PostEvent = async () => {
     try {
@@ -76,7 +78,7 @@ function PostEvent({ fetch }: any) {
         title: title,
         description: detail,
         startTime: toLocalISOString(startDate, "Asia/Bangkok"),
-        stopTime: endDate.toISOString(),
+        stopTime: toLocalISOString(startDate, "Asia/Bangkok"),
         image: imageUrl,
         createBy: { id: value.user?.id ?? 0 },
         vote: 0,
@@ -134,7 +136,7 @@ function PostEvent({ fetch }: any) {
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <>
         <button
-          className="btn btn-circle fixed bg-[#ebebeb] bottom-28 left-10 z-5 rounded-full p-2 shadow-sm w-[45px] h-[45px] z-10"
+          className="btn btn-circle fixed bg-[#ebebeb] bottom-28 left-5 z-5 rounded-full p-2 shadow-sm w-[45px] h-[45px] z-10"
           onClick={() => setModalOpen(true)}
         >
           <svg
@@ -152,7 +154,7 @@ function PostEvent({ fetch }: any) {
             />
           </svg>
         </button>
-        <label className="fixed  bottom-32 left-[90px] z-5 rounded-full z-10 ">
+        <label className="fixed  bottom-32 left-[70px] z-5 rounded-full z-10 ">
           แจ้งประกาศ
         </label>
         <ListPost fetchPost={reloadPosts} subjectData={subjectType} fetch={fetch}/>
