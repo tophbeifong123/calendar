@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { CustomNavbar } from "@/components/Navbar";
 import { useAuth } from "react-oidc-context";
 import CustomCalendar from "@/components/Calendar";
 import conf from "@/conf/main";
-import { useRouter } from "next/router";
 import { FooterComponent } from "@/components/Footer";
-import { ProfileAuthContext } from "@/contexts/Auth.context";
 
 function Home() {
   const auth = useAuth();
@@ -18,11 +16,10 @@ function Home() {
   const [postDateFormat, setPostDateFormat] = useState<any[]>([]);
   const [studentDetails, setStudentDetails] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [fetchPost, setFetchPost] = useState<boolean>(false);
   const [startRecur, setStartRecur] = useState<any>({});
   const [holidayDateFormat, setHolidayDateFormat] = useState<any>([]);
-  const app = useRouter();
-  const value = useContext(ProfileAuthContext);
-  // console.log("test1", examDate);
+
   useEffect(() => {
     if (auth.isAuthenticated) {
       setLoading(true);
@@ -30,10 +27,19 @@ function Home() {
       fectStudentClassDate();
       fectStartRecur();
     } else {
-      // app.push("/")
       console.log("No access token available");
     }
   }, [auth]);
+
+  useEffect(() => {
+    if (auth.isAuthenticated) {
+      fetchPostDate();
+    }
+  }, [auth, fetchPost]);
+
+  const triggerFetchPost = () => {
+    setFetchPost((fetchPost) => !fetchPost);
+  };
 
   useEffect(() => {
     if (
@@ -103,8 +109,8 @@ function Home() {
         title: `${item.subjectCode} ${item.title} `,
         subjectCode: `${item.subjectCode}`,
         description: ` ${item.description}`,
-        start: `${item.startTime.substring(0,19)}`,
-        end: `${item.stopTime.substring(0,19)}`,
+        start: `${item.startTime.substring(0, 19)}`,
+        end: `${item.stopTime.substring(0, 19)}`,
         image: `${item.image}`,
         createdDate: `${item.createdDate}`,
         status: `${item.status}`,
@@ -121,7 +127,7 @@ function Home() {
 
       console.log("MergeEvents", mergedEvents);
     }
-  }, [classDate, examDate]);
+  }, [classDate, examDate, postDate]);
 
   const fectStudentDetail = async () => {
     try {
@@ -137,7 +143,6 @@ function Home() {
       console.log("studentdetail", result.data.data[0]);
     } catch (error) {
       console.error("Error fetching student detail:", error);
-    } finally {
     }
   };
 
@@ -176,21 +181,26 @@ function Home() {
         `${conf.apiUrlPrefix}/api/fetch-holiday-google`
       );
 
-      const resultPost = await axios.get(`${conf.apiUrlPrefix}/schedules`);
-
-      setPostDate(resultPost.data);
       setClassDate(result.data);
       setExamDate(resultExam.data);
-      setPostDate(resultPost.data);
       setHolidayDate(resultHoliday.data.items);
 
-      console.log("classDate", result.data);
-      console.log("examDate", resultExam.data);
-      console.log("holidayData", resultHoliday.data.items.slice(0, 100));
+      // console.log("classDate", result.data);
+      // console.log("examDate", resultExam.data);
+      // console.log("holidayData", resultHoliday.data.items.slice(0, 100));
     } catch (error) {
       console.error("Error fetching student detail:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchPostDate = async () => {
+    try {
+      const resultPost = await axios.get(`${conf.apiUrlPrefix}/schedules`);
+      setPostDate(resultPost.data);
+    } catch (error) {
+      console.error("Error fetching post date:", error);
     }
   };
 
@@ -208,6 +218,7 @@ function Home() {
         <>
           <div className="flex justify-center items-center h-screen bg-gradient-to-r from-orange-100 to-blue-100">
             <CustomCalendar
+              fetch={triggerFetchPost}
               details={studentDetails}
               filterClass={classDate}
               filterExam={examDate}

@@ -11,9 +11,9 @@ import { useAuth } from "react-oidc-context";
 import { ProfileAuthContext } from "@/contexts/Auth.context";
 import toast, { Toaster } from "react-hot-toast";
 import ListPost from "./ListPost";
-import { format, toDate, toZonedTime } from 'date-fns-tz';
+import { format, toZonedTime } from "date-fns-tz";
 
-function PostEvent() {
+function PostEvent({ fetch }: any) {
   const auth = useAuth();
   const [modalOpen, setModalOpen] = useState<Boolean>(false);
   const [startDate, setStartDate] = useState<Date>(new Date());
@@ -26,8 +26,7 @@ function PostEvent() {
   const [previewPhoto, setPreviewPhoto] = useState<string>("");
   const [reloadPosts, setReloadPosts] = useState<Boolean>(false);
   const value = useContext(ProfileAuthContext);
-  // console.log("selectedSubject", selectedSubject);\
-  console.log(toLocalISOString(startDate, "Asia/Bangkok"))
+
   useEffect(() => {
     if (auth.isAuthenticated) {
       fetchSubject();
@@ -38,13 +37,17 @@ function PostEvent() {
 
   const handlePostSuccess = () => {
     setReloadPosts((prevState) => !prevState);
+    fetch();
+    setTitle("");
+    setDetail("");
+    setStartDate(new Date());
+    setEndDate(new Date());
+    setPreviewPhoto("");
+    setPhoto(null);
   };
 
-  function toLocalISOString(date:any, timeZone:any) {
-    // Convert date to the specified time zone
+  function toLocalISOString(date: any, timeZone: any) {
     const zonedDate = toZonedTime(date, timeZone);
-  
-    // Format the zoned date in ISO format
     return format(zonedDate, "yyyy-MM-dd'T'HH:mm:ss.SSS", { timeZone });
   }
 
@@ -80,11 +83,10 @@ function PostEvent() {
         createdDate: new Date().toISOString(),
         status: false,
       });
-      console.log("Posted Event:", response);
-      console.log(photo);
+      // console.log("Posted Event:", response);
+      // console.log(photo);
       handlePostSuccess();
       toast.success("สร้างประกาศสำเร็จแล้ว");
-      formatData();
     } catch (error) {
       console.error("Error creating event:", error);
     }
@@ -106,7 +108,7 @@ function PostEvent() {
         }
       );
       setSubjctType(classSubject.data);
-      // console.log("data = ", subject.data);
+    
     } catch (error) {
       console.log("error Subject", error);
     }
@@ -127,17 +129,6 @@ function PostEvent() {
       reader.readAsDataURL(file);
     }
   };
-
-  const formatData = () => {
-    setTitle("");
-    setDetail("");
-    setStartDate(new Date());
-    setEndDate(new Date());
-    setPreviewPhoto("");
-    setPhoto(null);
-  };
-
-  
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -164,8 +155,7 @@ function PostEvent() {
         <label className="fixed  bottom-32 left-[90px] z-5 rounded-full z-10 ">
           แจ้งประกาศ
         </label>
-        {/* <a className="mt-3">ประกาศ</a> */}
-        <ListPost fetchPost={reloadPosts} subjectData={subjectType} />
+        <ListPost fetchPost={reloadPosts} subjectData={subjectType} fetch={fetch}/>
         <Toaster position="bottom-right" />
         {modalOpen && (
           <div

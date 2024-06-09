@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { CustomNavbar } from "@/components/Navbar";
 import { useAuth } from "react-oidc-context";
 import conf from "@/conf/main";
-import { FooterComponent } from "@/components/Footer";
 import { useSession } from "@supabase/auth-helpers-react";
 import { ProfileAuthContext } from "@/contexts/Auth.context";
 

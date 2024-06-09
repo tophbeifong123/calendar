@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import conf from "@/conf/main";
-import { Button, Select } from "flowbite-react";
-import PostEvent from "./PostEvent";
+import { Select } from "flowbite-react";
 import { ProfileAuthContext } from "@/contexts/Auth.context";
 import toast, { Toaster } from "react-hot-toast";
-import { format, toZonedTime } from 'date-fns-tz';
+import { useSession } from "@supabase/auth-helpers-react";
 
 interface Post {
   id: number;
@@ -27,13 +26,22 @@ interface Post {
   };
 }
 
-function ListPost({ fetchPost, subjectData }: any) {
+interface EventGoogle {
+  summary: string;
+  description: string;
+  start: any;
+  end: any;
+  recurrence: [];
+  colorId: string;
+}
+
+function ListPost({ fetchPost, subjectData , fetch}: any) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [newFetch, setNewFetch] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectedSubject, setSelectedSubject] = useState<string>("");
   const value = useContext(ProfileAuthContext);
-
+  const session = useSession();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,18 +69,58 @@ function ListPost({ fetchPost, subjectData }: any) {
       );
       setNewFetch(!newFetch);
       toast.success("ลบประกาศสำเร็จแล้ว");
-      console.log("resDelete", resDelete);
+      fetch();
+      // console.log("resDelete", resDelete);
     } catch (error) {
       console.error("Error delete post:", error);
     }
   };
 
-  const VoteUpdate = async (id: number, vote: number) => {
+  const VoteUpdate = async (
+    id: number,
+    vote: number,
+    title: string,
+    description: string,
+    startDate: any,
+    endDate: any
+  ) => {
     try {
       const response = await axios.put(`${conf.apiUrlPrefix}/schedules/${id}`, {
         vote: vote + 1,
         votedBy: { id: value.user?.id ?? 0 },
       });
+      if (value.user?.google) {
+        const startDateObj = new Date(startDate);
+        const endDateObj = new Date(endDate);
+        const newEventGoogle: EventGoogle = {
+          summary: title || "ไม่ระบุ",
+          description: description || "ไม่ระบุ",
+          start: {
+            dateTime: startDateObj.toISOString(),
+            timeZone: "Asia/Bangkok",
+          },
+          end: {
+            dateTime: endDateObj.toISOString(),
+            timeZone: "Asia/Bangkok",
+          },
+          recurrence: [],
+          colorId: "10",
+        };
+
+        const responseGoogle = await fetch(
+          "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+          {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + session?.provider_token,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newEventGoogle),
+          }
+        );
+        console.log(responseGoogle);
+      }
+
       toast.success("โหวตสำเร็จแล้ว!!");
       setNewFetch(!newFetch);
     } catch (error) {
@@ -80,8 +128,6 @@ function ListPost({ fetchPost, subjectData }: any) {
       toast.error("เกิดข้อผิดพลาดในการโหวต");
     }
   };
-
-
 
   return (
     <>
@@ -176,9 +222,7 @@ function ListPost({ fetchPost, subjectData }: any) {
                           alt="Post Image"
                           className="h-[240px] mt-3 "
                         />
-                      ) : (
-                        <p className="text-center text-gray-500">ไม่มีรูปภาพ</p>
-                      )}
+                      ) : null}
                     </figure>
                     <div className="card-body">
                       <h2 className="card-title">
@@ -190,11 +234,13 @@ function ListPost({ fetchPost, subjectData }: any) {
                       <p>{post.description}</p>
                       <p>
                         <strong>เริ่มต้นเมื่อ:</strong>{" "}
-                        {post.startTime.substring(0,10)} / {post.startTime.substring(11,19)}
+                        {post.startTime.substring(0, 10)}{" "}
+                        {post.startTime.substring(11, 19)}
                       </p>
                       <p>
                         <strong>สิ้นสุดเมื่อ:</strong>{" "}
-                        {post.stopTime.substring(0,10)} / {post.stopTime.substring(11,19)}
+                        {post.stopTime.substring(0, 10)}{" "}
+                        {post.stopTime.substring(11, 19)}
                       </p>
                       <p>
                         <strong>ผู้โพสต์:</strong> {post.createBy.studentId}
@@ -217,7 +263,14 @@ function ListPost({ fetchPost, subjectData }: any) {
                             const isVotedByCurrentUser =
                               post.votedBy?.studentId === value.user?.studentId;
                             if (!isVotedByCurrentUser) {
-                              VoteUpdate(post.id, post.vote);
+                              VoteUpdate(
+                                post.id,
+                                post.vote,
+                                post.title,
+                                post.description,
+                                post.startTime,
+                                post.stopTime
+                              );
                             }
                           }}
                           disabled={

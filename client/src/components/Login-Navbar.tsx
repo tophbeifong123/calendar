@@ -1,6 +1,5 @@
 "use client";
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
-import { useEffect, useState } from "react";
 import PSUImage from "../assets/icon/logo-psupassport.png";
 
 export function LoginNavbar() {

@@ -4,20 +4,15 @@ import dayGridPlugin from "@fullcalendar/daygrid/index.js";
 import timeGridPlugin from "@fullcalendar/timegrid/index.js";
 import interactionPlugin from "@fullcalendar/interaction/index.js";
 import ModalInfo from "./ModalInfo";
-import Addevent from "./PostEvent";
 import listPlugin from "@fullcalendar/list";
-import settingLogo from "../assets/icon/setting.svg";
 import { AccordionSetting } from "./AccordionSetting";
 import axios from "axios";
 import conf from "@/conf/main";
-import { useAuth } from "react-oidc-context";
 import { ProfileAuthContext } from "@/contexts/Auth.context";
 import PostEvent from "./PostEvent";
 import AddEvent from "./Addevent";
-import ListPost from "./ListPost";
 import { useSession } from "@supabase/auth-helpers-react";
-import toast, { Toaster } from "react-hot-toast";
-import { Button } from "flowbite-react";
+import toast from "react-hot-toast";
 
 export default function CustomCalendar({
   details,
@@ -25,15 +20,14 @@ export default function CustomCalendar({
   filterClass,
   filterExam,
   postDateFormat,
+  fetch,
   holidayDateFormat,
 }: any) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [selectEvent, setSelectEvents] = useState<any>(null);
   const [initialDate, setInitialDate] = useState<string>("2020-07-01");
-  const [newEvent, setNewEvent] = useState<any>([]);
   const [filteredEvents, setFilteredEvents] = useState<any[]>([]);
   const [test, setTest] = useState<boolean>(true);
-  const [modalAddEvent, setModalAddEvent] = useState<Boolean>(false);
   const value = useContext(ProfileAuthContext);
   const session = useSession();
 
@@ -203,7 +197,7 @@ export default function CustomCalendar({
     <>
       <div className="flex justify-center items-center  w-full h-screen mb-10">
         <div className="items-center relative bottom-[100px] flex flex-col mx-auto">
-          <PostEvent />
+          <PostEvent fetch={fetch}/>
           <AccordionSetting
             events={events}
             filterClass={filterClass}

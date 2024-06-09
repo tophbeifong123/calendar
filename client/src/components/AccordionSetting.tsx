@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Accordion, Checkbox, ListGroup } from "flowbite-react";
+import React, { useState } from "react";
+import { Checkbox, ListGroup } from "flowbite-react";
 
 export function AccordionSetting({
   events,

@@ -74,7 +74,6 @@ export default function ModalInfo({
   if (!event) {
     return null;
   }
-  // console.log("modal event", event);
 
   const handleDelete = async (id: number) => {
     try {
@@ -154,7 +153,8 @@ export default function ModalInfo({
           )}
           {!event._def.extendedProps.examTypeDesc &&
             event._def.extendedProps.allday &&
-            !event._def.extendedProps.image && (
+            !event._def.extendedProps.image &&
+            !event._def.extendedProps.vote && (
               <>
                 <p className="text-base leading-relaxed text-gray-500 font-thin dark:text-gray-400">
                   <span className="font-bold">รายละเอียด: </span>
@@ -198,7 +198,7 @@ export default function ModalInfo({
               </>
             )}
 
-          {event._def.extendedProps.image && (
+          {event._def.extendedProps.vote && (
             <>
               <div className="card card-compact w-96 bg-base-100 shadow-xl my-10 mx-auto">
                 <div className="flex justify-center items-center mt-3">
@@ -219,9 +219,7 @@ export default function ModalInfo({
                       alt="Post Image"
                       className="h-[240px] mt-3"
                     />
-                  ) : (
-                    <p className="text-center text-gray-500">ไม่มีรูปภาพ</p>
-                  )}
+                  ) : null}
                 </figure>
                 <div className="card-body">
                   <h2 className="card-title text-base">
@@ -264,9 +262,8 @@ export default function ModalInfo({
                       className="btn btn-info"
                       onClick={() => {
                         const isVotedByCurrentUser =
-                          event._def.extendedProps.votedBy &&
-                          event._def.extendedProps.votedBy.studentId ===
-                            value.user?.studentId;
+                          event._def.extendedProps.votedBy?.studentId ===
+                          value.user?.studentId;
                         if (!isVotedByCurrentUser) {
                           VoteUpdate(
                             event._def.extendedProps.id,
