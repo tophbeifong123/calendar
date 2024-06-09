@@ -110,7 +110,7 @@ function Google() {
   };
 
   return (
-    <div className="h-screen bg-gray-100">
+    <div className="h-screen bg-base-200">
       <Toaster position="bottom-right" />
       <MuiPickersUtilsProvider utils={LocaleUtils}>
         <CustomNavbar />
@@ -209,6 +209,7 @@ function Google() {
                 ลงชื่อเข้าใช้ด้วย Google
               </button>
             )}
+            {session?.user && <hr className="mt-10" />}
             <ImportToGoogle />
           </div>
         </div>

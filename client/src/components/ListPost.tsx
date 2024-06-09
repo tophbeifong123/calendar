@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import conf from "@/conf/main";
-import { Select } from "flowbite-react";
+import { Button, Select } from "flowbite-react";
 import { ProfileAuthContext } from "@/contexts/Auth.context";
 import toast, { Toaster } from "react-hot-toast";
 import { useSession } from "@supabase/auth-helpers-react";
-
 interface Post {
   id: number;
   subjectCode: string;
@@ -73,73 +72,100 @@ function ListPost({ fetchPost, subjectData, fetch }: any) {
     }
   };
 
-  const VoteUpdate = async (
-    id: number,
-    vote: number,
-    title: string,
-    description: string,
-    startDate: any,
-    endDate: any,
-    subjectCode: string
-  ) => {
+  const VoteUpdate = async (id: number, vote: number) => {
     try {
       await axios.put(`${conf.apiUrlPrefix}/schedules/${id}`, {
         vote: vote + 1,
         votedBy: { id: value.user?.id ?? 0 },
       });
-  
-      if (value.user?.google) {
-        const startDateTime = new Date(startDate);
-        const endDateTime = new Date(endDate);
+      toast.success("โหวตสำเร็จแล้ว!!");
+      setNewFetch(!newFetch);
+    } catch (error) {
+      console.error("Error updating vote:", error);
+      toast.error("เกิดข้อผิดพลาดในการโหวต");
+    }
+  };
+
+  const test = async () => {
+    const newEventGoogleee = {
+      summary: "tedddst",
+      start: {
+        dateTime: `2024-06-09T20:07:07.997Z`,
+        timeZone: "Asia/Bangkok",
+      },
+      end: {
+        dateTime: `2024-06-09T20:09:07.997Z`,
+        timeZone: "Asia/Bangkok",
+      },
+      recurrence: [],
+      colorId: "9",
+    };
+    try {
+      const responseGoogle = await fetch(
+        "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + session?.provider_token,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newEventGoogleee),
+        }
+      );
+    } catch (error) {
+      console.error("Error creating event:", error);
+    }
+  };
+
+  const UpdateGoogle = async (
+    title: any,
+    description: any,
+    startDate: any,
+    endDate: any,
+    subjectCode: any
+  ) => {
+    if (value.user?.google) {
+      try {
+        const startDateTime = new Date(startDate).toISOString();
+        const endDateTime = new Date(endDate).toISOString();
+
         const newEventGoogle = {
-          summary: "ไม่ระบุ",
-          description: "ไม่ระบุ",
+          summary: `${subjectCode} ${title}`,
+          description: description,
           start: {
-            dateTime: startDate.toISOString(),
+            dateTime: startDateTime,
             timeZone: "Asia/Bangkok",
           },
           end: {
-            dateTime: endDate.toISOString(),
+            dateTime: endDateTime,
             timeZone: "Asia/Bangkok",
           },
           recurrence: [],
           colorId: "10",
         };
-  
-        console.log(newEventGoogle);
-  
+
+        console.log("New Google Calendar event:", newEventGoogle);
+
+        const token = session?.provider_token;
         const responseGoogle = await fetch(
           "https://www.googleapis.com/calendar/v3/calendars/primary/events",
           {
             method: "POST",
             headers: {
-              Authorization: `Bearer ${session?.provider_token}`,
+              Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
             body: JSON.stringify(newEventGoogle),
           }
         );
-  
-        console.log("responseGoogle", responseGoogle);
-  
-        if (responseGoogle.ok) {
-          const event = await responseGoogle.json();
-          console.log("Event created:", event);
-        } else {
-          const errorResponse = await responseGoogle.json();
-          console.error("Error creating event:", errorResponse);
-        }
+      } catch (error) {
+        console.error("Fetch error:", error);
       }
-  
-      toast.success("โหวตสำเร็จแล้ว!!");
-      setNewFetch(!newFetch);
-    } catch (error) {
-      console.error("Error update vote:", error);
-      toast.error("เกิดข้อผิดพลาดในการโหวต");
+    } else {
+      console.error("User's Google account is not linked");
+      toast.error("Google account is not linked");
     }
   };
-  
-
 
   return (
     <>
@@ -275,9 +301,8 @@ function ListPost({ fetchPost, subjectData, fetch }: any) {
                             const isVotedByCurrentUser =
                               post.votedBy?.studentId === value.user?.studentId;
                             if (!isVotedByCurrentUser) {
-                              VoteUpdate(
-                                post.id,
-                                post.vote,
+                              VoteUpdate(post.id, post.vote);
+                              UpdateGoogle(
                                 post.title,
                                 post.description,
                                 post.startTime,

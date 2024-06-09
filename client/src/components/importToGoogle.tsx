@@ -166,6 +166,50 @@ function ImportToGoogle() {
     }
   }, [classDate, examDate, postDate]);
 
+  const test = async () => {
+    const newEventGoogle = {
+      summary: "test",
+      start: {
+        dateTime: `2024-06-09T20:09:07.997Z`,
+        timeZone: "Asia/Bangkok",
+      },
+      end: {
+        dateTime: `2024-06-09T20:09:07.997Z`,
+        timeZone: "Asia/Bangkok",
+      },
+      recurrence: [],
+      colorId: "9",
+    };
+    try {
+      if (value) {
+        const responseGoogle = await fetch(
+          "https://www.googleapis.com/calendar/v3/calendars/primary/events",
+          {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer " + session?.provider_token,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newEventGoogle),
+          }
+        );
+
+        if (responseGoogle.ok) {
+          const createdEvent = await responseGoogle.json();
+          console.log("Event ID:", createdEvent.id);
+        } else {
+          console.error(
+            "Failed to create event on Google:",
+            responseGoogle.statusText
+          );
+          return;
+        }
+      }
+    } catch (error) {
+      console.error("Error creating event:", error);
+    }
+  };
+
   const fectStudentClassDate = async () => {
     setLoading(true);
     try {
@@ -257,11 +301,12 @@ function ImportToGoogle() {
   };
 
   return (
+    
     <div
       onClick={() => {
         console.log("hited"), importEvent();
       }}
-      className="flex items-center justify-center  dark:bg-gray-800"
+      className="flex items-center justify-center  dark:bg-gray-800 mt-6"
     >
       {session?.provider_token ? (
         <button

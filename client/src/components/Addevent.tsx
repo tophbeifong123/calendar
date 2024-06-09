@@ -54,7 +54,8 @@ function AddEvent() {
         console.error("User not authenticated");
         return;
       }
-      console.log(startDate.toISOString(), endDate.toISOString());
+    
+      console.log("yoto",startDate.toISOString(), endDate.toISOString());
       const newEventGoogle: EventGoogle = {
         summary: title || "ไม่ระบุ",
         description: detail || "ไม่ระบุ",
@@ -73,6 +74,7 @@ function AddEvent() {
       let createdEventId: string = "";
 
       if (value.user?.google) {
+        console.log("res",newEventGoogle);
         const responseGoogle = await fetch(
           "https://www.googleapis.com/calendar/v3/calendars/primary/events",
           {

@@ -185,9 +185,6 @@ function Home() {
       setExamDate(resultExam.data);
       setHolidayDate(resultHoliday.data.items);
 
-      // console.log("classDate", result.data);
-      // console.log("examDate", resultExam.data);
-      // console.log("holidayData", resultHoliday.data.items.slice(0, 100));
     } catch (error) {
       console.error("Error fetching student detail:", error);
     } finally {
