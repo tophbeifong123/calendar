@@ -196,17 +196,17 @@ export default function CustomCalendar({
 
   return (
     <>
-      <div className="flex justify-center items-center  w-full h-screen mb-10">
-        <div className="items-center relative bottom-[100px] flex flex-col mx-auto">
-          <PostEvent fetchTrigger={fetchTrigger}/>
+      <div className="flex justify-center items-center w-full h-screen p-5 bg-[#2D3F50] text-gray-400">
+        <div className="flex flex-col h-screen items-center mt-10 z-40 mr-10 ">
           <AccordionSetting
             events={events}
             filterClass={filterClass}
             filterExam={filterExam}
             test={toggleTest}
+            fetchTrigger={fetchTrigger}
           />
         </div>
-        <div className="w-5/6 bg-white p-7 rounded-3xl border-slate-900 drop-shadow-2xl z-0 mr-16">
+        <div className=" rounded-3xl bg-[#354553] h-full w-full p-5  sticky top-0 overflow-y-auto shadow-[inset_0_-2px_4px_6px_rgba(0,0,0,0.2)]">
           <FullCalendar
             plugins={[
               dayGridPlugin,
@@ -236,7 +236,6 @@ export default function CustomCalendar({
             onClose={() => setModalOpen(false)}
           />
         </div>
-        <AddEvent />
       </div>
     </>
   );

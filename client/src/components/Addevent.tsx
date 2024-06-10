@@ -135,7 +135,7 @@ function AddEvent() {
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <>
         <button
-          className="btn btn-circle fixed bg-[#ebebeb] bottom-10 left-5 z-5 rounded-full p-2 shadow-sm w-[45px] h-[45px]"
+          className="btn z-5 rounded-full p-2 shadow-sm w-[45px] h-[45px]"
           onClick={() => setModalOpen(true)}
         >
           <svg
@@ -153,7 +153,7 @@ function AddEvent() {
             />
           </svg>
         </button>
-        <label className="fixed  bottom-14 left-[70px] z-5 rounded-full z-10">
+        <label className="rounded-full relative left-5">
           สร้างกิจกรรม
         </label>
         {modalOpen && (
@@ -233,7 +233,7 @@ function AddEvent() {
             </div>
           </div>
         )}
-      </>
+      </>F
     </MuiPickersUtilsProvider>
   );
 }

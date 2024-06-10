@@ -324,9 +324,9 @@ function ImportToGoogle() {
           <span>
             {value.user?.google
               ? "คุณได้นำเข้าและกำลังซิงค์อยู่"
-              : "นำเข้ากิจกรรมของคุณไปยัง Google Calendar"}
+              : "นำเข้ากิจกรรมของคุณ"}
           </span>
-        </button>
+        </button> 
       ) : null}
     </div>
   );
