@@ -13,7 +13,7 @@ import toast, { Toaster } from "react-hot-toast";
 import ListPost from "./ListPost";
 import { format, toZonedTime } from "date-fns-tz";
 
-function PostEvent({ fetch }: any) {
+function PostEvent({ fetchTrigger }: any) {
   const auth = useAuth();
   const [modalOpen, setModalOpen] = useState<Boolean>(false);
   const [startDate, setStartDate] = useState<Date>(new Date());
@@ -37,7 +37,7 @@ function PostEvent({ fetch }: any) {
 
   const handlePostSuccess = () => {
     setReloadPosts((prevState) => !prevState);
-    fetch();
+    fetchTrigger();
     setTitle("");
     setDetail("");
     setStartDate(new Date());
@@ -157,7 +157,7 @@ function PostEvent({ fetch }: any) {
         <label className="fixed  bottom-32 left-[70px] z-5 rounded-full z-10 ">
           แจ้งประกาศ
         </label>
-        <ListPost fetchPost={reloadPosts} subjectData={subjectType} fetch={fetch}/>
+        <ListPost fetchPost={reloadPosts} subjectData={subjectType} fetchTrigger={fetchTrigger}/>
         <Toaster position="bottom-right" />
         {modalOpen && (
           <div

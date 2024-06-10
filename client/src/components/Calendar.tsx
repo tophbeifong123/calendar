@@ -20,7 +20,7 @@ export default function CustomCalendar({
   filterClass,
   filterExam,
   postDateFormat,
-  fetch,
+  fetchTrigger,
   holidayDateFormat,
 }: any) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -198,7 +198,7 @@ export default function CustomCalendar({
     <>
       <div className="flex justify-center items-center  w-full h-screen mb-10">
         <div className="items-center relative bottom-[100px] flex flex-col mx-auto">
-          <PostEvent fetch={fetch}/>
+          <PostEvent fetchTrigger={fetchTrigger}/>
           <AccordionSetting
             events={events}
             filterClass={filterClass}

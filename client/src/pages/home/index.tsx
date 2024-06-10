@@ -215,7 +215,7 @@ function Home() {
         <>
           <div className="flex justify-center items-center h-screen bg-base-200">
             <CustomCalendar
-              fetch={triggerFetchPost}
+              fetchTrigger={triggerFetchPost}
               details={studentDetails}
               filterClass={classDate}
               filterExam={examDate}

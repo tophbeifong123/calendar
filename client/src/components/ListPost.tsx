@@ -34,7 +34,7 @@ interface EventGoogle {
   colorId: string;
 }
 
-function ListPost({ fetchPost, subjectData, fetch }: any) {
+function ListPost({ fetchPost, subjectData, fetchTrigger }: any) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [newFetch, setNewFetch] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
@@ -59,14 +59,14 @@ function ListPost({ fetchPost, subjectData, fetch }: any) {
     };
 
     fetchData();
-  }, [fetchPost, selectedSubject, newFetch, fetch]);
+  }, [fetchPost, selectedSubject, newFetch, fetchTrigger]);
 
   const handleDelete = async (id: number) => {
     try {
       await axios.delete(`${conf.apiUrlPrefix}/schedules/${id}`);
       setNewFetch(!newFetch);
       toast.success("ลบประกาศสำเร็จแล้ว");
-      fetch();
+      fetchTrigger();
     } catch (error) {
       console.error("Error delete post:", error);
     }

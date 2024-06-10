@@ -263,6 +263,7 @@ function ImportToGoogle() {
       console.log("updateGoogleStatus", updateGoogleStatus);
 
       const requests = events.map(async (event: any) => {
+        alert("กำลังนำเข้ากิจกรรมกรุณารอ...")
         const response = await fetch(
           "https://www.googleapis.com/calendar/v3/calendars/primary/events",
           {
@@ -293,7 +294,8 @@ function ImportToGoogle() {
       }
 
       // แจ้งเตือนหลังจากทำงานเสร็จสมบูรณ์ทั้งหมด
-      alert("สร้างกิจกรรมเสร็จสมบูรณ์ โปรดตรวจสอบที่ปฏิทิน Google ของคุณ!");
+  
+      alert("นำเข้ากิจกรรมเสร็จสมบูรณ์ โปรดตรวจสอบที่ปฏิทิน Google ของคุณ!");
     } catch (error) {
       console.error("เกิดข้อผิดพลาดในการสร้างกิจกรรม:", error);
       alert("เกิดข้อผิดพลาดขณะสร้างกิจกรรม โปรดลองอีกครั้งในภายหลัง");
