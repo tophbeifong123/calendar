@@ -116,6 +116,11 @@ function ListPost({ fetchPost, subjectData, fetchTrigger }: any) {
       console.error("Error creating event:", error);
     }
   };
+  function adjustTimeByHours(dateTime:any, hours:any) {
+    const date = new Date(dateTime);
+    date.setHours(date.getHours() + hours);
+    return date.toISOString();
+}
 
   const UpdateGoogle = async (
     title: any,
@@ -126,8 +131,8 @@ function ListPost({ fetchPost, subjectData, fetchTrigger }: any) {
   ) => {
     if (value.user?.google) {
       try {
-        const startDateTime = new Date(startDate).toISOString();
-        const endDateTime = new Date(endDate).toISOString();
+        const startDateTime = adjustTimeByHours(startDate, -7);
+        const endDateTime = adjustTimeByHours(endDate, -7);
 
         const newEventGoogle = {
           summary: `${subjectCode} ${title}`,

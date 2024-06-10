@@ -139,11 +139,11 @@ function ImportToGoogle() {
         summary: `${item.subjectCode} ${item.title}`,
         description: `${item.description}`,
         start: {
-          dateTime: `${item.startTime.substring(0, 19)}+07:00`,
+          dateTime: `${item.startTime.substring(0, 19)}`,
           timeZone: "Asia/Bangkok",
         },
         end: {
-          dateTime: `${item.stopTime.substring(0, 19)}+07:00`,
+          dateTime: `${item.stopTime.substring(0, 19)}`,
           timeZone: "Asia/Bangkok",
         },
         recurrence: [],
@@ -261,9 +261,9 @@ function ImportToGoogle() {
       );
 
       console.log("updateGoogleStatus", updateGoogleStatus);
-
+      alert("กำลังนำเข้ากิจกรรมกรุณารอ...")
       const requests = events.map(async (event: any) => {
-        alert("กำลังนำเข้ากิจกรรมกรุณารอ...")
+        
         const response = await fetch(
           "https://www.googleapis.com/calendar/v3/calendars/primary/events",
           {
